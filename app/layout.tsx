@@ -6,18 +6,21 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar"; // Make sure this is our custom Navbar!
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Chainsync Supply Chain Platform",
-  description: "Next-generation solution for complex supply chains built on Snowflake.",
+  title: "ChainSync - Supply Chain Management",
+  description: "Optimize your supply chain with ChainSync",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: '/logocs.png',
+    apple: '/logocs.png',
+    shortcut: '/logocs.png'
   },
 };
 
@@ -29,7 +32,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn("min-h-screen bg-slate-50 dark:bg-slate-900 font-sans antialiased", fontSans.variable)}>
+      <body className={cn("min-h-screen bg-slate-50 dark:bg-slate-900 font-sans antialiased", fontSans.variable, inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
