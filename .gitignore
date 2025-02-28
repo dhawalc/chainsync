@@ -33,4 +33,4 @@ yarn-error.log*
 .turbo
 
 .contentlayer
-.env
+.envrsa_private_key.p8
