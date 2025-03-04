@@ -1,261 +1,441 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// Define types for our time-phase rows
-interface TimePhaseRow {
-  PRODUCT_ID: string;
-  START_DATE: string;   // ISO date string (YYYY-MM-DD)
-  END_DATE: string;     // ISO date string (YYYY-MM-DD)
-  CYCLE_TIME: number;   // Cycle time value (could be lead time)
+// Define types for our data
+interface Product {
+  PRODUCT_ID: string | number;
+  DESCRIPTION?: string;
 }
 
-// Define bucket options
-const bucketOptions = [
-  { label: 'Weekly', value: 'WEEKLY' },
-  { label: 'Monthly', value: 'MONTHLY' },
-  { label: 'Fiscal Quarters', value: 'QUARTERLY' },
-  { label: 'Yearly', value: 'YEARLY' },
-];
+interface CycleTimeData {
+  PRODUCT_ID: string | number;
+  START_DATE: string;
+  END_DATE: string;
+  CYCLE_TIME: number;
+  isEdited?: boolean;
+}
 
-export default function TimePhasePage() {
-  const [bucket, setBucket] = useState('WEEKLY');
-  const [rows, setRows] = useState<TimePhaseRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState<boolean>(false);
+interface ProductGroup {
+  groupName: string;
+  products: Product[];
+}
 
-  // Fetch time-phase data based on bucket
+export default function TimePhaseManagement() {
+  // State for selected time bucket
+  const [selectedBucket, setSelectedBucket] = useState('WEEKLY');
+  
+  // State for cycle time data
+  const [cycleTimeData, setCycleTimeData] = useState<CycleTimeData[]>([]);
+  
+  // State for products
+  const [products, setProducts] = useState<Product[]>([]);
+  
+  // State for selected products
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  
+  // State for product groups
+  const [productGroups, setProductGroups] = useState<ProductGroup[]>([]);
+  
+  // State for loading
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // State for saving
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // State for dialog
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  // State for toast
+  const [toast, setToast] = useState<{ visible: boolean, title: string, message: string, type: 'success' | 'error' | 'info' }>({
+    visible: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
+
+  // Fetch cycle time data when bucket changes
   useEffect(() => {
-    async function fetchTimePhaseData() {
-      setLoading(true);
-      setError(null);
-      try {
-        console.log(`Fetching time-phase data for bucket: ${bucket}`);
-        const res = await fetch(`/api/timephase?bucket=${bucket}`);
-        const responseData = await res.json();
-        console.log("API Response:", responseData);
-        
-        if (responseData.success && Array.isArray(responseData.data)) {
-          setRows(responseData.data);
-        } else if (Array.isArray(responseData)) {
-          // Handle case where API returns array directly
-          setRows(responseData);
-        } else {
-          setRows([]);
-          if (responseData.error) {
-            setError(responseData.error);
-          }
-        }
-      } catch (err) {
-        setError('Failed to load time-phase data.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchTimePhaseData();
-  }, [bucket]);
-
-  // Handle cell change
-  const handleCellChange = (index: number, field: keyof TimePhaseRow, value: any) => {
-    const updatedRows = [...rows];
-    updatedRows[index] = { ...updatedRows[index], [field]: value };
-    setRows(updatedRows);
-  };
-
-  // Save changes via POST to API route
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const res = await fetch('/api/timephase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bucket, data: rows }),
-      });
-      const result = await res.json();
+    fetchCycleTimeData();
+  }, [selectedBucket]);
+  
+  // Hide toast after 3 seconds
+  useEffect(() => {
+    if (toast.visible) {
+      const timer = setTimeout(() => {
+        setToast(prev => ({ ...prev, visible: false }));
+      }, 3000);
       
-      if (!result.success) throw new Error(result.error || 'Failed to save changes');
-      alert('Changes saved successfully!');
-    } catch (err: any) {
-      alert(`Error saving changes: ${err.message}`);
-      console.error(err);
+      return () => clearTimeout(timer);
+    }
+  }, [toast.visible]);
+
+  // Show toast message
+  const showToast = (title: string, message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToast({
+      visible: true,
+      title,
+      message,
+      type
+    });
+  };
+
+  // Fetch cycle time data
+  const fetchCycleTimeData = async () => {
+    setIsLoading(true);
+    try {
+      // Build the URL with bucket and selected products
+      let url = `/api/timephase?bucket=${selectedBucket}`;
+      
+      // Only add product filter if products are selected
+      if (selectedProducts.length > 0) {
+        url += `&products=${selectedProducts.join(',')}`;
+      }
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data.success) {
+        setCycleTimeData(data.data);
+      } else {
+        showToast('Error', data.error || 'Failed to fetch cycle time data', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching cycle time data:', error);
+      showToast('Error', 'Failed to fetch cycle time data', 'error');
     } finally {
-      setSaving(false);
+      setIsLoading(false);
     }
   };
 
-  // Format date for display (YYYY-MM-DD)
-  const formatDate = (dateString: string) => {
-    if (!dateString) return '';
-    // If already in YYYY-MM-DD format, return as is
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) return dateString;
-    
+  // Handle cycle time change
+  const handleCycleTimeChange = (productId: string | number, value: string) => {
+    setCycleTimeData(prevData => 
+      prevData.map(item => 
+        item.PRODUCT_ID === productId 
+          ? { ...item, CYCLE_TIME: Number(value), isEdited: true } 
+          : item
+      )
+    );
+  };
+
+  // Save changes
+  const saveChanges = async () => {
+    setIsSaving(true);
     try {
-      const date = new Date(dateString);
-      return date.toISOString().split('T')[0];
-    } catch (e) {
-      console.error("Invalid date:", dateString);
-      return '';
+      // Filter only edited rows
+      const editedData = cycleTimeData.filter(item => item.isEdited);
+      
+      if (editedData.length === 0) {
+        showToast('No changes', 'No changes to save', 'info');
+        setIsSaving(false);
+        return;
+      }
+      
+      const response = await fetch('/api/timephase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          bucket: selectedBucket,
+          data: editedData,
+        }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        showToast('Success', 'Changes saved successfully', 'success');
+        
+        // Reset isEdited flag
+        setCycleTimeData(prevData => 
+          prevData.map(item => ({ ...item, isEdited: false }))
+        );
+      } else {
+        showToast('Error', result.error || 'Failed to save changes', 'error');
+      }
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      showToast('Error', 'Failed to save changes', 'error');
+    } finally {
+      setIsSaving(false);
     }
   };
+
+  // Toggle product selection
+  const toggleProductSelection = (productId: string) => {
+    setSelectedProducts(prev => 
+      prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  // Fetch products for selection
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/timephase');
+      const data = await response.json();
+      
+      if (data.success) {
+        // Extract unique products from cycle time data
+        const uniqueProductIds = new Set();
+        const uniqueProducts: Product[] = []; // Add type annotation here
+        
+        data.cycleTimeData.forEach(item => {
+          if (!uniqueProductIds.has(item.PRODUCT_ID)) {
+            uniqueProductIds.add(item.PRODUCT_ID);
+            // Explicitly cast each product to the Product type
+            uniqueProducts.push({
+              PRODUCT_ID: item.PRODUCT_ID,
+              PRODUCT_NAME: item.PRODUCT_NAME,
+              PRODUCT_DESCRIPTION: item.PRODUCT_DESCRIPTION || '',
+              CATEGORY: item.CATEGORY || '',
+              SUBCATEGORY: item.SUBCATEGORY || '',
+              PRICE: item.PRICE || 0,
+              COST: item.COST || 0,
+              INVENTORY: item.INVENTORY || 0
+            });
+          }
+        });
+        
+        setProductGroups([{
+          groupName: 'Available Products',
+          products: uniqueProducts
+        }]);
+      } else {
+        showToast('Error', 'No products found', 'error');
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      showToast('Error', 'Failed to fetch products', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial data load
+  useEffect(() => {
+    fetchCycleTimeData();
+    fetchProducts();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 pt-8 pb-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-4">
-            <h1 className="text-2xl font-bold text-white">Time Phase Management</h1>
-            <p className="text-indigo-100 mt-1">Manage cycle times across different time buckets</p>
-          </div>
-          
-          <div className="p-6">
-            {/* Bucket selection */}
-            <div className="mb-8 bg-indigo-50 p-4 rounded-lg border border-indigo-100">
-              <label htmlFor="bucket" className="block text-sm font-medium text-indigo-700 mb-2">
-                Select Time Bucket:
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {bucketOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => setBucket(option.value)}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      bucket === option.value
-                        ? 'bg-indigo-600 text-white shadow-md'
-                        : 'bg-white text-indigo-700 border border-indigo-300 hover:bg-indigo-50'
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+    <div className="container mx-auto py-6 px-4 bg-gray-100 min-h-screen text-gray-900">
+      <h1 className="text-3xl font-bold mb-6 text-blue-800">Time-Phased Cycle Time Management</h1>
+      
+      {/* Toast notification */}
+      {toast.visible && (
+        <div className={`fixed top-4 right-4 p-4 rounded shadow-lg z-50 ${
+          toast.type === 'success' ? 'bg-green-100 border-green-500 text-green-800' : 
+          toast.type === 'error' ? 'bg-red-100 border-red-500 text-red-800' : 
+          'bg-blue-100 border-blue-500 text-blue-800'
+        } border-l-4`}>
+          <div className="flex items-center">
+            <div className="ml-3">
+              <p className="font-bold">{toast.title}</p>
+              <p>{toast.message}</p>
             </div>
-
-            {loading ? (
-              <div className="flex flex-col justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500 mb-4"></div>
-                <p className="text-indigo-500 font-medium">Loading time phase data...</p>
+            <button 
+              onClick={() => setToast(prev => ({ ...prev, visible: false }))}
+              className="ml-4 text-gray-600 hover:text-gray-800"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+      
+      <div className="grid grid-cols-1 gap-6">
+        {/* Time Bucket Selection */}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+          <h2 className="text-xl font-semibold mb-4 text-blue-700">Select Time Bucket</h2>
+          <div className="flex items-center space-x-4">
+            <select
+              value={selectedBucket}
+              onChange={(e) => {
+                setSelectedBucket(e.target.value);
+                // Refresh products when bucket changes
+                setTimeout(() => fetchProducts(), 100);
+              }}
+              className="border border-gray-300 rounded-md px-3 py-2 w-48 text-gray-800 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            >
+              <option value="WEEKLY">Weekly</option>
+              <option value="MONTHLY">Monthly</option>
+              <option value="QUARTERLY">Quarterly</option>
+              <option value="YEARLY">Yearly</option>
+            </select>
+            
+            <button 
+              onClick={fetchCycleTimeData} 
+              disabled={isLoading}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md disabled:opacity-50 border border-gray-300 font-medium"
+            >
+              {isLoading ? 'Loading...' : 'Refresh Data'}
+            </button>
+            
+            <button 
+              onClick={() => {
+                fetchProducts();
+                setIsDialogOpen(true);
+              }}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium"
+            >
+              Select Products
+            </button>
+          </div>
+        </div>
+        
+        {/* Product Selection Dialog */}
+        {isDialogOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-xl border border-gray-300">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-blue-700">Select Products</h2>
+                <button 
+                  onClick={() => setIsDialogOpen(false)}
+                  className="text-gray-600 hover:text-gray-800 text-2xl font-bold"
+                >
+                  ×
+                </button>
               </div>
-            ) : error ? (
-              <div className="p-6 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Error Loading Data</h3>
-                    <p className="text-sm text-red-700 mt-1">{error}</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <>
-                {rows.length === 0 ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">No time phase data</h3>
-                    <p className="mt-1 text-sm text-gray-500">No data available for the selected bucket type.</p>
+              
+              <p className="text-gray-700 mb-4">Choose products to display in the cycle time table.</p>
+              
+              <div className="max-h-[400px] overflow-y-auto">
+                {productGroups.length === 0 ? (
+                  <div className="text-center py-8 text-gray-700 bg-gray-50 rounded-md border border-gray-200">
+                    No products available. Try changing the time bucket.
                   </div>
                 ) : (
-                  /* Editable table */
-                  <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gradient-to-r from-indigo-600 to-blue-500">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                            Product ID
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                            Start Date
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                            End Date
-                          </th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                            Cycle Time
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {rows.map((row, idx) => (
-                          <tr key={idx} className="hover:bg-indigo-50 transition-colors duration-150">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-indigo-600">{row.PRODUCT_ID}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="relative">
-                                <input
-                                  type="date"
-                                  value={formatDate(row.START_DATE)}
-                                  onChange={(e) => handleCellChange(idx, 'START_DATE', e.target.value)}
-                                  className="text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 w-full"
-                                  style={{ colorScheme: 'light' }}
-                                />
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="relative">
-                                <input
-                                  type="date"
-                                  value={formatDate(row.END_DATE)}
-                                  onChange={(e) => handleCellChange(idx, 'END_DATE', e.target.value)}
-                                  className="text-sm border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900 w-full"
-                                  style={{ colorScheme: 'light' }}
-                                />
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="relative">
-                                <input
-                                  type="number"
-                                  value={row.CYCLE_TIME}
-                                  onChange={(e) => handleCellChange(idx, 'CYCLE_TIME', Number(e.target.value))}
-                                  min="0"
-                                  step="1"
-                                  className="text-sm border border-gray-300 rounded-md px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
-                                  style={{ colorScheme: 'light' }}
-                                />
-                              </div>
-                            </td>
-                          </tr>
+                  productGroups.map((group, index) => (
+                    <div key={index} className="mb-4">
+                      <h3 className="font-medium mb-2 text-blue-600">{group.groupName}</h3>
+                      <div className="space-y-2">
+                        {group.products.map((product) => (
+                          <div key={product.PRODUCT_ID} className="flex items-center space-x-2">
+                            <input 
+                              type="checkbox"
+                              id={`product-${product.PRODUCT_ID}`}
+                              checked={selectedProducts.includes(String(product.PRODUCT_ID))}
+                              onChange={() => toggleProductSelection(String(product.PRODUCT_ID))}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <label htmlFor={`product-${product.PRODUCT_ID}`} className="text-gray-800">
+                              {product.DESCRIPTION || `Product ${product.PRODUCT_ID}`}
+                            </label>
+                          </div>
                         ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      </div>
+                      {index < productGroups.length - 1 && <hr className="my-4 border-gray-300" />}
+                    </div>
+                  ))
                 )}
-
-                <div className="mt-6 flex justify-end">
-                  <button
-                    onClick={handleSave}
-                    disabled={saving || rows.length === 0}
-                    className={`px-6 py-2 rounded-md text-white font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 ${
-                      saving || rows.length === 0
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg'
-                    }`}
-                  >
-                    {saving ? (
-                      <span className="flex items-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Saving Changes...
-                      </span>
-                    ) : (
-                      'Save Changes'
-                    )}
-                  </button>
-                </div>
-              </>
-            )}
+              </div>
+              
+              <div className="flex justify-between mt-4">
+                <button 
+                  onClick={() => {
+                    setSelectedProducts([]);
+                    fetchCycleTimeData();
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 font-medium"
+                >
+                  Clear Selection
+                </button>
+                <button 
+                  onClick={() => {
+                    setIsDialogOpen(false);
+                    fetchCycleTimeData();
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
           </div>
+        )}
+        
+        {/* Cycle Time Data Table */}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-blue-700">Cycle Time Data</h2>
+            <button 
+              onClick={saveChanges} 
+              disabled={isSaving}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 font-medium"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+          
+          {isLoading ? (
+            <div className="text-center py-8 text-gray-700">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mx-auto mb-4"></div>
+              Loading data...
+            </div>
+          ) : cycleTimeData.length === 0 ? (
+            <div className="text-center py-8 text-gray-700 bg-gray-50 rounded-md border border-gray-200">
+              No data available for the selected time bucket.
+            </div>
+          ) : (
+            <div className="border rounded-md overflow-x-auto border-gray-300 shadow">
+              <table className="min-w-full divide-y divide-gray-300">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                      Product ID
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                      Start Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                      End Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                      Cycle Time (Days)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {cycleTimeData.map((item, index) => (
+                    <tr key={index} className={item.isEdited ? "bg-blue-50" : ""}>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800 font-medium">
+                        {item.PRODUCT_ID}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {formatDate(item.START_DATE)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-800">
+                        {formatDate(item.END_DATE)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="number"
+                          value={item.CYCLE_TIME}
+                          onChange={(e) => handleCycleTimeChange(item.PRODUCT_ID, e.target.value)}
+                          className="border border-gray-300 rounded-md px-3 py-1 w-24 bg-white text-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>
