@@ -6,7 +6,8 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}      # e.g., "chainsync-demo"
+  PROJECT_NUMBER: ${{ secrets.GCP_PROJECT_NUMBER }}  # e.g., "340970450219"
   SERVICE_NAME: chainsync
   REGION: us-central1
 
@@ -44,7 +45,7 @@ jobs:
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
             --memory 1Gi \
-            --set-secrets RSA_PRIVATE_KEY=projects/${{ env.PROJECT_ID }}/secrets/rsa_private_key:latest
+            --set-secrets RSA_PRIVATE_KEY=projects/${{ env.PROJECT_NUMBER }}/secrets/rsa_private_key:latest
 
       - name: Get Cloud Run URL
         run: |
