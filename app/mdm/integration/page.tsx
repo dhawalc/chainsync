@@ -1,198 +1,196 @@
 'use client';
 
 import { useState } from 'react';
-import ApiConfigurationPanel from '../components/ApiConfigurationPanel';
-import StandardObjectMapping from '../components/StandardObjectMapping';
-import DataElementOwnership from '../components/DataElementOwnership';
-import MiddleLayerConfig from '../components/MiddleLayerConfig';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 import { 
-  ArrowPathIcon,
-  ServerIcon,
-  UserGroupIcon,
-  ArrowsRightLeftIcon
+  ArrowPathIcon, 
+  CloudArrowUpIcon,
+  ArrowsRightLeftIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 
-export default function IntegrationPage() {
-  const [activeTab, setActiveTab] = useState('overview');
-  
+// Sample integration data for MDM
+const mdmIntegrations = [
+  {
+    id: 'erp-mdm',
+    name: 'ERP Master Data',
+    description: 'Sync master data with your Enterprise Resource Planning system',
+    status: 'connected',
+    lastSync: '2023-11-15T14:30:00',
+    provider: 'SAP'
+  },
+  {
+    id: 'plm',
+    name: 'Product Lifecycle Management',
+    description: 'Connect to your PLM system for product master data',
+    status: 'disconnected',
+    lastSync: null,
+    provider: 'Siemens Teamcenter'
+  },
+  {
+    id: 'supplier-portal',
+    name: 'Supplier Portal',
+    description: 'Integrate with your supplier portal for vendor master data',
+    status: 'connected',
+    lastSync: '2023-11-14T09:15:00',
+    provider: 'Ariba'
+  },
+  {
+    id: 'customer-mdm',
+    name: 'Customer MDM',
+    description: 'Sync customer master data with your CRM system',
+    status: 'pending',
+    lastSync: null,
+    provider: 'Salesforce'
+  }
+];
+
+export default function MdmIntegrationPage() {
+  const [syncingId, setSyncingId] = useState<string | null>(null);
+
+  const handleSync = (id: string) => {
+    setSyncingId(id);
+    // Simulate sync process
+    setTimeout(() => {
+      setSyncingId(null);
+    }, 2000);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'connected':
+        return <Badge variant="success">Connected</Badge>;
+      case 'disconnected':
+        return <Badge variant="error">Disconnected</Badge>;
+      case 'pending':
+        return <Badge variant="warning">Pending</Badge>;
+      default:
+        return null;
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'connected':
+        return <CheckCircleIcon className="h-6 w-6 text-emerald-500" />;
+      case 'disconnected':
+        return <XCircleIcon className="h-6 w-6 text-red-500" />;
+      case 'pending':
+        return <ClockIcon className="h-6 w-6 text-amber-500" />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Integration Configuration</h1>
-          <p className="mt-2 text-gray-600">Configure and manage data integration between systems based on project assumptions</p>
-        </div>
+    <div className="container mx-auto py-8 px-4 bg-white min-h-screen">
+      <div className="mb-10 border-b border-gray-200 pb-6">
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-3">MDM Integration Configuration</h1>
+        <p className="mt-2 text-xl text-gray-700 max-w-3xl">
+          Connect your master data with external systems and services
+        </p>
       </div>
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full max-w-3xl mb-8">
-          <TabsTrigger value="overview" className="flex-1 data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-700">
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="api" className="flex-1 data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-700">
-            <ServerIcon className="h-4 w-4 mr-2" />
-            API Configuration
-          </TabsTrigger>
-          <TabsTrigger value="mapping" className="flex-1 data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-700">
-            <ArrowsRightLeftIcon className="h-4 w-4 mr-2" />
-            Object Mapping
-          </TabsTrigger>
-          <TabsTrigger value="ownership" className="flex-1 data-[state=active]:bg-indigo-100 data-[state=active]:text-indigo-700">
-            <UserGroupIcon className="h-4 w-4 mr-2" />
-            Ownership
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview" className="mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Project Assumptions</h2>
-              <ul className="space-y-4">
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-green-600 text-sm font-bold">1</span>
-                  </div>
-                  <div>
-                    <p className="text-gray-700">From ECC to PDMT we are pulling all Fields through API from Standard Tables only (no Z table Stagging in ECC)</p>
-                    <p className="text-sm text-gray-500 mt-1">Direct API connections to standard SAP tables are configured</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-green-600 text-sm font-bold">2</span>
-                  </div>
-                  <div>
-                    <p className="text-gray-700">From PDMT we are able to create all Standard Objects directly (no Z Table Stagging in APO)</p>
-                    <p className="text-sm text-gray-500 mt-1">Direct mapping to standard APO objects without intermediate staging</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-green-600 text-sm font-bold">3</span>
-                  </div>
-                  <div>
-                    <p className="text-gray-700">One Functional owner will own the development of one Data Elements</p>
-                    <p className="text-sm text-gray-500 mt-1">Clear ownership and responsibility for each data element</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                    <span className="text-green-600 text-sm font-bold">4</span>
-                  </div>
-                  <div>
-                    <p className="text-gray-700">Middle Layer is only used for Mapping, no data massaging will happen in Middle Layer</p>
-                    <p className="text-sm text-gray-500 mt-1">Simple field mappings without complex transformations</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Integration Status</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {mdmIntegrations.map((integration) => (
+          <Card 
+            key={integration.id} 
+            className="border-2 border-gray-200 hover:border-indigo-300 shadow-md hover:shadow-xl rounded-xl overflow-hidden transition-all duration-300 bg-white"
+          >
+            <div className={`h-3 ${
+              integration.status === 'connected' ? 'bg-emerald-500' : 
+              integration.status === 'disconnected' ? 'bg-red-500' : 
+              'bg-amber-500'
+            }`}></div>
+            <CardHeader className="pb-3 bg-white">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl font-bold text-gray-900">{integration.name}</CardTitle>
+                <div className="p-2 bg-gray-100 rounded-full">
+                  <Cog6ToothIcon className="h-6 w-6 text-indigo-700" />
+                </div>
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <CardDescription className="text-gray-700 font-medium">
+                  {integration.provider}
+                </CardDescription>
+                {getStatusBadge(integration.status)}
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4 pb-6 bg-white">
+              <p className="text-base text-gray-800 mb-6">
+                {integration.description}
+              </p>
               
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-gray-700">API Connections</h3>
-                    <span className="text-sm text-green-600 font-medium">5/7 Active</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-green-600 h-2.5 rounded-full" style={{ width: '71%' }}></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-gray-700">Object Mappings</h3>
-                    <span className="text-sm text-green-600 font-medium">4/5 Active</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-green-600 h-2.5 rounded-full" style={{ width: '80%' }}></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-gray-700">Data Element Ownership</h3>
-                    <span className="text-sm text-green-600 font-medium">7/7 Assigned</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-green-600 h-2.5 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-gray-700">Field Mappings</h3>
-                    <span className="text-sm text-green-600 font-medium">5/5 Compliant</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div className="bg-green-600 h-2.5 rounded-full" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-              </div>
+              {integration.lastSync && (
+                <p className="text-sm text-gray-600 mb-4">
+                  Last synced: {new Date(integration.lastSync).toLocaleString()}
+                </p>
+              )}
               
-              <div className="mt-6">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Recent Activity</h3>
-                <div className="space-y-3">
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                      <ServerIcon className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-800">API connection for Material Master updated</p>
-                      <p className="text-xs text-gray-500">Today, 10:23 AM</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center mr-3">
-                      <ArrowsRightLeftIcon className="h-4 w-4 text-indigo-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-800">New field mapping added for Customer Master</p>
-                      <p className="text-xs text-gray-500">Yesterday, 4:12 PM</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                      <UserGroupIcon className="h-4 w-4 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-800">Ownership of Production Version assigned to David Martinez</p>
-                      <p className="text-xs text-gray-500">Oct 5, 2023</p>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex justify-between items-center mt-auto">
+                <Button 
+                  variant="outline" 
+                  className="text-gray-700 border-2 border-gray-300 hover:bg-gray-100"
+                >
+                  Configure Mapping
+                </Button>
+                
+                {integration.status === 'connected' && (
+                  <Button 
+                    onClick={() => handleSync(integration.id)}
+                    disabled={syncingId === integration.id}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  >
+                    {syncingId === integration.id ? (
+                      <>
+                        <ArrowPathIcon className="h-5 w-5 mr-2 animate-spin" />
+                        Syncing...
+                      </>
+                    ) : (
+                      <>
+                        <ArrowPathIcon className="h-5 w-5 mr-2" />
+                        Sync Now
+                      </>
+                    )}
+                  </Button>
+                )}
+                
+                {integration.status === 'disconnected' && (
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <CloudArrowUpIcon className="h-5 w-5 mr-2" />
+                    Connect
+                  </Button>
+                )}
+                
+                {integration.status === 'pending' && (
+                  <Button disabled className="bg-amber-600 text-white opacity-70">
+                    <ClockIcon className="h-5 w-5 mr-2" />
+                    Pending
+                  </Button>
+                )}
               </div>
-            </div>
-          </div>
-          
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Integration Architecture</h2>
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <div className="h-64 flex items-center justify-center border border-dashed border-gray-300 rounded-md">
-                <p className="text-gray-500">Integration architecture diagram will appear here</p>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="api" className="mt-0">
-          <ApiConfigurationPanel />
-        </TabsContent>
-        
-        <TabsContent value="mapping" className="mt-0">
-          <div className="space-y-8">
-            <StandardObjectMapping />
-            <MiddleLayerConfig />
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="ownership" className="mt-0">
-          <DataElementOwnership />
-        </TabsContent>
-      </Tabs>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      <div className="mt-12 bg-gray-50 p-8 rounded-xl border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">MDM Data Quality Settings</h2>
+        <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6 text-center">
+          Configure data quality rules and validation settings for master data integration
+        </p>
+        <div className="text-center">
+          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 text-lg">
+            Configure Data Quality Rules
+          </Button>
+        </div>
+      </div>
     </div>
   );
 } 

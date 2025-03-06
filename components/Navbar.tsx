@@ -71,11 +71,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto py-3 px-6 flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-3">
           <Image 
-            src="/logocs.png" 
+            src="/cslogo.jpg" 
             alt="ChainSync Logo" 
             width={40} 
             height={40} 
-            className="h-10 w-auto"
+            className="h-10 w-auto rounded-md"
             priority
           />
           <h1 className="text-2xl font-bold text-indigo-100">
@@ -178,6 +178,9 @@ const Navbar = () => {
                     </Link>
                     <Link href="/production" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                       Production
+                    </Link>
+                    <Link href="/risk" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      Risk Dashboard
                     </Link>
                   </div>
                 </div>
