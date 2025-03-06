@@ -9,7 +9,6 @@ git push origin main
 
 # Set your variables (adjust these as needed)
 PROJECT_ID=${GCP_PROJECT_ID:-chainsync-demo}
-# You can export GCP_PROJECT_ID in your terminal if not hardcoding
 SERVICE_NAME="chainsync"
 REGION="us-central1"
 
@@ -26,9 +25,8 @@ gcloud run deploy ${SERVICE_NAME} \
   --region ${REGION} \
   --allow-unauthenticated \
   --memory 1Gi \
-  --set-env-vars "SNOWFLAKE_ACCOUNT=OU87598,SNOWFLAKE_USERNAME=APP_SCDATA,SNOWFLAKE_PASSWORD=LaPxg9pgf2czyYw7btyNaJadGD7TrGw,SNOWFLAKE_WAREHOUSE=COMPUTE_WH,SNOWFLAKE_DATABASE=chainsyncdb,SNOWFLAKE_SCHEMA=scm,SNOWFLAKE_ROLE=APP_SCDATA_ROLE,SNOWFLAKE_REGION=west-us-2.azure,FRONTEND_URL=http://localhost:3000,PORT=5000" \
+  --set-env-vars "SNOWFLAKE_ACCOUNT=OU87598,SNOWFLAKE_USERNAME=APP_SCDATA,SNOWFLAKE_PASSWORD=LaPxg9pgf2czyYw7btyNaJadGD7TrGw,SNOWFLAKE_WAREHOUSE=COMPUTE_WH,SNOWFLAKE_DATABASE=chainsyncdb,SNOWFLAKE_SCHEMA=scm,SNOWFLAKE_ROLE=APP_SCDATA_ROLE,SNOWFLAKE_REGION=west-us-2.azure,FRONTEND_URL=http://localhost:3000" \
   --set-secrets RSA_PRIVATE_KEY=projects/340970450219/secrets/rsa_private_key:latest
-
 
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
