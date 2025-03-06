@@ -258,7 +258,7 @@ export default function HierarchyManagement() {
       
       if (data.success) {
         console.log("Hierarchy Diagnosis:", data);
-        alert(`Table exists: ${data.tableExists}\nColumns: ${data.tableStructure.map(col => col.COLUMN_NAME).join(', ')}\nSample data: ${data.sampleData.length} rows`);
+        alert(`Table exists: ${data.tableExists}\nColumns: ${data.tableStructure.map((col: any) => col.COLUMN_NAME).join(', ')}\nSample data: ${data.sampleData.length} rows`);
         showToast('Info', 'Diagnosis complete. Check console for details.', 'info');
       } else {
         showToast('Error', data.error || 'Failed to diagnose hierarchy', 'error');

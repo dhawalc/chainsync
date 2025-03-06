@@ -3762,3 +3762,515 @@
 {"level":"INFO","message":"[12:36:26.511 PM]: Connection[id: a44191e2-d2a2-42ff-b560-95aa0f7dc651] - connecting. Associated Snowflake domain: GLOBAL"}
 {"level":"INFO","message":"[12:36:26.516 PM]: Connection[id: a44191e2-d2a2-42ff-b560-95aa0f7dc651] - authentication successful using: SNOWFLAKE_JWT"}
 {"level":"INFO","message":"[12:36:26.518 PM]: Connection[id: a44191e2-d2a2-42ff-b560-95aa0f7dc651] - connected successfully after 6.884471997618675 milliseconds"}
+{"level":"INFO","message":"[3:07:39.836 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:07:39.850 PM]: Creating Connection[id: e41f41b5-5a60-41d4-9836-922abeefdb38] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:07:39.851 PM]: Connection[id: e41f41b5-5a60-41d4-9836-922abeefdb38] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:07:39.851 PM]: Connection[id: e41f41b5-5a60-41d4-9836-922abeefdb38] - connection object created successfully."}
+{"level":"INFO","message":"[3:07:39.852 PM]: Connection[id: e41f41b5-5a60-41d4-9836-922abeefdb38] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:07:39.855 PM]: Connection[id: e41f41b5-5a60-41d4-9836-922abeefdb38] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:07:39.855 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[3:07:39.865 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:07:39.866 PM]: Creating Connection[id: d7071ed9-5ef2-4bea-922d-77bcdc3ada7f] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:07:39.866 PM]: Connection[id: d7071ed9-5ef2-4bea-922d-77bcdc3ada7f] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:07:39.866 PM]: Connection[id: d7071ed9-5ef2-4bea-922d-77bcdc3ada7f] - connection object created successfully."}
+{"level":"INFO","message":"[3:07:39.866 PM]: Connection[id: d7071ed9-5ef2-4bea-922d-77bcdc3ada7f] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:07:39.869 PM]: Connection[id: d7071ed9-5ef2-4bea-922d-77bcdc3ada7f] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:07:39.869 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[3:07:39.870 PM]: No client config detected."}
+{"level":"INFO","message":"[3:07:39.870 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[3:07:39.871 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[3:07:39.872 PM]: Connection[id: e41f41b5-5a60-41d4-9836-922abeefdb38] - connected successfully after 20.846354007720947 milliseconds"}
+{"level":"INFO","message":"[3:07:39.877 PM]: No client config detected."}
+{"level":"INFO","message":"[3:07:39.877 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[3:07:39.877 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[3:07:39.877 PM]: Connection[id: d7071ed9-5ef2-4bea-922d-77bcdc3ada7f] - connected successfully after 11.006429001688957 milliseconds"}
+{"level":"INFO","message":"[3:07:40.953 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:07:40.954 PM]: Creating Connection[id: 874d6e61-a239-4c36-bc6d-7ce2d9c22dd2] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:07:40.954 PM]: Connection[id: 874d6e61-a239-4c36-bc6d-7ce2d9c22dd2] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:07:40.955 PM]: Connection[id: 874d6e61-a239-4c36-bc6d-7ce2d9c22dd2] - connection object created successfully."}
+{"level":"INFO","message":"[3:07:40.955 PM]: Connection[id: 874d6e61-a239-4c36-bc6d-7ce2d9c22dd2] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:07:40.959 PM]: Connection[id: 874d6e61-a239-4c36-bc6d-7ce2d9c22dd2] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:07:40.960 PM]: Connection[id: 874d6e61-a239-4c36-bc6d-7ce2d9c22dd2] - connected successfully after 5.16465899348259 milliseconds"}
+{"level":"INFO","message":"[3:07:40.995 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:07:40.996 PM]: Creating Connection[id: cebb6370-d8b5-456a-b1cd-776506c0dbe2] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:07:40.996 PM]: Connection[id: cebb6370-d8b5-456a-b1cd-776506c0dbe2] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:07:40.996 PM]: Connection[id: cebb6370-d8b5-456a-b1cd-776506c0dbe2] - connection object created successfully."}
+{"level":"INFO","message":"[3:07:40.996 PM]: Connection[id: cebb6370-d8b5-456a-b1cd-776506c0dbe2] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:07:40.998 PM]: Connection[id: cebb6370-d8b5-456a-b1cd-776506c0dbe2] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:07:40.999 PM]: Connection[id: cebb6370-d8b5-456a-b1cd-776506c0dbe2] - connected successfully after 2.424577012658119 milliseconds"}
+{"level":"INFO","message":"[3:07:41.578 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:07:41.579 PM]: Creating Connection[id: 89ee4ed1-9f1e-4fbe-bbe8-1f2b6a9e0598] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:07:41.580 PM]: Connection[id: 89ee4ed1-9f1e-4fbe-bbe8-1f2b6a9e0598] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:07:41.580 PM]: Connection[id: 89ee4ed1-9f1e-4fbe-bbe8-1f2b6a9e0598] - connection object created successfully."}
+{"level":"INFO","message":"[3:07:41.580 PM]: Connection[id: 89ee4ed1-9f1e-4fbe-bbe8-1f2b6a9e0598] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:07:41.585 PM]: Connection[id: 89ee4ed1-9f1e-4fbe-bbe8-1f2b6a9e0598] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:07:41.586 PM]: Connection[id: 89ee4ed1-9f1e-4fbe-bbe8-1f2b6a9e0598] - connected successfully after 5.340257003903389 milliseconds"}
+{"level":"INFO","message":"[3:07:42.261 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:07:42.262 PM]: Creating Connection[id: cc8962e9-e266-43d3-acba-46dea73745ab] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:07:42.262 PM]: Connection[id: cc8962e9-e266-43d3-acba-46dea73745ab] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:07:42.263 PM]: Connection[id: cc8962e9-e266-43d3-acba-46dea73745ab] - connection object created successfully."}
+{"level":"INFO","message":"[3:07:42.263 PM]: Connection[id: cc8962e9-e266-43d3-acba-46dea73745ab] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:07:42.267 PM]: Connection[id: cc8962e9-e266-43d3-acba-46dea73745ab] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:07:42.269 PM]: Connection[id: cc8962e9-e266-43d3-acba-46dea73745ab] - connected successfully after 5.329296991229057 milliseconds"}
+{"level":"INFO","message":"[3:08:20.814 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:20.829 PM]: Creating Connection[id: 0a438226-11b6-41db-8e45-937105a76aed] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:20.829 PM]: Connection[id: 0a438226-11b6-41db-8e45-937105a76aed] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:20.830 PM]: Connection[id: 0a438226-11b6-41db-8e45-937105a76aed] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:20.830 PM]: Connection[id: 0a438226-11b6-41db-8e45-937105a76aed] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:20.834 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:20.834 PM]: Creating Connection[id: d7e0c4f5-deea-4d78-adf8-39948c619a62] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:20.835 PM]: Connection[id: d7e0c4f5-deea-4d78-adf8-39948c619a62] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:20.835 PM]: Connection[id: d7e0c4f5-deea-4d78-adf8-39948c619a62] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:20.835 PM]: Connection[id: d7e0c4f5-deea-4d78-adf8-39948c619a62] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:20.837 PM]: Connection[id: 0a438226-11b6-41db-8e45-937105a76aed] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:20.838 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[3:08:20.838 PM]: Connection[id: d7e0c4f5-deea-4d78-adf8-39948c619a62] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:20.838 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[3:08:20.847 PM]: No client config detected."}
+{"level":"INFO","message":"[3:08:20.848 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[3:08:20.848 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[3:08:20.850 PM]: Connection[id: 0a438226-11b6-41db-8e45-937105a76aed] - connected successfully after 19.63272400200367 milliseconds"}
+{"level":"INFO","message":"[3:08:20.854 PM]: No client config detected."}
+{"level":"INFO","message":"[3:08:20.854 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[3:08:20.855 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[3:08:20.855 PM]: Connection[id: d7e0c4f5-deea-4d78-adf8-39948c619a62] - connected successfully after 19.960570007562637 milliseconds"}
+{"level":"INFO","message":"[3:08:21.916 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:21.917 PM]: Creating Connection[id: 4300a171-b8a3-43f3-bd93-351ebfe5e783] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:21.917 PM]: Connection[id: 4300a171-b8a3-43f3-bd93-351ebfe5e783] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:21.917 PM]: Connection[id: 4300a171-b8a3-43f3-bd93-351ebfe5e783] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:21.918 PM]: Connection[id: 4300a171-b8a3-43f3-bd93-351ebfe5e783] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:21.920 PM]: Connection[id: 4300a171-b8a3-43f3-bd93-351ebfe5e783] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:21.921 PM]: Connection[id: 4300a171-b8a3-43f3-bd93-351ebfe5e783] - connected successfully after 3.6509200036525726 milliseconds"}
+{"level":"INFO","message":"[3:08:21.951 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:21.952 PM]: Creating Connection[id: f69f8b06-9696-4dc4-b1fe-9c893a4623da] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:21.952 PM]: Connection[id: f69f8b06-9696-4dc4-b1fe-9c893a4623da] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:21.953 PM]: Connection[id: f69f8b06-9696-4dc4-b1fe-9c893a4623da] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:21.953 PM]: Connection[id: f69f8b06-9696-4dc4-b1fe-9c893a4623da] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:21.956 PM]: Connection[id: f69f8b06-9696-4dc4-b1fe-9c893a4623da] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:21.957 PM]: Connection[id: f69f8b06-9696-4dc4-b1fe-9c893a4623da] - connected successfully after 4.09162500500679 milliseconds"}
+{"level":"INFO","message":"[3:08:22.536 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:22.537 PM]: Creating Connection[id: 35dcff00-3150-497a-9878-c534d10335ae] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:22.537 PM]: Connection[id: 35dcff00-3150-497a-9878-c534d10335ae] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:22.537 PM]: Connection[id: 35dcff00-3150-497a-9878-c534d10335ae] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:22.538 PM]: Connection[id: 35dcff00-3150-497a-9878-c534d10335ae] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:22.542 PM]: Connection[id: 35dcff00-3150-497a-9878-c534d10335ae] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:22.543 PM]: Connection[id: 35dcff00-3150-497a-9878-c534d10335ae] - connected successfully after 4.947402998805046 milliseconds"}
+{"level":"INFO","message":"[3:08:23.035 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:23.036 PM]: Creating Connection[id: e6e18441-2196-4911-bb16-e81c78054d75] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:23.036 PM]: Connection[id: e6e18441-2196-4911-bb16-e81c78054d75] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:23.036 PM]: Connection[id: e6e18441-2196-4911-bb16-e81c78054d75] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:23.037 PM]: Connection[id: e6e18441-2196-4911-bb16-e81c78054d75] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:23.041 PM]: Connection[id: e6e18441-2196-4911-bb16-e81c78054d75] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:23.042 PM]: Connection[id: e6e18441-2196-4911-bb16-e81c78054d75] - connected successfully after 5.552794992923737 milliseconds"}
+{"level":"INFO","message":"[3:08:24.531 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:24.543 PM]: Creating Connection[id: bbf53349-79de-486c-ad07-1e772b1f53f8] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:24.544 PM]: Connection[id: bbf53349-79de-486c-ad07-1e772b1f53f8] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:24.544 PM]: Connection[id: bbf53349-79de-486c-ad07-1e772b1f53f8] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:24.545 PM]: Connection[id: bbf53349-79de-486c-ad07-1e772b1f53f8] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:24.548 PM]: Connection[id: bbf53349-79de-486c-ad07-1e772b1f53f8] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:24.548 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[3:08:24.550 PM]: No client config detected."}
+{"level":"INFO","message":"[3:08:24.550 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[3:08:24.550 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[3:08:24.552 PM]: Connection[id: bbf53349-79de-486c-ad07-1e772b1f53f8] - connected successfully after 7.108194008469582 milliseconds"}
+{"level":"INFO","message":"[3:08:27.536 PM]: Creating new connection object"}
+{"level":"INFO","message":"[3:08:27.537 PM]: Creating Connection[id: 90ea25b0-058c-4461-a508-d12dc8d45a65] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[3:08:27.538 PM]: Connection[id: 90ea25b0-058c-4461-a508-d12dc8d45a65] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[3:08:27.538 PM]: Connection[id: 90ea25b0-058c-4461-a508-d12dc8d45a65] - connection object created successfully."}
+{"level":"INFO","message":"[3:08:27.538 PM]: Connection[id: 90ea25b0-058c-4461-a508-d12dc8d45a65] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[3:08:27.543 PM]: Connection[id: 90ea25b0-058c-4461-a508-d12dc8d45a65] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[3:08:27.544 PM]: Connection[id: 90ea25b0-058c-4461-a508-d12dc8d45a65] - connected successfully after 5.4494670033454895 milliseconds"}
+{"level":"INFO","message":"[6:36:55.306 PM]: Creating new connection object"}
+{"level":"INFO","message":"[6:36:55.320 PM]: Creating Connection[id: 37731cb8-79dd-4ccc-a712-1bb71b6b713d] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[6:36:55.328 PM]: Connection[id: 37731cb8-79dd-4ccc-a712-1bb71b6b713d] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[6:36:55.328 PM]: Connection[id: 37731cb8-79dd-4ccc-a712-1bb71b6b713d] - connection object created successfully."}
+{"level":"INFO","message":"[6:36:55.329 PM]: Connection[id: 37731cb8-79dd-4ccc-a712-1bb71b6b713d] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[6:36:55.332 PM]: Connection[id: 37731cb8-79dd-4ccc-a712-1bb71b6b713d] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[6:36:55.333 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[6:36:55.343 PM]: Creating new connection object"}
+{"level":"INFO","message":"[6:36:55.344 PM]: Creating Connection[id: d291f0ae-14e8-4dd4-b28c-8512c20a08f1] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[6:36:55.344 PM]: Connection[id: d291f0ae-14e8-4dd4-b28c-8512c20a08f1] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[6:36:55.344 PM]: Connection[id: d291f0ae-14e8-4dd4-b28c-8512c20a08f1] - connection object created successfully."}
+{"level":"INFO","message":"[6:36:55.345 PM]: Connection[id: d291f0ae-14e8-4dd4-b28c-8512c20a08f1] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[6:36:55.347 PM]: Connection[id: d291f0ae-14e8-4dd4-b28c-8512c20a08f1] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[6:36:55.347 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[6:36:55.349 PM]: No client config detected."}
+{"level":"INFO","message":"[6:36:55.349 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[6:36:55.349 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[6:36:55.351 PM]: Connection[id: 37731cb8-79dd-4ccc-a712-1bb71b6b713d] - connected successfully after 22.156033992767334 milliseconds"}
+{"level":"INFO","message":"[6:36:55.356 PM]: No client config detected."}
+{"level":"INFO","message":"[6:36:55.356 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[6:36:55.356 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[6:36:55.357 PM]: Connection[id: d291f0ae-14e8-4dd4-b28c-8512c20a08f1] - connected successfully after 12.371679991483688 milliseconds"}
+{"level":"INFO","message":"[6:36:56.814 PM]: Creating new connection object"}
+{"level":"INFO","message":"[6:36:56.814 PM]: Creating Connection[id: 2cdcfebb-ad79-4b42-a94b-8fb7b1445a1b] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[6:36:56.814 PM]: Connection[id: 2cdcfebb-ad79-4b42-a94b-8fb7b1445a1b] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[6:36:56.815 PM]: Connection[id: 2cdcfebb-ad79-4b42-a94b-8fb7b1445a1b] - connection object created successfully."}
+{"level":"INFO","message":"[6:36:56.815 PM]: Connection[id: 2cdcfebb-ad79-4b42-a94b-8fb7b1445a1b] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[6:36:56.817 PM]: Connection[id: 2cdcfebb-ad79-4b42-a94b-8fb7b1445a1b] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[6:36:56.818 PM]: Connection[id: 2cdcfebb-ad79-4b42-a94b-8fb7b1445a1b] - connected successfully after 3.205017998814583 milliseconds"}
+{"level":"INFO","message":"[6:36:56.884 PM]: Creating new connection object"}
+{"level":"INFO","message":"[6:36:56.885 PM]: Creating Connection[id: a9da4c23-87fa-4f34-9a20-b33bce4b99c0] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[6:36:56.885 PM]: Connection[id: a9da4c23-87fa-4f34-9a20-b33bce4b99c0] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[6:36:56.885 PM]: Connection[id: a9da4c23-87fa-4f34-9a20-b33bce4b99c0] - connection object created successfully."}
+{"level":"INFO","message":"[6:36:56.885 PM]: Connection[id: a9da4c23-87fa-4f34-9a20-b33bce4b99c0] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[6:36:56.888 PM]: Connection[id: a9da4c23-87fa-4f34-9a20-b33bce4b99c0] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[6:36:56.888 PM]: Connection[id: a9da4c23-87fa-4f34-9a20-b33bce4b99c0] - connected successfully after 3.0199699997901917 milliseconds"}
+{"level":"INFO","message":"[6:36:57.434 PM]: Creating new connection object"}
+{"level":"INFO","message":"[6:36:57.435 PM]: Creating Connection[id: b4068612-3b9e-4011-89b3-ca649b8cea18] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[6:36:57.435 PM]: Connection[id: b4068612-3b9e-4011-89b3-ca649b8cea18] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[6:36:57.435 PM]: Connection[id: b4068612-3b9e-4011-89b3-ca649b8cea18] - connection object created successfully."}
+{"level":"INFO","message":"[6:36:57.435 PM]: Connection[id: b4068612-3b9e-4011-89b3-ca649b8cea18] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[6:36:57.438 PM]: Connection[id: b4068612-3b9e-4011-89b3-ca649b8cea18] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[6:36:57.438 PM]: Connection[id: b4068612-3b9e-4011-89b3-ca649b8cea18] - connected successfully after 2.809231996536255 milliseconds"}
+{"level":"INFO","message":"[6:36:58.071 PM]: Creating new connection object"}
+{"level":"INFO","message":"[6:36:58.072 PM]: Creating Connection[id: 679e8d20-4d18-44f6-9747-8a29751512ac] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[6:36:58.072 PM]: Connection[id: 679e8d20-4d18-44f6-9747-8a29751512ac] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[6:36:58.073 PM]: Connection[id: 679e8d20-4d18-44f6-9747-8a29751512ac] - connection object created successfully."}
+{"level":"INFO","message":"[6:36:58.073 PM]: Connection[id: 679e8d20-4d18-44f6-9747-8a29751512ac] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[6:36:58.076 PM]: Connection[id: 679e8d20-4d18-44f6-9747-8a29751512ac] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[6:36:58.079 PM]: Connection[id: 679e8d20-4d18-44f6-9747-8a29751512ac] - connected successfully after 6.054641008377075 milliseconds"}
+{"level":"ERROR","message":"[4:51:53.417 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:51:55.492 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:52:11.074 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:52:35.253 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:52:36.170 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:25.434 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:25.671 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:25.726 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:25.755 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:25.787 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:26.150 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:27.188 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:28.399 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:40.168 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:46.169 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:46.320 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:46.443 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:46.444 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:47.499 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:48.399 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:57.370 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:53:57.876 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:54:02.723 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:54:03.829 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:55:21.702 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:55:22.004 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:14.660 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:15.093 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:22.865 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:34.856 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:40.380 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:58.510 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:58.551 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:58.605 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:59.044 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:56:59.583 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:57:54.534 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:57:54.845 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:57:54.869 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:57:54.942 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:57:55.398 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:57:55.953 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[4:58:27.464 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:01:24.266 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:24.359 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:24.498 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:24.653 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:25.001 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:26.200 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:26.495 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:27.972 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:28.596 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:28.646 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:28.823 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:28.844 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:29.152 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:01:29.748 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:02:53.179 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:02:53.183 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:02:53.957 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:02:54.019 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:02:54.661 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:02:55.319 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:10:54.924 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:10:54.964 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:10:55.609 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:10:55.647 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:10:55.666 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:10:56.260 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:11:00.968 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:11:04.597 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:12:25.645 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:12:25.808 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:12:25.968 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:12:26.417 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:12:27.099 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:06.333 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:06.373 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:06.760 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:06.814 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:07.382 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:07.873 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:10.061 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:12.447 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:13:54.995 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:17:17.363 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:17.776 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:17.812 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:20.541 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:20.712 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:20.754 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:21.291 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:21.316 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:22.008 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:22.017 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:22.620 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:22.651 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:23.294 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:30.783 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:52.631 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:52.848 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:53.037 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:53.528 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:54.253 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:17:58.251 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:00.268 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:49.943 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:18:54.850 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:55.071 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:56.079 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:56.115 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:56.293 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:56.293 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:57.026 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:57.029 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:57.675 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:57.697 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:58.379 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:58.384 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:18:58.989 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:00.872 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:05.484 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:06.010 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:08.264 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:09.861 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:11.570 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:14.799 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:19:21.998 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:20:13.892 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:20:16.688 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:20:19.498 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:20:24.181 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:20:57.586 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:20:57.762 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:20:58.329 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:22:26.749 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:27:51.958 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:52.433 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:53.003 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:53.550 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:54.080 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:54.625 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:56.336 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:27:59.254 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:31:21.299 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:31:21.441 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:31:21.818 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:31:22.265 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:31:22.909 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:31:23.418 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:44.288 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:44.480 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:44.524 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:44.885 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:45.467 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:57.143 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:35:57.225 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:36:00.963 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:36:01.218 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:36:01.697 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:36:02.458 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:36:02.922 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:36:03.404 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:37:13.667 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:40:45.625 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:40:46.220 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:40:53.495 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:40:59.808 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:09.651 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:09.828 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:09.830 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:10.369 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:10.977 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:40.500 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:41.221 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:41.362 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:41.837 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:41:42.471 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:21.857 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:21.873 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:22.107 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:22.111 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:22.643 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:23.246 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:25.201 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:25.926 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:30.866 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:31.456 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:38.896 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:42:57.778 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:57.922 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:58.081 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:58.520 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:59.141 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:42:59.153 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:43:00.824 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:43:09.914 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:44:27.279 PM]: Error issuing heartbeat call: Network error. Could not reach Snowflake."}
+{"level":"ERROR","message":"[5:47:08.618 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:47:09.496 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:48:05.584 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:48:06.507 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:49:13.998 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:49:16.478 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:49:20.691 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:51:52.187 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:51:54.960 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:52:09.960 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:52:34.033 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:52:35.536 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:23.625 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:23.695 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:24.234 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:24.325 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:24.916 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:25.602 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:26.597 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:27.844 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:39.075 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:44.943 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:44.967 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:45.526 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:45.527 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:46.533 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:47.326 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:56.133 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:53:57.321 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:54:02.170 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:54:03.228 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:55:20.194 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:55:21.436 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:13.490 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:14.555 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:22.296 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:34.314 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:39.842 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:57.036 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:57.377 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:57.608 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:57.641 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:58.436 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:56:59.004 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"INFO","message":"[5:57:20.006 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:20.020 PM]: Creating Connection[id: 0172a6b1-6c3d-49e3-a304-218a3fcea7a7] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:20.020 PM]: Connection[id: 0172a6b1-6c3d-49e3-a304-218a3fcea7a7] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:20.021 PM]: Connection[id: 0172a6b1-6c3d-49e3-a304-218a3fcea7a7] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:20.021 PM]: Connection[id: 0172a6b1-6c3d-49e3-a304-218a3fcea7a7] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:20.025 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:20.026 PM]: Creating Connection[id: baf5ccf5-f4bf-4ba5-8668-759d224230d4] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:20.026 PM]: Connection[id: baf5ccf5-f4bf-4ba5-8668-759d224230d4] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:20.026 PM]: Connection[id: baf5ccf5-f4bf-4ba5-8668-759d224230d4] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:20.027 PM]: Connection[id: baf5ccf5-f4bf-4ba5-8668-759d224230d4] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:20.029 PM]: Connection[id: 0172a6b1-6c3d-49e3-a304-218a3fcea7a7] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:20.029 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[5:57:20.030 PM]: Connection[id: baf5ccf5-f4bf-4ba5-8668-759d224230d4] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:20.030 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[5:57:20.036 PM]: No client config detected."}
+{"level":"INFO","message":"[5:57:20.037 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[5:57:20.037 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[5:57:20.039 PM]: Connection[id: 0172a6b1-6c3d-49e3-a304-218a3fcea7a7] - connected successfully after 17.66201500594616 milliseconds"}
+{"level":"INFO","message":"[5:57:20.044 PM]: No client config detected."}
+{"level":"INFO","message":"[5:57:20.044 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[5:57:20.044 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[5:57:20.045 PM]: Connection[id: baf5ccf5-f4bf-4ba5-8668-759d224230d4] - connected successfully after 18.297786995768547 milliseconds"}
+{"level":"INFO","message":"[5:57:22.563 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:22.564 PM]: Creating Connection[id: 64b5030c-3c1c-4948-9bc5-52eb35388c44] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:22.564 PM]: Connection[id: 64b5030c-3c1c-4948-9bc5-52eb35388c44] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:22.564 PM]: Connection[id: 64b5030c-3c1c-4948-9bc5-52eb35388c44] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:22.565 PM]: Connection[id: 64b5030c-3c1c-4948-9bc5-52eb35388c44] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:22.567 PM]: Connection[id: 64b5030c-3c1c-4948-9bc5-52eb35388c44] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:22.568 PM]: Connection[id: 64b5030c-3c1c-4948-9bc5-52eb35388c44] - connected successfully after 2.933370992541313 milliseconds"}
+{"level":"INFO","message":"[5:57:22.593 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:22.594 PM]: Creating Connection[id: 99aba50c-b412-491c-b643-4a8bb6d27e99] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:22.594 PM]: Connection[id: 99aba50c-b412-491c-b643-4a8bb6d27e99] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:22.594 PM]: Connection[id: 99aba50c-b412-491c-b643-4a8bb6d27e99] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:22.595 PM]: Connection[id: 99aba50c-b412-491c-b643-4a8bb6d27e99] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:22.597 PM]: Connection[id: 99aba50c-b412-491c-b643-4a8bb6d27e99] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:22.598 PM]: Connection[id: 99aba50c-b412-491c-b643-4a8bb6d27e99] - connected successfully after 2.923782005906105 milliseconds"}
+{"level":"INFO","message":"[5:57:23.471 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:23.472 PM]: Creating Connection[id: 90c3284d-d343-4398-ac71-5261b5ebdeef] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:23.472 PM]: Connection[id: 90c3284d-d343-4398-ac71-5261b5ebdeef] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:23.473 PM]: Connection[id: 90c3284d-d343-4398-ac71-5261b5ebdeef] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:23.473 PM]: Connection[id: 90c3284d-d343-4398-ac71-5261b5ebdeef] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:23.476 PM]: Connection[id: 90c3284d-d343-4398-ac71-5261b5ebdeef] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:23.478 PM]: Connection[id: 90c3284d-d343-4398-ac71-5261b5ebdeef] - connected successfully after 4.51290899515152 milliseconds"}
+{"level":"INFO","message":"[5:57:24.240 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:24.241 PM]: Creating Connection[id: 198791b8-f1a4-43fb-a21b-5b7ed3098421] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:24.241 PM]: Connection[id: 198791b8-f1a4-43fb-a21b-5b7ed3098421] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:24.241 PM]: Connection[id: 198791b8-f1a4-43fb-a21b-5b7ed3098421] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:24.242 PM]: Connection[id: 198791b8-f1a4-43fb-a21b-5b7ed3098421] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:24.245 PM]: Connection[id: 198791b8-f1a4-43fb-a21b-5b7ed3098421] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:24.246 PM]: Connection[id: 198791b8-f1a4-43fb-a21b-5b7ed3098421] - connected successfully after 4.254185006022453 milliseconds"}
+{"level":"INFO","message":"[5:57:27.581 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:27.594 PM]: Creating Connection[id: c3e3dd81-d913-4b68-83d8-8ff4966b7796] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:27.595 PM]: Connection[id: c3e3dd81-d913-4b68-83d8-8ff4966b7796] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:27.595 PM]: Connection[id: c3e3dd81-d913-4b68-83d8-8ff4966b7796] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:27.596 PM]: Connection[id: c3e3dd81-d913-4b68-83d8-8ff4966b7796] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:27.599 PM]: Connection[id: c3e3dd81-d913-4b68-83d8-8ff4966b7796] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:27.599 PM]: Trying to initialize Easy Logging"}
+{"level":"INFO","message":"[5:57:27.602 PM]: No client config detected."}
+{"level":"INFO","message":"[5:57:27.602 PM]: No config file path found. Client config will not be used."}
+{"level":"INFO","message":"[5:57:27.602 PM]: Easy Logging is disabled as no config has been found"}
+{"level":"INFO","message":"[5:57:27.604 PM]: Connection[id: c3e3dd81-d913-4b68-83d8-8ff4966b7796] - connected successfully after 8.543049991130829 milliseconds"}
+{"level":"INFO","message":"[5:57:30.523 PM]: Creating new connection object"}
+{"level":"INFO","message":"[5:57:30.524 PM]: Creating Connection[id: 552d5024-f10d-46ac-bd67-104fe543a6e7] with host: OU87598.west-us-2.azure.snowflakecomputing.com, account: OU87598, accessUrl: https://OU87598.west-us-2.azure.snowflakecomputing.com, user: APP_SCDATA, role: APP_SCDATA_ROLE, database: chainsyncdb, schema: scm, warehouse: COMPUTE_WH, proxy was not configured, password is not provided, region: west-us-2.azure, authenticator: SNOWFLAKE_JWT, ocsp mode: FAIL_OPEN, os: linux, os version: 6.8.0-54-generic"}
+{"level":"INFO","message":"[5:57:30.524 PM]: Connection[id: 552d5024-f10d-46ac-bd67-104fe543a6e7] additional details: passcode in password is provided, passcode is not provided, private key is provided, application: undefined, client name: snowflake-sdk, client version: 2.0.2, retry timeout: 300, private key path: undefined, private key pass is not provided, client store temporary credential: false, browser response timeout: 120000"}
+{"level":"INFO","message":"[5:57:30.525 PM]: Connection[id: 552d5024-f10d-46ac-bd67-104fe543a6e7] - connection object created successfully."}
+{"level":"INFO","message":"[5:57:30.525 PM]: Connection[id: 552d5024-f10d-46ac-bd67-104fe543a6e7] - connecting. Associated Snowflake domain: GLOBAL"}
+{"level":"INFO","message":"[5:57:30.529 PM]: Connection[id: 552d5024-f10d-46ac-bd67-104fe543a6e7] - authentication successful using: SNOWFLAKE_JWT"}
+{"level":"INFO","message":"[5:57:30.530 PM]: Connection[id: 552d5024-f10d-46ac-bd67-104fe543a6e7] - connected successfully after 4.965896010398865 milliseconds"}
+{"level":"ERROR","message":"[5:57:53.132 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:57:53.383 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:57:53.890 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:57:54.025 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:57:54.831 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[5:57:55.407 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:22.939 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:22.945 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:23.731 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:24.043 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:24.453 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:25.104 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:25.659 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:26.719 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:27.417 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:27.423 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:28.098 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:28.098 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:28.613 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:01:29.184 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:02:52.586 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:02:52.628 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:02:53.394 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:02:53.399 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:02:54.065 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:02:54.738 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:53.793 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:53.825 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:54.438 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:54.489 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:55.141 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:55.735 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:10:59.046 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}
+{"level":"ERROR","message":"[6:11:00.297 PM]: Error issuing heartbeat call: Unable to perform operation using terminated connection."}

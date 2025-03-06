@@ -194,19 +194,16 @@ export default function TimePhaseManagement() {
         const uniqueProductIds = new Set();
         const uniqueProducts: Product[] = []; // Add type annotation here
         
-        data.cycleTimeData.forEach(item => {
+        data.cycleTimeData.forEach((item: any) => {
           if (!uniqueProductIds.has(item.PRODUCT_ID)) {
             uniqueProductIds.add(item.PRODUCT_ID);
             // Explicitly cast each product to the Product type
             uniqueProducts.push({
               PRODUCT_ID: item.PRODUCT_ID,
-              PRODUCT_NAME: item.PRODUCT_NAME,
-              PRODUCT_DESCRIPTION: item.PRODUCT_DESCRIPTION || '',
-              CATEGORY: item.CATEGORY || '',
-              SUBCATEGORY: item.SUBCATEGORY || '',
-              PRICE: item.PRICE || 0,
-              COST: item.COST || 0,
-              INVENTORY: item.INVENTORY || 0
+              name: item.PRODUCT_NAME,
+              description: item.PRODUCT_DESCRIPTION || '',
+              category: item.CATEGORY || '',
+              subcategory: item.SUBCATEGORY || '',
             });
           }
         });
