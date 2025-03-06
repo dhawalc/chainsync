@@ -1,0 +1,10 @@
+node_modules
+.git
+.github
+.next
+*.md
+.env*
+.dockerignore
+Dockerfile
+.gitignore 
+.envrsa_private_key.p8

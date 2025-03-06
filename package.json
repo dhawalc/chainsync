@@ -11,7 +11,10 @@
     "preview": "next build && next start",
     "typecheck": "tsc --noEmit",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
-    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache"
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
+    "docker:build": "docker build -t chainsync:latest .",
+    "docker:run": "docker run -p 3000:3000 chainsync:latest",
+    "docker:dev": "bash ./scripts/docker-dev.sh"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

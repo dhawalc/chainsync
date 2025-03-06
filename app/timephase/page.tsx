@@ -5,7 +5,12 @@ import { useState, useEffect } from 'react';
 // Define types for our data
 interface Product {
   PRODUCT_ID: string | number;
-  DESCRIPTION?: string;
+  PRODUCT_NAME?: string;
+  name?: string;
+  description?: string;
+  category?: string;
+  subcategory?: string;
+  [key: string]: any; // Allow for additional properties
 }
 
 interface CycleTimeData {
@@ -200,6 +205,7 @@ export default function TimePhaseManagement() {
             // Explicitly cast each product to the Product type
             uniqueProducts.push({
               PRODUCT_ID: item.PRODUCT_ID,
+              PRODUCT_NAME: item.PRODUCT_NAME,
               name: item.PRODUCT_NAME,
               description: item.PRODUCT_DESCRIPTION || '',
               category: item.CATEGORY || '',
@@ -331,7 +337,7 @@ export default function TimePhaseManagement() {
                               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                             />
                             <label htmlFor={`product-${product.PRODUCT_ID}`} className="text-gray-800">
-                              {product.DESCRIPTION || `Product ${product.PRODUCT_ID}`}
+                              {product.PRODUCT_NAME || `Product ${product.PRODUCT_ID}`}
                             </label>
                           </div>
                         ))}

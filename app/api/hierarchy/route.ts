@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
 
+// Define the node structure
+interface HierarchyNode {
+  NODE_ID: string;
+  NODE_NAME: string;
+  ENTITY_TYPE: string;
+  PARENT_NODE_ID: string | null;
+  LEVEL?: number;
+  [key: string]: any; // Allow for additional properties
+}
+
 export async function GET() {
   try {
     const connection = initializeSnowflake();
@@ -43,16 +53,16 @@ export async function GET() {
     const nodesWithLevels = calculateHierarchyLevels(hierarchyData);
     
     // Sort by level and name
-    nodesWithLevels.sort((a, b) => {
+    nodesWithLevels.sort((a: HierarchyNode, b: HierarchyNode) => {
       if (a.LEVEL !== b.LEVEL) {
-        return a.LEVEL - b.LEVEL;
+        return (a.LEVEL || 0) - (b.LEVEL || 0);
       }
       return a.NODE_NAME.localeCompare(b.NODE_NAME);
     });
     
     return NextResponse.json({ 
-      success: true,
-      data: nodesWithLevels 
+      nodes: nodesWithLevels,
+      success: true 
     });
   } catch (error: any) {
     console.error('Error fetching hierarchy data:', error);
@@ -64,26 +74,24 @@ export async function GET() {
 }
 
 // Helper function to calculate hierarchy levels
-function calculateHierarchyLevels(nodes) {
+function calculateHierarchyLevels(nodes: HierarchyNode[]): HierarchyNode[] {
   // Create a map for quick node lookup
-  const nodeMap = {};
+  const nodeMap: Record<string, HierarchyNode> = {};
   nodes.forEach(node => {
     nodeMap[node.NODE_ID] = {
       ...node,
       PARENT_ID: node.PARENT_NODE_ID, // Rename to match expected property
       NODE_TYPE: node.ENTITY_TYPE,    // Rename to match expected property
-      LEVEL: 0 // Will be calculated
     };
   });
   
   // Calculate level for each node
   Object.values(nodeMap).forEach(node => {
-    let level = 1;
-    let currentNode = node;
+    let level = 0;
     
     // If node has a parent, traverse up to calculate level
-    if (currentNode.PARENT_ID) {
-      let parentId = currentNode.PARENT_ID;
+    if (node.PARENT_ID) {
+      let parentId = node.PARENT_ID;
       while (parentId) {
         level++;
         const parent = nodeMap[parentId];

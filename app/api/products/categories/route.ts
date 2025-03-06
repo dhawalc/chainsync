@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
 
+// Define the category structure
+interface Category {
+  CATEGORY_ID?: string | number;
+  CATEGORY_NAME?: string;
+  ID?: string | number;
+  NAME?: string;
+  DESCRIPTION?: string;
+  [key: string]: any; // Allow for additional properties
+}
+
 export async function GET() {
   try {
     console.log("Initializing Snowflake connection for product categories...");
@@ -15,33 +25,32 @@ export async function GET() {
     await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE}`);
     await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA}`);
 
-    // First, let's get the column names from PRODUCT_CATEGORY
-    const describeQuery = `DESCRIBE TABLE PRODUCT_CATEGORY`;
-    console.log(`Executing query: ${describeQuery}`);
-    const tableStructure = await executeQuery(connection, describeQuery);
-    console.log("PRODUCT_CATEGORY structure:", tableStructure);
-
-    // Get all columns from PRODUCT_CATEGORY
-    const query = `SELECT * FROM PRODUCT_CATEGORY`;
-    console.log(`Executing query: ${query}`);
+    // Query to get product categories
+    const query = `
+      SELECT DISTINCT CATEGORY 
+      FROM PRODUCTS 
+      WHERE CATEGORY IS NOT NULL
+      ORDER BY CATEGORY
+    `;
+    
     const categories = await executeQuery(connection, query);
-    console.log("Raw categories data:", categories);
     
     // Create a more robust response that handles different column names
-    const formattedCategories = categories.map(cat => {
+    const formattedCategories = categories.map((cat: Category) => {
       // Try to find the ID and name columns with various possible names
       const id = cat.CATEGORY_ID || cat.ID || Object.values(cat)[0];
-      const name = cat.CATEGORY_NAME || cat.NAME || cat.DESCRIPTION || `Category ${id}`;
+      const name = cat.CATEGORY_NAME || cat.NAME || cat.DESCRIPTION || cat.CATEGORY || `Category ${id}`;
       
       return {
-        CATEGORY_ID: id,
-        CATEGORY_NAME: name
+        id,
+        name,
+        originalData: cat
       };
     });
     
     return NextResponse.json({ 
       success: true,
-      data: formattedCategories 
+      categories: formattedCategories
     });
   } catch (error: any) {
     console.error('Error fetching product categories:', error);
