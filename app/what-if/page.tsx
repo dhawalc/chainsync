@@ -24,13 +24,26 @@ const baselineData = [
   { month: 'Jun', demand: 1700, production: 1650, inventory: 100, cost: 825000 },
 ];
 
+// Define the scenario type
+interface Scenario {
+  id: string;
+  name: string;
+  description: string;
+  parameters?: {
+    demandIncrease: number;
+    supplierDisruption: number;
+    productionEfficiency: number;
+    leadTimeReduction: number;
+  };
+}
+
 export default function WhatIfPage() {
   const [demandIncrease, setDemandIncrease] = useState(0);
   const [supplierDisruption, setSupplierDisruption] = useState(0);
   const [productionEfficiency, setProductionEfficiency] = useState(0);
   const [leadTimeReduction, setLeadTimeReduction] = useState(0);
   const [activeScenario, setActiveScenario] = useState('baseline');
-  const [savedScenarios, setSavedScenarios] = useState([
+  const [savedScenarios, setSavedScenarios] = useState<Scenario[]>([
     { id: 'baseline', name: 'Baseline', description: 'Current operations without changes' }
   ]);
 

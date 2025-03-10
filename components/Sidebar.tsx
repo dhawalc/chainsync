@@ -10,7 +10,7 @@ import {
   ShoppingCart, 
   Truck, 
   Users, 
-  Workflow,
+  GitBranch,
   FileBarChart
 } from 'lucide-react';
 
@@ -29,7 +29,7 @@ const navigation = [
       { name: 'Logistics', href: '/logistics' },
     ],
   },
-  { name: 'What-If Analysis', href: '/what-if', icon: Workflow },
+  { name: 'What-If Analysis', href: '/what-if', icon: GitBranch },
   { name: 'Performance', href: '/performance', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];

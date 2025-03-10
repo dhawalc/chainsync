@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
+import { initializeSnowflake, connectSnowflake, executeQuery, closeConnection } from '@/lib/snowflake';
 
 export async function GET() {
   console.log("API /snowflake-test: Starting connection test");
+  let connection;
   
   // Log all environment variables for debugging (excluding password)
   console.log("API /snowflake-test: Environment variables:");
@@ -16,7 +17,7 @@ export async function GET() {
   
   try {
     console.log("API /snowflake-test: Creating connection");
-    const connection = initializeSnowflake();
+    connection = initializeSnowflake();
 
     console.log("API /snowflake-test: Attempting to connect");
     await connectSnowflake(connection);
@@ -34,14 +35,14 @@ export async function GET() {
       connection,
       `SELECT TABLE_NAME 
        FROM INFORMATION_SCHEMA.TABLES 
-       WHERE TABLE_SCHEMA = '${process.env.SNOWFLAKE_SCHEMA}'`
+       WHERE TABLE_SCHEMA = '${process.env.SNOWFLAKE_SCHEMA || ''}'`
     );
 
     console.log("API /snowflake-test: Available tables:", tables);
 
     // Destroy the connection
-    connection.destroy();
-    console.log("API /snowflake-test: Connection destroyed");
+    console.log("API /snowflake-test: Closing connection");
+    closeConnection(connection);
     
     return NextResponse.json({
       status: "success",
@@ -51,6 +52,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error("API /snowflake-test: Error:", error);
+    if (connection) {
+      closeConnection(connection);
+    }
     return NextResponse.json(
       { 
         status: "error", 

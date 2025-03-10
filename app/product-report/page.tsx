@@ -261,7 +261,7 @@ export default function ProductReportPage() {
               <Checkbox 
                 id="projected-inventory" 
                 checked={showProjectedInventory}
-                onCheckedChange={setShowProjectedInventory}
+                onCheckedChange={(checked) => setShowProjectedInventory(checked === true)}
               />
               <Label htmlFor="projected-inventory" className="text-sm font-medium text-gray-700">
                 With Projected Inventory?
