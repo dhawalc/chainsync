@@ -89,11 +89,10 @@ const Navbar = () => {
               Dashboard
             </Link>
             
-            {/* Master Data Management Dropdown */}
+            {/* MDM Dropdown */}
             <div ref={mdmRef} className="relative inline-block text-left">
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
+              <button
+                onClick={() => {
                   setMdmOpen(!mdmOpen);
                   setSupplyChainOpen(false);
                   setPlanningOpen(false);

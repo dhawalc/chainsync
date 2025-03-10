@@ -23,6 +23,9 @@ export default function IndexPage() {
               <Link href="#demo" className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md transition-colors duration-200">
                 Request Demo
               </Link>
+              <Link href="/pricing" className="px-6 py-3 bg-white hover:bg-indigo-100 text-indigo-700 font-medium rounded-md transition-colors duration-200">
+                View Pricing
+              </Link>
               <Link href="#benefits" className="px-6 py-3 bg-transparent hover:bg-indigo-800 text-white font-medium rounded-md border border-white transition-colors duration-200">
                 Learn More
               </Link>
