@@ -9,7 +9,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 # Install additional dependencies needed for the build
-RUN npm install --save clsx tailwind-merge @radix-ui/react-switch @radix-ui/react-select @radix-ui/react-label @radix-ui/react-slot @radix-ui/react-checkbox @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-toast lucide-react
+RUN npm install --save clsx tailwind-merge @radix-ui/react-switch @radix-ui/react-select @radix-ui/react-label @radix-ui/react-slot @radix-ui/react-checkbox @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-toast lucide-react recharts
 
 # Create necessary directories
 RUN mkdir -p lib

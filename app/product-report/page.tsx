@@ -147,6 +147,12 @@ const generateChartData = (componentData) => {
   }));
 };
 
+// Add a utility function for consistent number formatting
+const formatNumber = (num: number) => {
+  // Use a simple approach that works the same on server and client
+  return num.toString();
+};
+
 export default function ProductReportPage() {
   const [selectedProduct, setSelectedProduct] = useState(productOptions[0].value);
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(timeBucketOptions[2].value);
@@ -318,18 +324,18 @@ export default function ProductReportPage() {
                       <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{reportData.topLevelData.description}</td>
                       <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{reportData.topLevelData.location}</td>
                       {reportData.topLevelData.data.map((item, index) => (
-                        <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{item.required.toLocaleString()}</td>
+                        <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
                       ))}
                     </tr>
                     <tr>
                       {reportData.topLevelData.data.map((item, index) => (
-                        <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{item.supply.toLocaleString()}</td>
+                        <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
                       ))}
                     </tr>
                     {showProjectedInventory && (
                       <tr>
                         {reportData.topLevelData.data.map((item, index) => (
-                          <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{item.projectedInventory.toLocaleString()}</td>
+                          <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
                         ))}
                       </tr>
                     )}
@@ -382,20 +388,20 @@ export default function ProductReportPage() {
                           <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{component.location}</td>
                           <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Required</td>
                           {component.data.map((item, index) => (
-                            <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{item.required.toLocaleString()}</td>
+                            <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
                           ))}
                         </tr>
                         <tr className="hover:bg-gray-50" onClick={() => handleComponentSelect(component)}>
                           <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Supply</td>
                           {component.data.map((item, index) => (
-                            <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{item.supply.toLocaleString()}</td>
+                            <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
                           ))}
                         </tr>
                         {showProjectedInventory && (
                           <tr className="hover:bg-gray-50" onClick={() => handleComponentSelect(component)}>
                             <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Projected Inventory</td>
                             {component.data.map((item, index) => (
-                              <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{item.projectedInventory.toLocaleString()}</td>
+                              <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
                             ))}
                           </tr>
                         )}
@@ -412,20 +418,20 @@ export default function ProductReportPage() {
                                 <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{subcomp.location}</td>
                                 <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Required</td>
                                 {subcomp.data.map((item, index) => (
-                                  <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{item.required.toLocaleString()}</td>
+                                  <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
                                 ))}
                               </tr>
                               <tr className="bg-gray-50 hover:bg-gray-100" onClick={() => handleComponentSelect(subcomp)}>
                                 <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Supply</td>
                                 {subcomp.data.map((item, index) => (
-                                  <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{item.supply.toLocaleString()}</td>
+                                  <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
                                 ))}
                               </tr>
                               {showProjectedInventory && (
                                 <tr className="bg-gray-50 hover:bg-gray-100" onClick={() => handleComponentSelect(subcomp)}>
                                   <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Projected Inventory</td>
                                   {subcomp.data.map((item, index) => (
-                                    <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{item.projectedInventory.toLocaleString()}</td>
+                                    <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
                                   ))}
                                 </tr>
                               )}

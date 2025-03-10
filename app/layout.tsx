@@ -32,8 +32,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn("min-h-screen bg-slate-50 dark:bg-slate-900 font-sans antialiased", fontSans.variable, inter.className)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <body className={cn("min-h-screen bg-white font-sans antialiased", fontSans.variable, inter.className)}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <div className="relative flex min-h-screen flex-col">
             <Navbar />
             <div className="flex-1 p-6 max-w-7xl mx-auto w-full">{children}</div>

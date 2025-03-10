@@ -64,6 +64,12 @@ const radarData = [
   { subject: 'Lead Time', A: 88, B: 82, fullMark: 100 },
 ];
 
+// Add a utility function for consistent number formatting
+const formatNumber = (num: number) => {
+  // Use a simple approach that works the same on server and client
+  return num.toString();
+};
+
 export default function KpiDashboardPage() {
   const [timeframe, setTimeframe] = useState('monthly');
   const [selectedKpi, setSelectedKpi] = useState('otd');

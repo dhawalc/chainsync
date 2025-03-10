@@ -37,6 +37,12 @@ interface Scenario {
   };
 }
 
+// Add a utility function for consistent number formatting
+const formatNumber = (num: number) => {
+  // Use a simple approach that works the same on server and client
+  return num.toString();
+};
+
 export default function WhatIfPage() {
   const [demandIncrease, setDemandIncrease] = useState(0);
   const [supplierDisruption, setSupplierDisruption] = useState(0);
@@ -269,7 +275,7 @@ export default function WhatIfPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500">Total Demand</h3>
-                <p className="text-xl font-bold">{scenarioKPIs.totalDemand.toLocaleString()}</p>
+                <p className="text-xl font-bold">{formatNumber(scenarioKPIs.totalDemand)}</p>
                 <div className="text-sm mt-1">
                   {scenarioKPIs.totalDemand > baselineKPIs.totalDemand ? (
                     <span className="text-green-600">+{((scenarioKPIs.totalDemand / baselineKPIs.totalDemand - 1) * 100).toFixed(1)}%</span>
@@ -299,7 +305,7 @@ export default function WhatIfPage() {
               
               <div className="p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500">Avg. Inventory</h3>
-                <p className="text-xl font-bold">{scenarioKPIs.avgInventory.toFixed(0)}</p>
+                <p className="text-xl font-bold">{formatNumber(Math.round(scenarioKPIs.avgInventory))}</p>
                 <div className="text-sm mt-1">
                   {scenarioKPIs.avgInventory > baselineKPIs.avgInventory ? (
                     <span className="text-red-600">+{((scenarioKPIs.avgInventory / baselineKPIs.avgInventory - 1) * 100).toFixed(1)}%</span>
