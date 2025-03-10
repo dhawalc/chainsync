@@ -8,7 +8,8 @@ import {
   TableCellsIcon,
   ArrowPathIcon,
   DocumentChartBarIcon,
-  PresentationChartLineIcon
+  PresentationChartLineIcon,
+  ChartPieIcon
 } from '@heroicons/react/24/outline';
 
 export default function AnalysisPage() {
@@ -23,35 +24,35 @@ export default function AnalysisPage() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <Link href="/analysis/explainability" className="block transform transition-all duration-300 hover:scale-105">
+        <Link href="/product-report" className="block transform transition-all duration-300 hover:scale-105">
           <Card className="h-full border-2 border-gray-200 hover:border-indigo-400 shadow-md hover:shadow-xl rounded-xl overflow-hidden">
             <div className="h-3 bg-indigo-600"></div>
             <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-white">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl font-bold text-gray-900">Explainability Grid</CardTitle>
+                <CardTitle className="text-2xl font-bold text-gray-900">Product Report</CardTitle>
                 <div className="p-2 bg-indigo-100 rounded-full">
                   <TableCellsIcon className="h-7 w-7 text-indigo-700" />
                 </div>
               </div>
               <CardDescription className="text-gray-700 font-medium mt-2">
-                Analyze supply commitments across different BOM levels
+                Analyze product data across BOM levels
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4 pb-6">
               <p className="text-base text-gray-800 mb-6">
-                Understand how demand is fulfilled through different levels of your supply chain, 
-                with detailed visibility into inventory, supply, and commitments.
+                Detailed view of product data including required quantities, supply, and projected inventory
+                across different levels of your bill of materials.
               </p>
               <div className="mt-auto flex justify-end">
                 <span className="inline-flex items-center text-sm font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 px-4 py-2 rounded-full">
-                  Open Grid <span className="ml-1">→</span>
+                  Open Report <span className="ml-1">→</span>
                 </span>
               </div>
             </CardContent>
           </Card>
         </Link>
         
-        <Link href="/analysis/performance" className="block transform transition-all duration-300 hover:scale-105">
+        <Link href="/performance" className="block transform transition-all duration-300 hover:scale-105">
           <Card className="h-full border-2 border-gray-200 hover:border-indigo-400 shadow-md hover:shadow-xl rounded-xl overflow-hidden">
             <div className="h-3 bg-indigo-600"></div>
             <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-white">
@@ -79,7 +80,7 @@ export default function AnalysisPage() {
           </Card>
         </Link>
         
-        <Link href="/analysis/what-if" className="block transform transition-all duration-300 hover:scale-105">
+        <Link href="/what-if" className="block transform transition-all duration-300 hover:scale-105">
           <Card className="h-full border-2 border-gray-200 hover:border-indigo-400 shadow-md hover:shadow-xl rounded-xl overflow-hidden">
             <div className="h-3 bg-indigo-600"></div>
             <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-white">
@@ -101,6 +102,34 @@ export default function AnalysisPage() {
               <div className="mt-auto flex justify-end">
                 <span className="inline-flex items-center text-sm font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 px-4 py-2 rounded-full">
                   Run Simulation <span className="ml-1">→</span>
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+        
+        <Link href="/kpi" className="block transform transition-all duration-300 hover:scale-105">
+          <Card className="h-full border-2 border-gray-200 hover:border-indigo-400 shadow-md hover:shadow-xl rounded-xl overflow-hidden">
+            <div className="h-3 bg-indigo-600"></div>
+            <CardHeader className="pb-3 bg-gradient-to-r from-gray-50 to-white">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl font-bold text-gray-900">KPI Dashboard</CardTitle>
+                <div className="p-2 bg-indigo-100 rounded-full">
+                  <ChartPieIcon className="h-7 w-7 text-indigo-700" />
+                </div>
+              </div>
+              <CardDescription className="text-gray-700 font-medium mt-2">
+                Track supply chain KPIs
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4 pb-6">
+              <p className="text-base text-gray-800 mb-6">
+                Interactive dashboard for monitoring and analyzing key performance indicators
+                across your entire supply chain operation.
+              </p>
+              <div className="mt-auto flex justify-end">
+                <span className="inline-flex items-center text-sm font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 px-4 py-2 rounded-full">
+                  View KPIs <span className="ml-1">→</span>
                 </span>
               </div>
             </CardContent>

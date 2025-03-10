@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
+import { initializeSnowflake, connectSnowflake, executeQuery, closeConnection } from '@/lib/snowflake';
 
 // Define the node structure
 interface HierarchyNode {
@@ -12,16 +12,63 @@ interface HierarchyNode {
 }
 
 export async function GET() {
+  console.log("API /hierarchy: Starting request handler");
+  let connection;
+  
   try {
-    const connection = initializeSnowflake();
+    console.log("API /hierarchy: Creating Snowflake connection");
+    connection = initializeSnowflake();
+    
+    console.log("API /hierarchy: Connecting to Snowflake");
     await connectSnowflake(connection);
 
+    console.log("API /hierarchy: Setting session context");
     // Set session context
-    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE}`);
-    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE}`);
-    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA}`);
+    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE || ''}`);
+    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE || ''}`);
+    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA || ''}`);
 
-    // Check if the hierarchy table exists
+    // First check if we have a PRODUCT table
+    console.log("API /hierarchy: Checking if PRODUCT table exists");
+    const checkProductTableQuery = `
+      SELECT COUNT(*) as TABLE_EXISTS 
+      FROM INFORMATION_SCHEMA.TABLES 
+      WHERE TABLE_NAME = 'PRODUCT'
+    `;
+    
+    const productTableCheck = await executeQuery(connection, checkProductTableQuery);
+    
+    if (productTableCheck[0].TABLE_EXISTS > 0) {
+      console.log("API /hierarchy: PRODUCT table exists, fetching product data");
+      // If PRODUCT table exists, fetch product data
+      const productQuery = `
+        SELECT 
+          p.PRODUCT_ID, 
+          p.PRODUCT_NAME, 
+          p.PRODUCT_DESCRIPTION,
+          h.LEVEL_1 as CATEGORY,
+          h.LEVEL_2 as SUBCATEGORY
+        FROM 
+          PRODUCT p
+        LEFT JOIN 
+          HIERARCHY h ON p.PRODUCT_ID = h.PRODUCT_ID
+      `;
+      
+      const productData = await executeQuery(connection, productQuery);
+      console.log(`API /hierarchy: Retrieved ${productData.length} products`);
+      
+      console.log("API /hierarchy: Destroying connection");
+      closeConnection(connection);
+      
+      console.log("API /hierarchy: Returning product results");
+      return NextResponse.json({
+        success: true,
+        data: productData
+      });
+    }
+    
+    // If no PRODUCT table, check if the hierarchy table exists
+    console.log("API /hierarchy: Checking if HIERARCHY_TREE table exists");
     const checkTableQuery = `
       SELECT COUNT(*) as TABLE_EXISTS 
       FROM INFORMATION_SCHEMA.TABLES 
@@ -31,13 +78,16 @@ export async function GET() {
     const tableCheck = await executeQuery(connection, checkTableQuery);
     
     if (tableCheck[0].TABLE_EXISTS === 0) {
+      console.log("API /hierarchy: HIERARCHY_TREE table does not exist");
+      closeConnection(connection);
       return NextResponse.json({ 
         success: false,
         error: 'Hierarchy table does not exist. Please reset the hierarchy.' 
       }, { status: 404 });
     }
 
-    // First, get all hierarchy nodes
+    // Get all hierarchy nodes
+    console.log("API /hierarchy: Fetching hierarchy nodes");
     const query = `
       SELECT 
         NODE_ID, 
@@ -60,12 +110,19 @@ export async function GET() {
       return a.NODE_NAME.localeCompare(b.NODE_NAME);
     });
     
+    console.log("API /hierarchy: Destroying connection");
+    closeConnection(connection);
+    
+    console.log("API /hierarchy: Returning hierarchy results");
     return NextResponse.json({ 
-      nodes: nodesWithLevels,
-      success: true 
+      success: true,
+      data: nodesWithLevels
     });
   } catch (error: any) {
     console.error('Error fetching hierarchy data:', error);
+    if (connection) {
+      closeConnection(connection);
+    }
     return NextResponse.json({ 
       success: false,
       error: error.message 
@@ -107,6 +164,7 @@ function calculateHierarchyLevels(nodes: HierarchyNode[]): HierarchyNode[] {
 }
 
 export async function POST(request: Request) {
+  let connection;
   try {
     const body = await request.json();
     const { NODE_NAME, PARENT_ID, NODE_TYPE } = body;
@@ -118,13 +176,13 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
     
-    const connection = initializeSnowflake();
+    connection = initializeSnowflake();
     await connectSnowflake(connection);
 
     // Set session context
-    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE}`);
-    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE}`);
-    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA}`);
+    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE || ''}`);
+    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE || ''}`);
+    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA || ''}`);
 
     // Insert new node using the actual column names from your database
     let query = '';
@@ -141,6 +199,7 @@ export async function POST(request: Request) {
     }
     
     await executeQuery(connection, query);
+    closeConnection(connection);
     
     return NextResponse.json({ 
       success: true,
@@ -148,6 +207,9 @@ export async function POST(request: Request) {
     });
   } catch (error: any) {
     console.error('Error adding hierarchy node:', error);
+    if (connection) {
+      closeConnection(connection);
+    }
     return NextResponse.json({ 
       success: false,
       error: error.message 
@@ -156,6 +218,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  let connection;
   try {
     const { searchParams } = new URL(request.url);
     const nodeId = searchParams.get('nodeId');
@@ -167,13 +230,13 @@ export async function DELETE(request: Request) {
       }, { status: 400 });
     }
     
-    const connection = initializeSnowflake();
+    connection = initializeSnowflake();
     await connectSnowflake(connection);
 
     // Set session context
-    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE}`);
-    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE}`);
-    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA}`);
+    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE || ''}`);
+    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE || ''}`);
+    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA || ''}`);
 
     // Check if the node has children using the actual column names
     const checkChildrenQuery = `
@@ -185,6 +248,7 @@ export async function DELETE(request: Request) {
     const childrenCheck = await executeQuery(connection, checkChildrenQuery);
     
     if (childrenCheck[0].CHILD_COUNT > 0) {
+      closeConnection(connection);
       return NextResponse.json({ 
         success: false,
         error: 'Cannot delete node with children. Delete children first or move them to another parent.' 
@@ -198,6 +262,7 @@ export async function DELETE(request: Request) {
     `;
     
     await executeQuery(connection, deleteQuery);
+    closeConnection(connection);
     
     return NextResponse.json({ 
       success: true,
@@ -205,6 +270,9 @@ export async function DELETE(request: Request) {
     });
   } catch (error: any) {
     console.error('Error deleting hierarchy node:', error);
+    if (connection) {
+      closeConnection(connection);
+    }
     return NextResponse.json({ 
       success: false,
       error: error.message 

@@ -191,39 +191,69 @@ export default function TimePhaseManagement() {
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/timephase');
-      const data = await response.json();
+      console.log("TimePhasePage: Starting to fetch products");
       
-      if (data.success) {
-        // Extract unique products from cycle time data
-        const uniqueProductIds = new Set();
-        const uniqueProducts: Product[] = []; // Add type annotation here
-        
-        data.cycleTimeData.forEach((item: any) => {
-          if (!uniqueProductIds.has(item.PRODUCT_ID)) {
-            uniqueProductIds.add(item.PRODUCT_ID);
-            // Explicitly cast each product to the Product type
-            uniqueProducts.push({
-              PRODUCT_ID: item.PRODUCT_ID,
-              PRODUCT_NAME: item.PRODUCT_NAME,
-              name: item.PRODUCT_NAME,
-              description: item.PRODUCT_DESCRIPTION || '',
-              category: item.CATEGORY || '',
-              subcategory: item.SUBCATEGORY || '',
-            });
-          }
-        });
-        
-        setProductGroups([{
-          groupName: 'Available Products',
-          products: uniqueProducts
-        }]);
-      } else {
-        showToast('Error', 'No products found', 'error');
+      console.log("TimePhasePage: Making API request to /api/hierarchy");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/hierarchy`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-store',
+      });
+      
+      console.log(`TimePhasePage: API response status: ${response.status}`);
+      
+      if (!response.ok) {
+        console.error(`TimePhasePage: API response not OK: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to fetch products: ${response.statusText}`);
       }
+      
+      const responseData = await response.json();
+      console.log("TimePhasePage: Response data:", responseData);
+      
+      // Check if the response was successful
+      if (!responseData.success) {
+        console.error("TimePhasePage: API returned error:", responseData.error);
+        throw new Error(responseData.error || "Failed to fetch products");
+      }
+      
+      // Get the data array
+      const productData = responseData.data || [];
+      console.log(`TimePhasePage: Processing ${productData.length} items`);
+      
+      // Extract unique products
+      const uniqueProductIds = new Set();
+      const uniqueProducts: Product[] = [];
+      
+      productData.forEach((item: any) => {
+        // Check if this is a product or a hierarchy node
+        const productId = item.PRODUCT_ID || item.NODE_ID;
+        const productName = item.PRODUCT_NAME || item.NODE_NAME;
+        
+        if (!uniqueProductIds.has(productId)) {
+          uniqueProductIds.add(productId);
+          // Explicitly cast each product to the Product type
+          uniqueProducts.push({
+            PRODUCT_ID: productId,
+            PRODUCT_NAME: productName,
+            name: productName,
+            description: item.PRODUCT_DESCRIPTION || '',
+            category: item.CATEGORY || item.ENTITY_TYPE || '',
+            subcategory: item.SUBCATEGORY || '',
+          });
+        }
+      });
+      
+      console.log(`TimePhasePage: Extracted ${uniqueProducts.length} unique products`);
+      
+      setProductGroups([{
+        groupName: 'Available Products',
+        products: uniqueProducts
+      }]);
     } catch (error) {
-      console.error('Error fetching products:', error);
-      showToast('Error', 'Failed to fetch products', 'error');
+      console.error("TimePhasePage: Error fetching products:", error);
+      showToast('Error', error instanceof Error ? error.message : 'Failed to fetch products', 'error');
     } finally {
       setIsLoading(false);
     }

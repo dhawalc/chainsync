@@ -34,3 +34,6 @@ yarn-error.log*
 
 .contentlayer
 .envrsa_private_key.p8
+
+# deploy
+deploy.sh

@@ -14,7 +14,7 @@ import {
 // Mock user data - in a real app, this would come from authentication
 const user = {
   name: "Jeff",
-  company: "Nvidia",
+  company: "Acme, Inc.",
   avatar: "https://randomuser.me/api/portraits/men/32.jpg"
 };
 
@@ -249,14 +249,17 @@ const Navbar = () => {
                     <Link href="/analysis" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                       Dashboard
                     </Link>
-                    <Link href="/analysis/explainability" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Explainability Grid
+                    <Link href="/product-report" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      Product Report
                     </Link>
-                    <Link href="/analysis/performance" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Performance Dashboard
+                    <Link href="/performance" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      Performance
                     </Link>
-                    <Link href="/analysis/what-if" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                    <Link href="/what-if" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                       What-If Analysis
+                    </Link>
+                    <Link href="/kpi" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      KPI Dashboard
                     </Link>
                   </div>
                 </div>
