@@ -27,7 +27,7 @@ export async function GET() {
     const products = await executeQuery(connection, query);
     
     // Format the products with proper descriptions
-    const formattedProducts = products.map(product => ({
+    const formattedProducts = products.map((product: any) => ({
       PRODUCT_ID: product.PRODUCT_ID,
       DESCRIPTION: product.DESCRIPTION || `Product ${product.PRODUCT_ID}`
     }));

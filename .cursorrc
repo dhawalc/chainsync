@@ -1,0 +1,66 @@
+{
+  "project": {
+    "name": "ChainSync",
+    "type": "Next.js",
+    "rules": {
+      "autoFixLinterErrors": true,
+      "componentLibrary": "shadcn/ui",
+      "styling": "tailwindcss",
+      "typescript": {
+        "strict": true,
+        "paths": {
+          "@/*": ["./*"]
+        }
+      },
+      "components": {
+        "location": "components/ui",
+        "autoImport": true
+      },
+      "errorHandling": {
+        "autoResolve": true,
+        "priorities": [
+          "typescript",
+          "linter",
+          "runtime"
+        ]
+      },
+      "dependencies": {
+        "autoInstall": true,
+        "preferredVersions": {
+          "next": "^14.0.0",
+          "react": "^18.0.0",
+          "typescript": "^5.0.0"
+        }
+      }
+    },
+    "conventions": {
+      "fileNaming": "kebab-case",
+      "componentNaming": "PascalCase",
+      "imports": {
+        "order": [
+          "react",
+          "next",
+          "external",
+          "components",
+          "utils",
+          "styles"
+        ]
+      },
+      "styling": {
+        "gradients": {
+          "primary": "from-blue-500 to-purple-500",
+          "secondary": "from-gray-50 to-gray-100"
+        },
+        "colors": {
+          "primary": "blue",
+          "secondary": "purple",
+          "accent": "emerald"
+        }
+      }
+    },
+    "documentation": {
+      "autoUpdate": true,
+      "includeChangelog": true
+    }
+  }
+} 

@@ -38,13 +38,13 @@ export async function GET(request: Request) {
       console.log(`Filtering products by category: ${category}`);
       
       // Check if there's a direct category column in PRODUCT_MASTER
-      const hasCategoryColumn = tableStructure.some(col => 
+      const hasCategoryColumn = tableStructure.some((col: any) => 
         col.name.toUpperCase().includes('CATEGORY')
       );
       
       if (hasCategoryColumn) {
         // If we have a category column, filter in the database
-        const categoryColumnName = tableStructure.find(col => 
+        const categoryColumnName = tableStructure.find((col: any) => 
           col.name.toUpperCase().includes('CATEGORY')
         ).name;
         
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
     }
     
     // Format the response to ensure we have PRODUCT_ID and DESCRIPTION
-    const formattedProducts = products.map(product => ({
+    const formattedProducts = products.map((product: any) => ({
       PRODUCT_ID: product.PRODUCT_ID,
       DESCRIPTION: product.DESCRIPTION || product.NAME || `Product ${product.PRODUCT_ID}`
     }));

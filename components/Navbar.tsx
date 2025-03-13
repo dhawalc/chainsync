@@ -219,6 +219,18 @@ const Navbar = () => {
                     <Link href="/hierarchy" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                       Hierarchy
                     </Link>
+                    <Link href="/yield-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      Yield Management
+                    </Link>
+                    <Link href="/planning-setup/location-process" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      Location Process Setup
+                    </Link>
+                    <Link href="/planning-setup/bom-time-phase" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      BOM Time Phase
+                    </Link>
+                    <Link href="/planning-setup/resource-mapping" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                      Resource Mapping
+                    </Link>
                   </div>
                 </div>
               )}

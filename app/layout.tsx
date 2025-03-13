@@ -1,6 +1,6 @@
 // app/layout.tsx
 import "@/styles/globals.css";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { fontSans } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar"; // Make sure this is our custom Navbar!
@@ -13,16 +13,21 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: "ChainSync - Supply Chain Management",
   description: "Optimize your supply chain with ChainSync",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
   icons: {
     icon: '/logocs.png',
     apple: '/logocs.png',
     shortcut: '/logocs.png'
   },
 };
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" }
+  ],
+  width: 'device-width',
+  initialScale: 1,
+}
 
 interface RootLayoutProps {
   children: React.ReactNode;
