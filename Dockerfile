@@ -4,12 +4,12 @@ FROM node:18-alpine AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files and install dependencies with legacy peer dependency resolution
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Install additional dependencies needed for the build
-RUN npm install --save clsx tailwind-merge @radix-ui/react-switch @radix-ui/react-select @radix-ui/react-label @radix-ui/react-slot @radix-ui/react-checkbox @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-toast lucide-react recharts
+RUN npm install --save clsx tailwind-merge @radix-ui/react-switch @radix-ui/react-select @radix-ui/react-label @radix-ui/react-slot @radix-ui/react-checkbox @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-toast lucide-react recharts --legacy-peer-deps
 
 # Create necessary directories
 RUN mkdir -p lib
@@ -46,4 +46,4 @@ COPY --from=builder /app/package.json ./package.json
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"] 
+CMD ["npm", "start"]
