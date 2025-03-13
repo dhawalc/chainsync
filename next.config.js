@@ -1,17 +1,25 @@
 // next.config.js
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development'
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone', // Optimizes for containerized environments
   reactStrictMode: true,
-  swcMinify: true, // This key is still valid in Next.js 13.5.8, so you can keep it if it's working for you
-  webpack: (config) => {
-    // Add support for path aliases
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': '.',
-    };
-    return config;
+  swcMinify: true,
+  images: {
+    domains: ['avatars.githubusercontent.com'],
   },
+  // Preserve existing configuration
+  ...(process.env.NODE_ENV === 'production' ? {
+    output: 'standalone',
+    experimental: {
+      optimizeCss: true,
+    },
+  } : {}),
   // Updated image configuration using remotePatterns
   images: {
     remotePatterns: [
@@ -40,4 +48,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withPWA(nextConfig);

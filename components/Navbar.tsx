@@ -5,11 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { 
-  Bars3Icon, 
-  XMarkIcon,
-  ChevronDownIcon
-} from '@heroicons/react/24/outline';
+import { ChevronDownIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 // Mock user data - in a real app, this would come from authentication
 const user = {
@@ -20,54 +16,47 @@ const user = {
 
 const Navbar = () => {
   const [supplyChainOpen, setSupplyChainOpen] = useState(false);
-  const [planningOpen, setPlanningOpen] = useState(false);
   const [mdmOpen, setMdmOpen] = useState(false);
+  const [planningOpen, setPlanningOpen] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  
+
   // Refs for dropdown containers
   const supplyChainRef = useRef<HTMLDivElement>(null);
-  const planningRef = useRef<HTMLDivElement>(null);
   const mdmRef = useRef<HTMLDivElement>(null);
+  const planningRef = useRef<HTMLDivElement>(null);
   const analysisRef = useRef<HTMLDivElement>(null);
 
-  const isActive = (path: string) => {
-    return pathname === path;
-  };
-
-  // Function to close all dropdowns
-  const closeAllDropdowns = () => {
-    setSupplyChainOpen(false);
-    setPlanningOpen(false);
-    setMdmOpen(false);
-    setAnalysisOpen(false);
-  };
+  const isActive = (path: string) => pathname === path;
 
   // Handle clicks outside of dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Check if click is outside all dropdown containers
       if (
         supplyChainRef.current && !supplyChainRef.current.contains(event.target as Node) &&
-        planningRef.current && !planningRef.current.contains(event.target as Node) &&
         mdmRef.current && !mdmRef.current.contains(event.target as Node) &&
+        planningRef.current && !planningRef.current.contains(event.target as Node) &&
         analysisRef.current && !analysisRef.current.contains(event.target as Node)
       ) {
-        closeAllDropdowns();
+        setSupplyChainOpen(false);
+        setMdmOpen(false);
+        setPlanningOpen(false);
+        setAnalysisOpen(false);
       }
     };
 
-    // Add event listener
     document.addEventListener('mousedown', handleClickOutside);
-    
-    // Clean up
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close mobile menu on navigation
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <header className="bg-indigo-900 shadow-md">
+    <header className="bg-indigo-900 shadow-md relative">
       <div className="max-w-7xl mx-auto py-3 px-6 flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-3">
           <Image 
@@ -83,7 +72,20 @@ const Navbar = () => {
           </h1>
         </Link>
         
-        <div className="flex items-center">
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden text-indigo-200 hover:text-emerald-300 transition-colors duration-200"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? (
+            <XMarkIcon className="h-6 w-6" />
+          ) : (
+            <Bars3Icon className="h-6 w-6" />
+          )}
+        </button>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center">
           <nav className="space-x-6 mr-8">
             <Link href="/" className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
               Dashboard
@@ -286,7 +288,7 @@ const Navbar = () => {
             </Link>
           </nav>
           
-          {/* User profile */}
+          {/* Desktop User profile */}
           <div className="flex items-center">
             <div className="text-right mr-3">
               <p className="text-indigo-100 text-sm">Welcome, <span className="font-semibold">{user.name}</span></p>
@@ -302,6 +304,129 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="absolute top-full left-0 right-0 bg-indigo-900 shadow-lg md:hidden z-50">
+            <div className="px-4 py-2 border-t border-indigo-800">
+              {/* Mobile User Profile */}
+              <div className="flex items-center py-4 border-b border-indigo-800">
+                <img
+                  src={user.avatar}
+                  alt={`${user.name}'s profile`}
+                  className="h-10 w-10 rounded-full border-2 border-emerald-400"
+                />
+                <div className="ml-3">
+                  <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
+                  <p className="text-emerald-300 text-sm">{user.company}</p>
+                </div>
+              </div>
+
+              {/* Mobile Navigation Links */}
+              <nav className="py-4">
+                <Link href="/" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
+                  Dashboard
+                </Link>
+
+                {/* Mobile MDM Section */}
+                <div className="py-2.5">
+                  <button
+                    onClick={() => setMdmOpen(!mdmOpen)}
+                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                  >
+                    <span>Master Data</span>
+                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mdmOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {mdmOpen && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      <Link href="/mdm" className="block py-2 text-indigo-300 hover:text-emerald-300">MDM Dashboard</Link>
+                      <Link href="/mdm/material" className="block py-2 text-indigo-300 hover:text-emerald-300">Material Master</Link>
+                      <Link href="/mdm/customer" className="block py-2 text-indigo-300 hover:text-emerald-300">Customer Master</Link>
+                      <Link href="/mdm/vendor" className="block py-2 text-indigo-300 hover:text-emerald-300">Vendor Master</Link>
+                      <Link href="/mdm/bom" className="block py-2 text-indigo-300 hover:text-emerald-300">Bill of Materials</Link>
+                      <Link href="/mdm/routing" className="block py-2 text-indigo-300 hover:text-emerald-300">Routing & Work Centers</Link>
+                      <Link href="/mdm/production-version" className="block py-2 text-indigo-300 hover:text-emerald-300">Production Version</Link>
+                      <Link href="/mdm/calendar" className="block py-2 text-indigo-300 hover:text-emerald-300">Calendars</Link>
+                      <Link href="/mdm/transportation" className="block py-2 text-indigo-300 hover:text-emerald-300">Transportation</Link>
+                      <Link href="/integrations" className="block py-2 text-indigo-300 hover:text-emerald-300">Integration</Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Supply Chain Section */}
+                <div className="py-2.5">
+                  <button
+                    onClick={() => setSupplyChainOpen(!supplyChainOpen)}
+                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                  >
+                    <span>Supply Chain</span>
+                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${supplyChainOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {supplyChainOpen && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      <Link href="/products" className="block py-2 text-indigo-300 hover:text-emerald-300">Products</Link>
+                      <Link href="/inventory" className="block py-2 text-indigo-300 hover:text-emerald-300">Inventory</Link>
+                      <Link href="/suppliers" className="block py-2 text-indigo-300 hover:text-emerald-300">Suppliers</Link>
+                      <Link href="/production" className="block py-2 text-indigo-300 hover:text-emerald-300">Production</Link>
+                      <Link href="/risk" className="block py-2 text-indigo-300 hover:text-emerald-300">Risk Dashboard</Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Planning & Analytics Section */}
+                <div className="py-2.5">
+                  <button
+                    onClick={() => setPlanningOpen(!planningOpen)}
+                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                  >
+                    <span>Planning & Analytics</span>
+                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${planningOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {planningOpen && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      <Link href="/forecast" className="block py-2 text-indigo-300 hover:text-emerald-300">Forecast</Link>
+                      <Link href="/demand" className="block py-2 text-indigo-300 hover:text-emerald-300">Demand Planning</Link>
+                      <Link href="/timephase" className="block py-2 text-indigo-300 hover:text-emerald-300">Time Phase</Link>
+                      <Link href="/hierarchy" className="block py-2 text-indigo-300 hover:text-emerald-300">Hierarchy</Link>
+                      <Link href="/yield-management" className="block py-2 text-indigo-300 hover:text-emerald-300">Yield Management</Link>
+                      <Link href="/planning-setup/location-process" className="block py-2 text-indigo-300 hover:text-emerald-300">Location Process Setup</Link>
+                      <Link href="/planning-setup/bom-time-phase" className="block py-2 text-indigo-300 hover:text-emerald-300">BOM Time Phase</Link>
+                      <Link href="/planning-setup/resource-mapping" className="block py-2 text-indigo-300 hover:text-emerald-300">Resource Mapping</Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Analysis Section */}
+                <div className="py-2.5">
+                  <button
+                    onClick={() => setAnalysisOpen(!analysisOpen)}
+                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                  >
+                    <span>Analysis</span>
+                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${analysisOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {analysisOpen && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      <Link href="/analysis" className="block py-2 text-indigo-300 hover:text-emerald-300">Dashboard</Link>
+                      <Link href="/product-report" className="block py-2 text-indigo-300 hover:text-emerald-300">Product Report</Link>
+                      <Link href="/performance" className="block py-2 text-indigo-300 hover:text-emerald-300">Performance</Link>
+                      <Link href="/what-if" className="block py-2 text-indigo-300 hover:text-emerald-300">What-If Analysis</Link>
+                      <Link href="/kpi" className="block py-2 text-indigo-300 hover:text-emerald-300">KPI Dashboard</Link>
+                    </div>
+                  )}
+                </div>
+
+                <Link href="/audit" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
+                  Audit
+                </Link>
+                
+                <Link href="/landing" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
+                  Landing
+                </Link>
+              </nav>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
