@@ -215,6 +215,13 @@ const Navbar = () => {
                       Calendars
                     </Link>
                     <Link
+                      href="/mdm/location"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      Location Master
+                    </Link>
+                    <Link
                       href="/mdm/transportation"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       role="menuitem"
@@ -575,6 +582,13 @@ const Navbar = () => {
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Calendars
+                      </Link>
+                      <Link
+                        href="/mdm/location"
+                        className="block w-full text-left py-2 text-indigo-300 hover:text-emerald-300 transition-colors duration-200"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Location Master
                       </Link>
                       <Link
                         href="/mdm/transportation"
