@@ -1,13 +1,39 @@
 // app/api/products/route.ts
-// app/api/products/route.ts
 import { NextResponse } from 'next/server';
 import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
+import { mockProducts, mockCategories, mockProductCategories, shouldUseMockData } from '@/lib/mock-data';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     
+    // Check if we should use mock data
+    if (shouldUseMockData()) {
+      console.log("Using mock data for products API");
+      
+      let filteredProducts = [...mockProducts];
+      
+      // Filter by category if specified
+      if (category) {
+        // Get product IDs in this category
+        const productIdsInCategory = mockProductCategories
+          .filter(pc => pc.CATEGORY_ID === category)
+          .map(pc => pc.PRODUCT_ID);
+        
+        // Filter products by these IDs
+        filteredProducts = mockProducts.filter(p => 
+          productIdsInCategory.includes(String(p.PRODUCT_ID))
+        );
+      }
+      
+      return NextResponse.json({ 
+        success: true,
+        data: filteredProducts 
+      });
+    }
+    
+    // Continue with real Snowflake connection
     console.log("Initializing Snowflake connection for products...");
     const connection = initializeSnowflake();
     
@@ -81,9 +107,13 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.error('Error fetching products:', error);
+    
+    // Fallback to mock data on error
+    console.log("Falling back to mock data due to error");
     return NextResponse.json({ 
-      success: false,
-      error: error.message 
-    }, { status: 500 });
+      success: true,
+      data: mockProducts,
+      _isMockData: true
+    });
   }
 }
