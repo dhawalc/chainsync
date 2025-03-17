@@ -48,11 +48,10 @@ const menuItems = {
   ],
   analysis: [
     { href: '/analysis', label: 'Dashboard' },
-    { href: '/kpi', label: 'KPI Dashboard' },
     { href: '/product-report', label: 'Product Report' },
-    { href: '/supplier-performance', label: 'Supplier Performance' },
-    { href: '/inventory-analysis', label: 'Inventory Analysis' },
-    { href: '/cost-analysis', label: 'Cost Analysis' },
+    { href: '/performance', label: 'Performance' },
+    { href: '/what-if', label: 'What-If Analysis' },
+    { href: '/kpi', label: 'KPI Dashboard' },
   ],
   additional: [
     { href: '/audit', label: 'Audit' },
