@@ -3,8 +3,8 @@
 // components/Navbar.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect, useRef, memo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { ChevronDownIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 // Mock user data - in a real app, this would come from authentication
@@ -117,11 +117,19 @@ const DropdownButton = memo(({
 DropdownButton.displayName = 'DropdownButton';
 
 const Navbar = () => {
+  // Desktop dropdown states
   const [supplyChainOpen, setSupplyChainOpen] = useState(false);
   const [mdmOpen, setMdmOpen] = useState(false);
   const [planningOpen, setPlanningOpen] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
+
+  // Mobile dropdown states
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMdmOpen, setMobileMdmOpen] = useState(false);
+  const [mobileSupplyChainOpen, setMobileSupplyChainOpen] = useState(false);
+  const [mobilePlanningOpen, setMobilePlanningOpen] = useState(false);
+  const [mobileAnalysisOpen, setMobileAnalysisOpen] = useState(false);
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -157,9 +165,13 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu on navigation
+  // Close mobile menu and all mobile dropdowns on navigation
   useEffect(() => {
     setMobileMenuOpen(false);
+    setMobileMdmOpen(false);
+    setMobileSupplyChainOpen(false);
+    setMobilePlanningOpen(false);
+    setMobileAnalysisOpen(false);
   }, [pathname]);
 
   return (
@@ -220,37 +232,17 @@ const Navbar = () => {
               {mdmOpen && (
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                   <div className="py-1" role="menu" aria-orientation="vertical">
-                    <Link href="/mdm" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      MDM Dashboard
-                    </Link>
-                    <Link href="/mdm/material" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Material Master
-                    </Link>
-                    <Link href="/mdm/customer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Customer Master
-                    </Link>
-                    <Link href="/mdm/vendor" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Vendor Master
-                    </Link>
-                    <Link href="/mdm/bom" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Bill of Materials
-                    </Link>
-                    <Link href="/mdm/routing" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Routing & Work Centers
-                    </Link>
-                    <Link href="/mdm/production-version" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Production Version
-                    </Link>
-                    <Link href="/mdm/calendar" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Calendars
-                    </Link>
-                    <Link href="/mdm/transportation" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Transportation
-                    </Link>
-                    <div className="border-t border-gray-100 my-1"></div>
-                    <Link href="/integrations" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Integration
-                    </Link>
+                    {menuItems.mdm.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        onClick={() => setMdmOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               )}
@@ -258,9 +250,8 @@ const Navbar = () => {
 
             {/* Supply Chain Dropdown */}
             <div ref={supplyChainRef} className="relative inline-block text-left">
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
+              <button
+                onClick={() => {
                   setSupplyChainOpen(!supplyChainOpen);
                   setMdmOpen(false);
                   setPlanningOpen(false);
@@ -277,21 +268,17 @@ const Navbar = () => {
               {supplyChainOpen && (
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                   <div className="py-1" role="menu" aria-orientation="vertical">
-                    <Link href="/products" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Products
-                    </Link>
-                    <Link href="/inventory" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Inventory
-                    </Link>
-                    <Link href="/suppliers" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Suppliers
-                    </Link>
-                    <Link href="/production" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Production
-                    </Link>
-                    <Link href="/risk" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Risk Dashboard
-                    </Link>
+                    {menuItems.supplyChain.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        onClick={() => setSupplyChainOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               )}
@@ -299,9 +286,8 @@ const Navbar = () => {
 
             {/* Planning & Analytics Dropdown */}
             <div ref={planningRef} className="relative inline-block text-left">
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
+              <button
+                onClick={() => {
                   setPlanningOpen(!planningOpen);
                   setSupplyChainOpen(false);
                   setMdmOpen(false);
@@ -318,30 +304,17 @@ const Navbar = () => {
               {planningOpen && (
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                   <div className="py-1" role="menu" aria-orientation="vertical">
-                    <Link href="/forecast" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Forecast
-                    </Link>
-                    <Link href="/demand" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Demand Planning
-                    </Link>
-                    <Link href="/timephase" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Time Phase
-                    </Link>
-                    <Link href="/hierarchy" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Hierarchy
-                    </Link>
-                    <Link href="/yield-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Yield Management
-                    </Link>
-                    <Link href="/planning-setup/location-process" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Location Process Setup
-                    </Link>
-                    <Link href="/planning-setup/bom-time-phase" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      BOM Time Phase
-                    </Link>
-                    <Link href="/planning-setup/resource-mapping" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Resource Mapping
-                    </Link>
+                    {menuItems.planning.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        onClick={() => setPlanningOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               )}
@@ -350,8 +323,7 @@ const Navbar = () => {
             {/* Analysis Dropdown */}
             <div ref={analysisRef} className="relative inline-block text-left">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   setAnalysisOpen(!analysisOpen);
                   setSupplyChainOpen(false);
                   setMdmOpen(false);
@@ -368,21 +340,17 @@ const Navbar = () => {
               {analysisOpen && (
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                   <div className="py-1" role="menu" aria-orientation="vertical">
-                    <Link href="/analysis" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Dashboard
-                    </Link>
-                    <Link href="/product-report" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Product Report
-                    </Link>
-                    <Link href="/performance" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Performance
-                    </Link>
-                    <Link href="/what-if" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      What-If Analysis
-                    </Link>
-                    <Link href="/kpi" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      KPI Dashboard
-                    </Link>
+                    {menuItems.analysis.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        role="menuitem"
+                        onClick={() => setAnalysisOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 </div>
               )}
@@ -411,138 +379,145 @@ const Navbar = () => {
                 height={32}
                 className="rounded-full"
               />
-              <div className="text-left">
-                <p className="text-sm font-medium text-indigo-100">{user.name}</p>
-                <p className="text-xs text-indigo-200">{user.company}</p>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-indigo-900 shadow-lg md:hidden z-50">
-            <div className="px-4 py-2 border-t border-indigo-800">
-              {/* Mobile User Profile */}
-              <div className="flex items-center py-4 border-b border-indigo-800">
-                <img
-                  src={user.avatar}
-                  alt={`${user.name}'s profile`}
-                  className="h-10 w-10 rounded-full border-2 border-emerald-400"
-                />
-                <div className="ml-3">
-                  <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
-                  <p className="text-emerald-300 text-sm">{user.company}</p>
-                </div>
+      {/* Mobile Navigation */}
+      {mobileMenuOpen && (
+        <div className="absolute top-full left-0 right-0 bg-indigo-900 shadow-lg md:hidden z-50">
+          <div className="px-4 py-2 border-t border-indigo-800">
+            {/* Mobile User Profile */}
+            <div className="flex items-center py-4 border-b border-indigo-800">
+              <img
+                src={user.avatar}
+                alt={`${user.name}'s profile`}
+                className="h-10 w-10 rounded-full border-2 border-emerald-400"
+              />
+              <div className="ml-3">
+                <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
+                <p className="text-emerald-300 text-sm">{user.company}</p>
+              </div>
+            </div>
+
+            {/* Mobile Navigation Links */}
+            <nav className="py-4">
+              <Link href="/" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
+                Dashboard
+              </Link>
+
+              {/* Mobile MDM Section */}
+              <div className="py-2.5">
+                <button
+                  onClick={() => setMobileMdmOpen(!mobileMdmOpen)}
+                  className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                >
+                  <span>Master Data</span>
+                  <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobileMdmOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileMdmOpen && (
+                  <div className="pl-4 mt-2 space-y-2">
+                    {menuItems.mdm.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block py-2 text-indigo-300 hover:text-emerald-300"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Mobile Navigation Links */}
-              <nav className="py-4">
-                <Link href="/" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
-                  Dashboard
-                </Link>
+              {/* Mobile Supply Chain Section */}
+              <div className="py-2.5">
+                <button
+                  onClick={() => setMobileSupplyChainOpen(!mobileSupplyChainOpen)}
+                  className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                >
+                  <span>Supply Chain</span>
+                  <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobileSupplyChainOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileSupplyChainOpen && (
+                  <div className="pl-4 mt-2 space-y-2">
+                    {menuItems.supplyChain.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block py-2 text-indigo-300 hover:text-emerald-300"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-                {/* Mobile MDM Section */}
-                <div className="py-2.5">
-                  <button
-                    onClick={() => setMdmOpen(!mdmOpen)}
-                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                  >
-                    <span>Master Data</span>
-                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mdmOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {mdmOpen && (
-                    <div className="pl-4 mt-2 space-y-2">
-                      <Link href="/mdm" className="block py-2 text-indigo-300 hover:text-emerald-300">MDM Dashboard</Link>
-                      <Link href="/mdm/material" className="block py-2 text-indigo-300 hover:text-emerald-300">Material Master</Link>
-                      <Link href="/mdm/customer" className="block py-2 text-indigo-300 hover:text-emerald-300">Customer Master</Link>
-                      <Link href="/mdm/vendor" className="block py-2 text-indigo-300 hover:text-emerald-300">Vendor Master</Link>
-                      <Link href="/mdm/bom" className="block py-2 text-indigo-300 hover:text-emerald-300">Bill of Materials</Link>
-                      <Link href="/mdm/routing" className="block py-2 text-indigo-300 hover:text-emerald-300">Routing & Work Centers</Link>
-                      <Link href="/mdm/production-version" className="block py-2 text-indigo-300 hover:text-emerald-300">Production Version</Link>
-                      <Link href="/mdm/calendar" className="block py-2 text-indigo-300 hover:text-emerald-300">Calendars</Link>
-                      <Link href="/mdm/transportation" className="block py-2 text-indigo-300 hover:text-emerald-300">Transportation</Link>
-                      <Link href="/integrations" className="block py-2 text-indigo-300 hover:text-emerald-300">Integration</Link>
-                    </div>
-                  )}
-                </div>
+              {/* Mobile Planning & Analytics Section */}
+              <div className="py-2.5">
+                <button
+                  onClick={() => setMobilePlanningOpen(!mobilePlanningOpen)}
+                  className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                >
+                  <span>Planning & Analytics</span>
+                  <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobilePlanningOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobilePlanningOpen && (
+                  <div className="pl-4 mt-2 space-y-2">
+                    {menuItems.planning.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block py-2 text-indigo-300 hover:text-emerald-300"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-                {/* Mobile Supply Chain Section */}
-                <div className="py-2.5">
-                  <button
-                    onClick={() => setSupplyChainOpen(!supplyChainOpen)}
-                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                  >
-                    <span>Supply Chain</span>
-                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${supplyChainOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {supplyChainOpen && (
-                    <div className="pl-4 mt-2 space-y-2">
-                      <Link href="/products" className="block py-2 text-indigo-300 hover:text-emerald-300">Products</Link>
-                      <Link href="/inventory" className="block py-2 text-indigo-300 hover:text-emerald-300">Inventory</Link>
-                      <Link href="/suppliers" className="block py-2 text-indigo-300 hover:text-emerald-300">Suppliers</Link>
-                      <Link href="/production" className="block py-2 text-indigo-300 hover:text-emerald-300">Production</Link>
-                      <Link href="/risk" className="block py-2 text-indigo-300 hover:text-emerald-300">Risk Dashboard</Link>
-                    </div>
-                  )}
-                </div>
+              {/* Mobile Analysis Section */}
+              <div className="py-2.5">
+                <button
+                  onClick={() => setMobileAnalysisOpen(!mobileAnalysisOpen)}
+                  className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
+                >
+                  <span>Analysis</span>
+                  <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobileAnalysisOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileAnalysisOpen && (
+                  <div className="pl-4 mt-2 space-y-2">
+                    {menuItems.analysis.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block py-2 text-indigo-300 hover:text-emerald-300"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-                {/* Mobile Planning & Analytics Section */}
-                <div className="py-2.5">
-                  <button
-                    onClick={() => setPlanningOpen(!planningOpen)}
-                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                  >
-                    <span>Planning & Analytics</span>
-                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${planningOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {planningOpen && (
-                    <div className="pl-4 mt-2 space-y-2">
-                      <Link href="/forecast" className="block py-2 text-indigo-300 hover:text-emerald-300">Forecast</Link>
-                      <Link href="/demand" className="block py-2 text-indigo-300 hover:text-emerald-300">Demand Planning</Link>
-                      <Link href="/timephase" className="block py-2 text-indigo-300 hover:text-emerald-300">Time Phase</Link>
-                      <Link href="/hierarchy" className="block py-2 text-indigo-300 hover:text-emerald-300">Hierarchy</Link>
-                      <Link href="/yield-management" className="block py-2 text-indigo-300 hover:text-emerald-300">Yield Management</Link>
-                      <Link href="/planning-setup/location-process" className="block py-2 text-indigo-300 hover:text-emerald-300">Location Process Setup</Link>
-                      <Link href="/planning-setup/bom-time-phase" className="block py-2 text-indigo-300 hover:text-emerald-300">BOM Time Phase</Link>
-                      <Link href="/planning-setup/resource-mapping" className="block py-2 text-indigo-300 hover:text-emerald-300">Resource Mapping</Link>
-                    </div>
-                  )}
-                </div>
-
-                {/* Mobile Analysis Section */}
-                <div className="py-2.5">
-                  <button
-                    onClick={() => setAnalysisOpen(!analysisOpen)}
-                    className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                  >
-                    <span>Analysis</span>
-                    <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${analysisOpen ? 'rotate-180' : ''}`} />
-                  </button>
-                  {analysisOpen && (
-                    <div className="pl-4 mt-2 space-y-2">
-                      <Link href="/analysis" className="block py-2 text-indigo-300 hover:text-emerald-300">Dashboard</Link>
-                      <Link href="/product-report" className="block py-2 text-indigo-300 hover:text-emerald-300">Product Report</Link>
-                      <Link href="/performance" className="block py-2 text-indigo-300 hover:text-emerald-300">Performance</Link>
-                      <Link href="/what-if" className="block py-2 text-indigo-300 hover:text-emerald-300">What-If Analysis</Link>
-                      <Link href="/kpi" className="block py-2 text-indigo-300 hover:text-emerald-300">KPI Dashboard</Link>
-                    </div>
-                  )}
-                </div>
-
-                <Link href="/audit" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
-                  Audit
-                </Link>
-                
-                <Link href="/landing" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
-                  Landing
-                </Link>
-              </nav>
-            </div>
+              <Link href="/audit" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
+                Audit
+              </Link>
+              
+              <Link href="/landing" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
+                Landing
+              </Link>
+            </nav>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 };
