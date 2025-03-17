@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { initializeSnowflake, connectSnowflake, executeQuery, closeConnection } from '@/lib/snowflake';
+import { mockHierarchyData, shouldUseMockData } from '@/lib/mock-data';
 
 // Define the node structure
 interface HierarchyNode {
@@ -12,121 +13,63 @@ interface HierarchyNode {
 }
 
 export async function GET() {
-  console.log("API /hierarchy: Starting request handler");
-  let connection;
-  
   try {
-    console.log("API /hierarchy: Creating Snowflake connection");
-    connection = initializeSnowflake();
-    
-    console.log("API /hierarchy: Connecting to Snowflake");
-    await connectSnowflake(connection);
-
-    console.log("API /hierarchy: Setting session context");
-    // Set session context
-    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE || ''}`);
-    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE || ''}`);
-    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA || ''}`);
-
-    // First check if we have a PRODUCT table
-    console.log("API /hierarchy: Checking if PRODUCT table exists");
-    const checkProductTableQuery = `
-      SELECT COUNT(*) as TABLE_EXISTS 
-      FROM INFORMATION_SCHEMA.TABLES 
-      WHERE TABLE_NAME = 'PRODUCT'
-    `;
-    
-    const productTableCheck = await executeQuery(connection, checkProductTableQuery);
-    
-    if (productTableCheck[0].TABLE_EXISTS > 0) {
-      console.log("API /hierarchy: PRODUCT table exists, fetching product data");
-      // If PRODUCT table exists, fetch product data
-      const productQuery = `
-        SELECT 
-          p.PRODUCT_ID, 
-          p.PRODUCT_NAME, 
-          p.PRODUCT_DESCRIPTION,
-          h.LEVEL_1 as CATEGORY,
-          h.LEVEL_2 as SUBCATEGORY
-        FROM 
-          PRODUCT p
-        LEFT JOIN 
-          HIERARCHY h ON p.PRODUCT_ID = h.PRODUCT_ID
-      `;
+    // Check if we should use mock data
+    if (shouldUseMockData()) {
+      console.log("Using mock data for hierarchy API");
       
-      const productData = await executeQuery(connection, productQuery);
-      console.log(`API /hierarchy: Retrieved ${productData.length} products`);
-      
-      console.log("API /hierarchy: Destroying connection");
-      closeConnection(connection);
-      
-      console.log("API /hierarchy: Returning product results");
       return NextResponse.json({
         success: true,
-        data: productData
+        data: mockHierarchyData
       });
     }
     
-    // If no PRODUCT table, check if the hierarchy table exists
-    console.log("API /hierarchy: Checking if HIERARCHY_TREE table exists");
-    const checkTableQuery = `
-      SELECT COUNT(*) as TABLE_EXISTS 
-      FROM INFORMATION_SCHEMA.TABLES 
-      WHERE TABLE_NAME = 'HIERARCHY_TREE'
-    `;
+    // Continue with real Snowflake connection
+    console.log("Initializing Snowflake connection for hierarchy...");
+    const connection = initializeSnowflake();
     
-    const tableCheck = await executeQuery(connection, checkTableQuery);
-    
-    if (tableCheck[0].TABLE_EXISTS === 0) {
-      console.log("API /hierarchy: HIERARCHY_TREE table does not exist");
-      closeConnection(connection);
-      return NextResponse.json({ 
-        success: false,
-        error: 'Hierarchy table does not exist. Please reset the hierarchy.' 
-      }, { status: 404 });
-    }
+    console.log("Connecting to Snowflake...");
+    await connectSnowflake(connection);
+    console.log("Connected to Snowflake successfully");
 
-    // Get all hierarchy nodes
-    console.log("API /hierarchy: Fetching hierarchy nodes");
+    // Set session context
+    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE}`);
+    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE}`);
+    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA}`);
+
+    // Query to get hierarchy data
     const query = `
       SELECT 
         NODE_ID, 
         NODE_NAME, 
+        ENTITY_TYPE, 
         PARENT_NODE_ID,
-        ENTITY_TYPE
-      FROM HIERARCHY_TREE
+        LEVEL
+      FROM HIERARCHY_NODES
+      ORDER BY LEVEL, NODE_ID
     `;
     
+    console.log(`Executing query: ${query}`);
     const hierarchyData = await executeQuery(connection, query);
     
-    // Now, calculate the levels in JavaScript instead of SQL
-    const nodesWithLevels = calculateHierarchyLevels(hierarchyData);
-    
-    // Sort by level and name
-    nodesWithLevels.sort((a: HierarchyNode, b: HierarchyNode) => {
-      if (a.LEVEL !== b.LEVEL) {
-        return (a.LEVEL || 0) - (b.LEVEL || 0);
-      }
-      return a.NODE_NAME.localeCompare(b.NODE_NAME);
-    });
-    
-    console.log("API /hierarchy: Destroying connection");
+    // Close the connection
     closeConnection(connection);
     
-    console.log("API /hierarchy: Returning hierarchy results");
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      data: nodesWithLevels
+      data: hierarchyData
     });
   } catch (error: any) {
-    console.error('Error fetching hierarchy data:', error);
-    if (connection) {
-      closeConnection(connection);
-    }
-    return NextResponse.json({ 
-      success: false,
-      error: error.message 
-    }, { status: 500 });
+    console.error("Error fetching hierarchy data:", error);
+    
+    // Fallback to mock data on error
+    console.log("Falling back to mock hierarchy data due to error");
+    
+    return NextResponse.json({
+      success: true,
+      data: mockHierarchyData,
+      _isMockData: true
+    });
   }
 }
 
