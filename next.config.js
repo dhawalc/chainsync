@@ -1,17 +1,17 @@
 // next.config.js
 const withPWA = require('next-pwa')({
   dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
-})
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['avatars.githubusercontent.com'],
+    domains: ['randomuser.me'],
   },
   // Preserve existing configuration
   ...(process.env.NODE_ENV === 'production' ? {
@@ -45,6 +45,14 @@ const nextConfig = {
   // Bypass TypeScript errors during builds
   typescript: {
     ignoreBuildErrors: true,
+  },
+  // Add webpack configuration for Leaflet
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(png|jpg|gif|svg)$/i,
+      type: 'asset/resource',
+    });
+    return config;
   },
 };
 

@@ -22,8 +22,43 @@ import {
   Radar
 } from 'recharts';
 
+// Add interfaces for data types
+interface KpiTrendData {
+  month: string;
+  otd: number;
+  quality: number;
+  inventory: number;
+  cost: number;
+}
+
+interface SupplierPerformanceData {
+  name: string;
+  otd: number;
+  quality: number;
+  responsiveness: number;
+  cost: number;
+}
+
+interface InventoryBreakdownData {
+  name: string;
+  value: number;
+}
+
+interface RadarData {
+  subject: string;
+  A: number;
+  B: number;
+  fullMark: number;
+}
+
+interface KpiOption {
+  id: keyof KpiTrendData;
+  name: string;
+  color: string;
+}
+
 // Mock data for KPI metrics
-const kpiTrendData = [
+const kpiTrendData: KpiTrendData[] = [
   { month: 'Jan', otd: 88, quality: 92, inventory: 4.2, cost: 95 },
   { month: 'Feb', otd: 90, quality: 93, inventory: 4.3, cost: 96 },
   { month: 'Mar', otd: 89, quality: 94, inventory: 4.5, cost: 94 },
@@ -38,7 +73,7 @@ const kpiTrendData = [
   { month: 'Dec', otd: 98, quality: 99, inventory: 6.0, cost: 98 },
 ];
 
-const supplierPerformanceData = [
+const supplierPerformanceData: SupplierPerformanceData[] = [
   { name: 'Acme Components', otd: 92, quality: 95, responsiveness: 88, cost: 90 },
   { name: 'Global Materials', otd: 85, quality: 90, responsiveness: 82, cost: 95 },
   { name: 'Tech Solutions', otd: 97, quality: 98, responsiveness: 95, cost: 85 },
@@ -46,7 +81,7 @@ const supplierPerformanceData = [
   { name: 'EcoPackaging', otd: 90, quality: 93, responsiveness: 87, cost: 96 },
 ];
 
-const inventoryBreakdownData = [
+const inventoryBreakdownData: InventoryBreakdownData[] = [
   { name: 'Raw Materials', value: 35 },
   { name: 'Work in Progress', value: 25 },
   { name: 'Finished Goods', value: 30 },
@@ -55,7 +90,7 @@ const inventoryBreakdownData = [
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
-const radarData = [
+const radarData: RadarData[] = [
   { subject: 'On-Time Delivery', A: 95, B: 85, fullMark: 100 },
   { subject: 'Quality', A: 98, B: 90, fullMark: 100 },
   { subject: 'Cost', A: 92, B: 96, fullMark: 100 },
@@ -64,25 +99,112 @@ const radarData = [
   { subject: 'Lead Time', A: 88, B: 82, fullMark: 100 },
 ];
 
+// Update kpiOptions with proper type
+const kpiOptions: KpiOption[] = [
+  { id: 'otd', name: 'On-Time Delivery', color: '#8884d8' },
+  { id: 'quality', name: 'Quality Compliance', color: '#82ca9d' },
+  { id: 'inventory', name: 'Inventory Turnover', color: '#ffc658' },
+  { id: 'cost', name: 'Cost Adherence', color: '#ff8042' },
+];
+
 // Add a utility function for consistent number formatting
 const formatNumber = (num: number) => {
   // Use a simple approach that works the same on server and client
   return num.toString();
 };
 
+// Add interfaces for chart components
+interface ChartProps {
+  data: any[];
+  width?: number;
+  height?: number;
+  margin?: { top: number; right: number; bottom: number; left: number };
+}
+
+interface KpiCardProps {
+  kpi: KpiOption;
+  currentValue: string | number;
+  previousValue: string | number;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+// Add type for timeframe options
+type TimeframeOption = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
+
+// Add type for chart data
+type ChartData = KpiTrendData[] | SupplierPerformanceData[] | InventoryBreakdownData[] | RadarData[];
+
+// Add utility function for chart data type checking
+const isKpiTrendData = (data: ChartData): data is KpiTrendData[] => {
+  return data.length > 0 && 'month' in data[0] && 'otd' in data[0];
+};
+
+const isSupplierPerformanceData = (data: ChartData): data is SupplierPerformanceData[] => {
+  return data.length > 0 && 'name' in data[0] && 'otd' in data[0] && 'responsiveness' in data[0];
+};
+
+const isInventoryBreakdownData = (data: ChartData): data is InventoryBreakdownData[] => {
+  return data.length > 0 && 'name' in data[0] && 'value' in data[0];
+};
+
+const isRadarData = (data: ChartData): data is RadarData[] => {
+  return data.length > 0 && 'subject' in data[0] && 'A' in data[0] && 'B' in data[0];
+};
+
+// Add KpiCard component with proper types
+const KpiCard: React.FC<KpiCardProps> = ({ kpi, currentValue, previousValue, isSelected, onClick }) => {
+  const currentNum = Number(currentValue);
+  const previousNum = Number(previousValue);
+  const change = currentNum - previousNum;
+  const formattedValue = kpi.id === 'inventory' 
+    ? currentNum.toFixed(1)
+    : `${currentNum}%`;
+  const formattedChange = `${change >= 0 ? '↑' : '↓'} ${Math.abs(change).toFixed(1)}${kpi.id === 'inventory' ? '' : '%'}`;
+
+  return (
+    <div 
+      className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-all ${
+        isSelected ? 'ring-2 ring-blue-500' : 'hover:shadow-lg'
+      }`}
+      onClick={onClick}
+    >
+      <h3 className="text-sm font-medium text-gray-500 mb-1">{kpi.name}</h3>
+      <div className="flex items-end">
+        <p className="text-3xl font-bold">{formattedValue}</p>
+        <span className={`ml-2 text-sm font-medium ${change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          {formattedChange}
+        </span>
+      </div>
+      <p className="text-xs text-gray-500 mt-1">vs. Previous Month</p>
+    </div>
+  );
+};
+
 export default function KpiDashboardPage() {
-  const [timeframe, setTimeframe] = useState('monthly');
-  const [selectedKpi, setSelectedKpi] = useState('otd');
-  
-  const kpiOptions = [
-    { id: 'otd', name: 'On-Time Delivery', color: '#8884d8' },
-    { id: 'quality', name: 'Quality Compliance', color: '#82ca9d' },
-    { id: 'inventory', name: 'Inventory Turnover', color: '#ffc658' },
-    { id: 'cost', name: 'Cost Adherence', color: '#ff8042' },
-  ];
+  const [timeframe, setTimeframe] = useState<TimeframeOption>('monthly');
+  const [selectedKpi, setSelectedKpi] = useState<keyof KpiTrendData>('otd');
   
   const selectedKpiOption = kpiOptions.find(option => option.id === selectedKpi);
   
+  // Add type safety for chart data
+  const getChartData = (): KpiTrendData[] => {
+    switch (timeframe) {
+      case 'daily':
+        return kpiTrendData.slice(-7);
+      case 'weekly':
+        return kpiTrendData.slice(-4);
+      case 'monthly':
+        return kpiTrendData;
+      case 'quarterly':
+        return kpiTrendData.filter((_, index) => index % 3 === 0);
+      case 'yearly':
+        return kpiTrendData.filter((_, index) => index % 12 === 0);
+      default:
+        return kpiTrendData;
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
@@ -92,7 +214,7 @@ export default function KpiDashboardPage() {
           <select 
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value)}
+            onChange={(e) => setTimeframe(e.target.value as TimeframeOption)}
           >
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
@@ -110,28 +232,14 @@ export default function KpiDashboardPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {kpiOptions.map((kpi) => (
-          <div 
+          <KpiCard
             key={kpi.id}
-            className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-all ${
-              selectedKpi === kpi.id ? 'ring-2 ring-blue-500' : 'hover:shadow-lg'
-            }`}
+            kpi={kpi}
+            currentValue={kpiTrendData[kpiTrendData.length - 1][kpi.id]}
+            previousValue={kpiTrendData[kpiTrendData.length - 2][kpi.id]}
+            isSelected={selectedKpi === kpi.id}
             onClick={() => setSelectedKpi(kpi.id)}
-          >
-            <h3 className="text-sm font-medium text-gray-500 mb-1">{kpi.name}</h3>
-            <div className="flex items-end">
-              <p className="text-3xl font-bold">
-                {kpi.id === 'inventory' 
-                  ? kpiTrendData[kpiTrendData.length - 1][kpi.id].toFixed(1)
-                  : kpiTrendData[kpiTrendData.length - 1][kpi.id] + '%'
-                }
-              </p>
-              <span className="ml-2 text-sm font-medium text-green-600">
-                ↑ {(kpiTrendData[kpiTrendData.length - 1][kpi.id] - kpiTrendData[kpiTrendData.length - 2][kpi.id]).toFixed(1)}
-                {kpi.id === 'inventory' ? '' : '%'}
-              </span>
-            </div>
-            <p className="text-xs text-gray-500 mt-1">vs. Previous Month</p>
-          </div>
+          />
         ))}
       </div>
       
@@ -143,7 +251,7 @@ export default function KpiDashboardPage() {
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
-              data={kpiTrendData}
+              data={getChartData()}
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" />

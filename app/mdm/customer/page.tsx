@@ -12,9 +12,20 @@ import {
   FunnelIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline';
+import { ColumnDef } from '@tanstack/react-table';
 
-// Sample data
-const customers = [
+// Add interface for data type
+interface Customer {
+  id: string;
+  name: string;
+  type: string;
+  region: string;
+  country: string;
+  status: string;
+}
+
+// Update sample data with proper type
+const customers: Customer[] = [
   { id: 'C1001', name: 'Acme Corporation', type: 'Corporate', region: 'North America', country: 'USA', status: 'Active' },
   { id: 'C1002', name: 'TechGiant Inc.', type: 'Corporate', region: 'North America', country: 'USA', status: 'Active' },
   { id: 'C1003', name: 'Global Retail Ltd', type: 'Retail', region: 'Europe', country: 'UK', status: 'Active' },
@@ -22,7 +33,8 @@ const customers = [
   { id: 'C1005', name: 'Southern Markets', type: 'Retail', region: 'South America', country: 'Brazil', status: 'Inactive' },
 ];
 
-const columns = [
+// Update columns with proper type
+const columns: ColumnDef<Customer, unknown>[] = [
   { accessorKey: 'id', header: 'Customer ID' },
   { accessorKey: 'name', header: 'Customer Name' },
   { accessorKey: 'type', header: 'Customer Type' },
@@ -31,6 +43,7 @@ const columns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>

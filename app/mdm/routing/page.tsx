@@ -13,9 +13,30 @@ import {
   ArrowPathIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
+import { ColumnDef } from '@tanstack/react-table';
 
-// Sample data
-const routings = [
+// Add interfaces for data types
+interface Routing {
+  id: string;
+  material: string;
+  description: string;
+  plant: string;
+  workCenters: number;
+  operations: number;
+  status: string;
+}
+
+interface WorkCenter {
+  id: string;
+  name: string;
+  category: string;
+  plant: string;
+  capacity: string;
+  status: string;
+}
+
+// Update sample data with proper types
+const routings: Routing[] = [
   { id: 'R1001', material: 'Final Product X', description: 'Standard Production Routing', plant: '1000', workCenters: 3, operations: 5, status: 'Active' },
   { id: 'R1002', material: 'Subassembly A', description: 'Electronics Assembly', plant: '1000', workCenters: 2, operations: 4, status: 'Active' },
   { id: 'R1003', material: 'Subassembly B', description: 'Mechanical Assembly', plant: '1000', workCenters: 2, operations: 3, status: 'Active' },
@@ -23,7 +44,8 @@ const routings = [
   { id: 'R1005', material: 'Final Product Z', description: 'Standard Production Routing', plant: '1004', workCenters: 3, operations: 6, status: 'Active' },
 ];
 
-const columns = [
+// Update columns with proper types
+const columns: ColumnDef<Routing, unknown>[] = [
   { accessorKey: 'id', header: 'Routing ID' },
   { accessorKey: 'material', header: 'Material' },
   { accessorKey: 'description', header: 'Description' },
@@ -33,6 +55,7 @@ const columns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>
@@ -45,8 +68,8 @@ const columns = [
   },
 ];
 
-// Work Centers Tab
-const workCenters = [
+// Update work centers data with proper type
+const workCenters: WorkCenter[] = [
   { id: 'WC1001', name: 'Assembly Line 1', category: 'Assembly', plant: '1000', capacity: '100%', status: 'Active' },
   { id: 'WC1002', name: 'Assembly Line 2', category: 'Assembly', plant: '1000', capacity: '80%', status: 'Active' },
   { id: 'WC1003', name: 'Paint Shop', category: 'Finishing', plant: '1000', capacity: '90%', status: 'Active' },
@@ -54,7 +77,8 @@ const workCenters = [
   { id: 'WC1005', name: 'Packaging', category: 'Logistics', plant: '1000', capacity: '100%', status: 'Active' },
 ];
 
-const workCenterColumns = [
+// Update work center columns with proper type
+const workCenterColumns: ColumnDef<WorkCenter, unknown>[] = [
   { accessorKey: 'id', header: 'Work Center ID' },
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'category', header: 'Category' },
@@ -63,6 +87,7 @@ const workCenterColumns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>

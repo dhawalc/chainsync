@@ -12,9 +12,20 @@ import {
   FunnelIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline';
+import { ColumnDef } from '@tanstack/react-table';
 
-// Sample data - in a real app, this would come from your API
-const materials = [
+// Add interface for data type
+interface Material {
+  id: string;
+  name: string;
+  type: string;
+  group: string;
+  unit: string;
+  status: string;
+}
+
+// Update sample data with proper type
+const materials: Material[] = [
   { id: '1000001', name: 'Aluminum Sheet 3mm', type: 'ROH', group: 'METAL', unit: 'EA', status: 'Active' },
   { id: '1000002', name: 'Steel Rod 10mm', type: 'ROH', group: 'METAL', unit: 'EA', status: 'Active' },
   { id: '1000003', name: 'Plastic Housing Type A', type: 'HALB', group: 'PLASTIC', unit: 'EA', status: 'Active' },
@@ -22,7 +33,8 @@ const materials = [
   { id: '1000005', name: 'Final Product X', type: 'FERT', group: 'FINISHED', unit: 'EA', status: 'Active' },
 ];
 
-const columns = [
+// Update columns with proper type
+const columns: ColumnDef<Material, unknown>[] = [
   { accessorKey: 'id', header: 'Material ID' },
   { accessorKey: 'name', header: 'Description' },
   { accessorKey: 'type', header: 'Material Type' },
@@ -31,6 +43,7 @@ const columns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>

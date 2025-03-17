@@ -11,36 +11,36 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon,
   ArrowPathIcon,
-  DocumentDuplicateIcon
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 import { ColumnDef } from '@tanstack/react-table';
 
-// Add interface for data type
-interface Bom {
+// Add interface for vendor data type
+interface Vendor {
   id: string;
-  material: string;
-  description: string;
-  plant: string;
+  name: string;
+  type: string;
+  region: string;
+  country: string;
   status: string;
-  components: number;
 }
 
-// Update sample data with proper type
-const boms: Bom[] = [
-  { id: 'BOM1001', material: 'Final Product X', description: 'Standard BOM for Product X', plant: '1000', status: 'Active', components: 12 },
-  { id: 'BOM1002', material: 'Subassembly A', description: 'Subassembly for Electronics', plant: '1000', status: 'Active', components: 8 },
-  { id: 'BOM1003', material: 'Subassembly B', description: 'Mechanical Components', plant: '1000', status: 'Active', components: 6 },
-  { id: 'BOM1004', material: 'Final Product Y', description: 'Standard BOM for Product Y', plant: '1000', status: 'Active', components: 15 },
-  { id: 'BOM1005', material: 'Final Product Z', description: 'Alternative BOM for Product Z', plant: '1004', status: 'In Development', components: 10 },
+// Sample data with proper type
+const vendors: Vendor[] = [
+  { id: 'V1001', name: 'Supplier A', type: 'Raw Material', region: 'North America', country: 'USA', status: 'Active' },
+  { id: 'V1002', name: 'Supplier B', type: 'Component', region: 'Europe', country: 'Germany', status: 'Active' },
+  { id: 'V1003', name: 'Supplier C', type: 'Service', region: 'Asia', country: 'China', status: 'Active' },
+  { id: 'V1004', name: 'Supplier D', type: 'Raw Material', region: 'South America', country: 'Brazil', status: 'Inactive' },
+  { id: 'V1005', name: 'Supplier E', type: 'Component', region: 'Europe', country: 'France', status: 'Active' },
 ];
 
-// Update columns with proper type
-const columns: ColumnDef<Bom, unknown>[] = [
-  { accessorKey: 'id', header: 'BOM ID' },
-  { accessorKey: 'material', header: 'Material' },
-  { accessorKey: 'description', header: 'Description' },
-  { accessorKey: 'plant', header: 'Plant' },
-  { accessorKey: 'components', header: 'Components' },
+// Define columns with proper type
+const columns: ColumnDef<Vendor, unknown>[] = [
+  { accessorKey: 'id', header: 'Vendor ID' },
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'type', header: 'Type' },
+  { accessorKey: 'region', header: 'Region' },
+  { accessorKey: 'country', header: 'Country' },
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
@@ -50,25 +50,26 @@ const columns: ColumnDef<Bom, unknown>[] = [
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">View</Button>
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">
-          <DocumentDuplicateIcon className="h-4 w-4" />
+          <BuildingOfficeIcon className="h-4 w-4" />
         </Button>
       </div>
     ),
   },
 ];
 
-export default function BomMasterPage() {
+export default function VendorMasterPage() {
   return (
     <MdmPageTemplate
-      title="Bill of Materials"
-      description="Manage bill of materials (BOM) data including components, quantities, and relationships. Define product structures and maintain engineering and manufacturing BOMs."
+      title="Vendor Master"
+      description="Manage vendor information. Define supplier types, regions, and status for procurement and supplier relationship management."
+      outboundApoEnabled={false}
     >
       <div className="mb-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div className="flex flex-wrap gap-2">
             <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
               <PlusCircleIcon className="h-4 w-4 mr-2" />
-              New BOM
+              New Vendor
             </Button>
             <Button variant="outline" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">
               <ArrowUpTrayIcon className="h-4 w-4 mr-2" />
@@ -91,7 +92,7 @@ export default function BomMasterPage() {
               </div>
               <input
                 type="text"
-                placeholder="Search BOMs..."
+                placeholder="Search vendors..."
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full md:w-64"
               />
             </div>
@@ -104,9 +105,9 @@ export default function BomMasterPage() {
       
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-200 bg-gray-50">
-          <h3 className="font-medium text-gray-700">Bill of Materials List</h3>
+          <h3 className="font-medium text-gray-700">Vendor List</h3>
         </div>
-        <DataTable columns={columns} data={boms} />
+        <DataTable columns={columns} data={vendors} />
       </div>
     </MdmPageTemplate>
   );

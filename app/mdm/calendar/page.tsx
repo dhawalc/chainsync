@@ -14,9 +14,21 @@ import {
   CalendarIcon,
   EyeIcon
 } from '@heroicons/react/24/outline';
+import { ColumnDef } from '@tanstack/react-table';
 
-// Sample data
-const calendars = [
+// Add interface for data type
+interface Calendar {
+  id: string;
+  name: string;
+  type: string;
+  year: string;
+  workingDays: number;
+  holidays: number;
+  status: string;
+}
+
+// Update sample data with proper type
+const calendars: Calendar[] = [
   { id: 'CAL1001', name: 'Standard Factory Calendar', type: 'Factory', year: '2023', workingDays: 251, holidays: 10, status: 'Active' },
   { id: 'CAL1002', name: 'US Plant Calendar', type: 'Factory', year: '2023', workingDays: 249, holidays: 12, status: 'Active' },
   { id: 'CAL1003', name: 'European Plant Calendar', type: 'Factory', year: '2023', workingDays: 245, holidays: 15, status: 'Active' },
@@ -24,7 +36,8 @@ const calendars = [
   { id: 'CAL1005', name: 'Maintenance Schedule', type: 'Maintenance', year: '2023', workingDays: 52, holidays: 0, status: 'Active' },
 ];
 
-const columns = [
+// Update columns with proper type
+const columns: ColumnDef<Calendar, unknown>[] = [
   { accessorKey: 'id', header: 'Calendar ID' },
   { accessorKey: 'name', header: 'Name' },
   { accessorKey: 'type', header: 'Type' },
@@ -34,6 +47,7 @@ const columns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>

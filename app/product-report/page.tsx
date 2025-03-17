@@ -20,8 +20,338 @@ import {
 } from 'recharts';
 import { ChevronDownIcon, ChevronRightIcon, ArrowDownTrayIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
+// Add interfaces for data types
+interface ProductOption {
+  value: string;
+  label: string;
+}
+
+interface TimeBucketOption {
+  value: string;
+  label: string;
+}
+
+interface LocationOption {
+  value: string;
+  label: string;
+}
+
+interface DataPoint {
+  date: string;
+  required: number;
+  supply: number;
+  projectedInventory: number;
+}
+
+interface ComponentData {
+  component: string;
+  location: string;
+  expanded?: boolean;
+  parentComponent?: string;
+  data: DataPoint[];
+}
+
+interface TopLevelData {
+  product: string;
+  description: string;
+  location: string;
+  data: DataPoint[];
+}
+
+interface ReportData {
+  topLevelData: TopLevelData;
+  level2Components: ComponentData[];
+  level3Components: ComponentData[];
+}
+
+interface ChartDataPoint {
+  date: string;
+  Required: number;
+  Supply: number;
+  'Projected Inventory': number;
+}
+
+// Add interfaces for chart components
+interface ChartProps {
+  data: any[];
+  width?: number;
+  height?: number;
+  margin?: { top: number; right: number; bottom: number; left: number };
+}
+
+interface ReportControlsProps {
+  selectedProduct: string;
+  selectedTimeBucket: string;
+  selectedLocation: string;
+  showProjectedInventory: boolean;
+  onProductChange: (value: string) => void;
+  onTimeBucketChange: (value: string) => void;
+  onLocationChange: (value: string) => void;
+  onProjectedInventoryChange: (checked: boolean) => void;
+}
+
+interface ReportTableProps {
+  data: DataPoint[];
+  dates: string[];
+  showProjectedInventory: boolean;
+  onComponentSelect: (component: ComponentData) => void;
+}
+
+interface ReportChartProps {
+  data: ChartDataPoint[];
+  showProjectedInventory: boolean;
+}
+
+// Add type for chart data
+type ChartData = DataPoint[] | ComponentData[] | TopLevelData[];
+
+// Add utility function for chart data type checking
+const isDataPoint = (data: ChartData): data is DataPoint[] => {
+  return data.length > 0 && 'date' in data[0] && 'required' in data[0];
+};
+
+const isComponentData = (data: ChartData): data is ComponentData[] => {
+  return data.length > 0 && 'component' in data[0] && 'data' in data[0];
+};
+
+const isTopLevelData = (data: ChartData): data is TopLevelData[] => {
+  return data.length > 0 && 'product' in data[0] && 'data' in data[0];
+};
+
+// Add types for chart data
+interface ComponentBreakdownData {
+  name: string;
+  required: number;
+  supply: number;
+}
+
+interface SupplyDemandData {
+  date: string;
+  required: number;
+  supply: number;
+  gap: number;
+}
+
+// Add utility functions with proper types
+const calculateTotalRequired = (data: DataPoint[]): number => {
+  return data.reduce((sum, item) => sum + item.required, 0);
+};
+
+const calculateTotalSupply = (data: DataPoint[]): number => {
+  return data.reduce((sum, item) => sum + item.supply, 0);
+};
+
+const calculateSupplyDemandGap = (required: number, supply: number): number => {
+  return supply - required;
+};
+
+// Add types for event handlers
+type ProductChangeHandler = (value: string) => void;
+type TimeBucketChangeHandler = (value: string) => void;
+type LocationChangeHandler = (value: string) => void;
+type ProjectedInventoryChangeHandler = (checked: boolean) => void;
+type ComponentExpansionHandler = (componentName: string) => void;
+type ComponentSelectHandler = (component: ComponentData) => void;
+
+// Add type for loading state
+interface LoadingState {
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+}
+
+// Add type for report state
+interface ReportState {
+  reportData: ReportData;
+  setReportData: (data: ReportData) => void;
+}
+
+// Add type for component state
+interface ComponentState {
+  expandedComponents: Record<string, boolean>;
+  selectedComponent: ComponentData | null;
+  activeTab: 'table' | 'chart';
+  setExpandedComponents: (components: Record<string, boolean>) => void;
+  setSelectedComponent: (component: ComponentData | null) => void;
+  setActiveTab: (tab: 'table' | 'chart') => void;
+}
+
+// Add ReportControls component with proper types
+const ReportControls: React.FC<ReportControlsProps> = ({
+  selectedProduct,
+  selectedTimeBucket,
+  selectedLocation,
+  showProjectedInventory,
+  onProductChange,
+  onTimeBucketChange,
+  onLocationChange,
+  onProjectedInventoryChange,
+}) => {
+  return (
+    <Card className="mb-8">
+      <CardHeader>
+        <CardTitle className="text-lg">Report Parameters</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <Label htmlFor="bom-selection" className="block text-sm font-medium text-gray-700 mb-1">
+              Top Level BOM for Report Out:
+            </Label>
+            <select
+              id="bom-selection"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedProduct}
+              onChange={(e) => onProductChange(e.target.value)}
+            >
+              {productOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <Label htmlFor="time-bucket" className="block text-sm font-medium text-gray-700 mb-1">
+              Time Bucket:
+            </Label>
+            <select
+              id="time-bucket"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedTimeBucket}
+              onChange={(e) => onTimeBucketChange(e.target.value)}
+            >
+              {timeBucketOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <Label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              Location:
+            </Label>
+            <select
+              id="location"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedLocation}
+              onChange={(e) => onLocationChange(e.target.value)}
+            >
+              {locationOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        <div className="mt-4 flex items-center">
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="projected-inventory" 
+              checked={showProjectedInventory}
+              onCheckedChange={(checked) => onProjectedInventoryChange(checked === true)}
+            />
+            <Label htmlFor="projected-inventory" className="text-sm font-medium text-gray-700">
+              With Projected Inventory?
+            </Label>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Add ReportTable component with proper types
+const ReportTable: React.FC<ReportTableProps> = ({
+  data,
+  dates,
+  showProjectedInventory,
+  onComponentSelect,
+}) => {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Date</th>
+            {dates.map((date, index) => (
+              <th key={index} className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{date}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          <tr>
+            <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Required</td>
+            {data.map((item, index) => (
+              <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
+            ))}
+          </tr>
+          <tr>
+            <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Supply</td>
+            {data.map((item, index) => (
+              <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
+            ))}
+          </tr>
+          {showProjectedInventory && (
+            <tr>
+              <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Projected Inventory</td>
+              {data.map((item, index) => (
+                <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
+              ))}
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+// Add ReportChart component with proper types
+const ReportChart: React.FC<ReportChartProps> = ({
+  data,
+  showProjectedInventory,
+}) => {
+  return (
+    <div className="h-96">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          data={data}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line 
+            type="monotone" 
+            dataKey="Required" 
+            stroke="#8884d8" 
+            strokeWidth={2}
+            activeDot={{ r: 8 }}
+          />
+          <Line 
+            type="monotone" 
+            dataKey="Supply" 
+            stroke="#82ca9d" 
+            strokeWidth={2}
+            activeDot={{ r: 8 }}
+          />
+          {showProjectedInventory && (
+            <Line 
+              type="monotone" 
+              dataKey="Projected Inventory" 
+              stroke="#ffc658" 
+              strokeWidth={2}
+              activeDot={{ r: 8 }}
+            />
+          )}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
 // Mock data for the report
-const productOptions = [
+const productOptions: ProductOption[] = [
   { value: 'product-a', label: 'Product A - Smartphone' },
   { value: 'product-b', label: 'Product B - Tablet' },
   { value: 'product-c', label: 'Product C - Laptop' },
@@ -29,7 +359,7 @@ const productOptions = [
   { value: 'product-e', label: 'Product E - Wearable' },
 ];
 
-const timeBucketOptions = [
+const timeBucketOptions: TimeBucketOption[] = [
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly' },
   { value: 'monthly', label: 'Monthly' },
@@ -37,7 +367,7 @@ const timeBucketOptions = [
   { value: 'physical-quarter', label: 'Physical Quarter' },
 ];
 
-const locationOptions = [
+const locationOptions: LocationOption[] = [
   { value: 'all', label: 'All Locations' },
   { value: 'factory-1', label: 'Factory 1' },
   { value: 'factory-2', label: 'Factory 2' },
@@ -60,8 +390,8 @@ const generateDates = () => {
 const dates = generateDates();
 
 // Generate mock data for the report
-const generateReportData = () => {
-  const topLevelData = {
+const generateReportData = (): ReportData => {
+  const topLevelData: TopLevelData = {
     product: 'Product A',
     description: 'High-end Smartphone',
     location: 'Factory 1',
@@ -73,7 +403,7 @@ const generateReportData = () => {
     })
   };
 
-  const level2Components = [
+  const level2Components: ComponentData[] = [
     {
       component: 'Component 1 - Display Module',
       location: 'Factory 2',
@@ -98,7 +428,7 @@ const generateReportData = () => {
     }
   ];
 
-  const level3Components = [
+  const level3Components: ComponentData[] = [
     {
       component: 'Subcomponent 1 - LCD Panel',
       location: 'Factory 4',
@@ -137,8 +467,8 @@ const generateReportData = () => {
   return { topLevelData, level2Components, level3Components };
 };
 
-// Generate chart data
-const generateChartData = (componentData) => {
+// Update generateChartData to handle both types
+const generateChartData = (componentData: ComponentData | TopLevelData): ChartDataPoint[] => {
   return componentData.data.map((item) => ({
     date: item.date,
     Required: item.required,
@@ -153,16 +483,66 @@ const formatNumber = (num: number) => {
   return num.toString();
 };
 
+// Add utility function for component breakdown data
+const generateComponentBreakdownData = (components: ComponentData[]): ComponentBreakdownData[] => {
+  return components.map(comp => ({
+    name: comp.component.split(' - ')[0],
+    required: calculateTotalRequired(comp.data),
+    supply: calculateTotalSupply(comp.data),
+  }));
+};
+
+// Add utility function for supply demand data
+const generateSupplyDemandData = (dates: string[], data: DataPoint[]): SupplyDemandData[] => {
+  return dates.map((date, i) => ({
+    date,
+    required: data[i].required,
+    supply: data[i].supply,
+    gap: calculateSupplyDemandGap(data[i].required, data[i].supply),
+  }));
+};
+
+// Update the main component with proper types
 export default function ProductReportPage() {
-  const [selectedProduct, setSelectedProduct] = useState(productOptions[0].value);
-  const [selectedTimeBucket, setSelectedTimeBucket] = useState(timeBucketOptions[2].value);
-  const [selectedLocation, setSelectedLocation] = useState(locationOptions[0].value);
-  const [showProjectedInventory, setShowProjectedInventory] = useState(true);
-  const [reportData, setReportData] = useState(generateReportData());
-  const [expandedComponents, setExpandedComponents] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('table');
-  const [selectedComponent, setSelectedComponent] = useState(null);
+  // State management with proper types
+  const [selectedProduct, setSelectedProduct] = useState<string>(productOptions[0].value);
+  const [selectedTimeBucket, setSelectedTimeBucket] = useState<string>(timeBucketOptions[2].value);
+  const [selectedLocation, setSelectedLocation] = useState<string>(locationOptions[0].value);
+  const [showProjectedInventory, setShowProjectedInventory] = useState<boolean>(true);
+  const [reportData, setReportData] = useState<ReportData>(generateReportData());
+  const [expandedComponents, setExpandedComponents] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<'table' | 'chart'>('table');
+  const [selectedComponent, setSelectedComponent] = useState<ComponentData | null>(null);
+
+  // Event handlers with proper types
+  const handleProductChange: ProductChangeHandler = (value) => {
+    setSelectedProduct(value);
+  };
+
+  const handleTimeBucketChange: TimeBucketChangeHandler = (value) => {
+    setSelectedTimeBucket(value);
+  };
+
+  const handleLocationChange: LocationChangeHandler = (value) => {
+    setSelectedLocation(value);
+  };
+
+  const handleProjectedInventoryChange: ProjectedInventoryChangeHandler = (checked) => {
+    setShowProjectedInventory(checked);
+  };
+
+  const handleComponentExpansion: ComponentExpansionHandler = (componentName) => {
+    setExpandedComponents({
+      ...expandedComponents,
+      [componentName]: !expandedComponents[componentName]
+    });
+  };
+
+  const handleComponentSelect: ComponentSelectHandler = (component) => {
+    setSelectedComponent(component);
+    setActiveTab('chart');
+  };
 
   // Simulate loading data when filters change
   useEffect(() => {
@@ -177,18 +557,6 @@ export default function ProductReportPage() {
     loadData();
   }, [selectedProduct, selectedTimeBucket, selectedLocation]);
 
-  const toggleComponentExpansion = (componentName) => {
-    setExpandedComponents({
-      ...expandedComponents,
-      [componentName]: !expandedComponents[componentName]
-    });
-  };
-
-  const handleComponentSelect = (component) => {
-    setSelectedComponent(component);
-    setActiveTab('chart');
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -199,83 +567,27 @@ export default function ProductReportPage() {
             <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button variant="outline" className="flex items-center" onClick={() => setReportData(generateReportData())}>
+          <Button 
+            variant="outline" 
+            className="flex items-center" 
+            onClick={() => setReportData(generateReportData())}
+          >
             <ArrowPathIcon className="h-4 w-4 mr-2" />
             Refresh
           </Button>
         </div>
       </div>
       
-      {/* Report Controls */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle className="text-lg">Report Parameters</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <Label htmlFor="bom-selection" className="block text-sm font-medium text-gray-700 mb-1">
-                Top Level BOM for Report Out:
-              </Label>
-              <select
-                id="bom-selection"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={selectedProduct}
-                onChange={(e) => setSelectedProduct(e.target.value)}
-              >
-                {productOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <Label htmlFor="time-bucket" className="block text-sm font-medium text-gray-700 mb-1">
-                Time Bucket:
-              </Label>
-              <select
-                id="time-bucket"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={selectedTimeBucket}
-                onChange={(e) => setSelectedTimeBucket(e.target.value)}
-              >
-                {timeBucketOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <Label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-                Location:
-              </Label>
-              <select
-                id="location"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-              >
-                {locationOptions.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          
-          <div className="mt-4 flex items-center">
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="projected-inventory" 
-                checked={showProjectedInventory}
-                onCheckedChange={(checked) => setShowProjectedInventory(checked === true)}
-              />
-              <Label htmlFor="projected-inventory" className="text-sm font-medium text-gray-700">
-                With Projected Inventory?
-              </Label>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <ReportControls
+        selectedProduct={selectedProduct}
+        selectedTimeBucket={selectedTimeBucket}
+        selectedLocation={selectedLocation}
+        showProjectedInventory={showProjectedInventory}
+        onProductChange={handleProductChange}
+        onTimeBucketChange={handleTimeBucketChange}
+        onLocationChange={handleLocationChange}
+        onProjectedInventoryChange={handleProjectedInventoryChange}
+      />
       
       {/* View Tabs */}
       <div className="flex mb-6 border-b border-gray-200">
@@ -306,42 +618,12 @@ export default function ProductReportPage() {
               <CardTitle className="text-lg">Top Level of Mfg Process: {reportData.topLevelData.product}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Product</th>
-                      <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Product Description</th>
-                      <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Location</th>
-                      {dates.map((date, index) => (
-                        <th key={index} className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{date}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    <tr>
-                      <td className="px-4 py-2 whitespace-nowrap font-medium" rowSpan={showProjectedInventory ? 3 : 2}>{reportData.topLevelData.product}</td>
-                      <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{reportData.topLevelData.description}</td>
-                      <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{reportData.topLevelData.location}</td>
-                      {reportData.topLevelData.data.map((item, index) => (
-                        <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
-                      ))}
-                    </tr>
-                    <tr>
-                      {reportData.topLevelData.data.map((item, index) => (
-                        <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
-                      ))}
-                    </tr>
-                    {showProjectedInventory && (
-                      <tr>
-                        {reportData.topLevelData.data.map((item, index) => (
-                          <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
-                        ))}
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <ReportTable
+                data={reportData.topLevelData.data}
+                dates={dates}
+                showProjectedInventory={showProjectedInventory}
+                onComponentSelect={handleComponentSelect}
+              />
             </CardContent>
           </Card>
           
@@ -351,97 +633,40 @@ export default function ProductReportPage() {
               <CardTitle className="text-lg">Level 2 Components</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Component</th>
-                      <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Location</th>
-                      <th className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6"></th>
-                      {dates.map((date, index) => (
-                        <th key={index} className="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{date}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {reportData.level2Components.map((component, componentIndex) => (
-                      <React.Fragment key={componentIndex}>
-                        <tr className="cursor-pointer hover:bg-gray-50" onClick={() => handleComponentSelect(component)}>
-                          <td className="px-4 py-2 whitespace-nowrap font-medium" rowSpan={showProjectedInventory ? 3 : 2}>
-                            <div className="flex items-center">
-                              <button 
-                                className="mr-2 focus:outline-none" 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleComponentExpansion(component.component);
-                                }}
-                              >
-                                {expandedComponents[component.component] ? (
-                                  <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-                                ) : (
-                                  <ChevronRightIcon className="h-4 w-4 text-gray-500" />
-                                )}
-                              </button>
-                              {component.component}
-                            </div>
-                          </td>
-                          <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{component.location}</td>
-                          <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Required</td>
-                          {component.data.map((item, index) => (
-                            <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
-                          ))}
-                        </tr>
-                        <tr className="hover:bg-gray-50" onClick={() => handleComponentSelect(component)}>
-                          <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Supply</td>
-                          {component.data.map((item, index) => (
-                            <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
-                          ))}
-                        </tr>
-                        {showProjectedInventory && (
-                          <tr className="hover:bg-gray-50" onClick={() => handleComponentSelect(component)}>
-                            <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Projected Inventory</td>
-                            {component.data.map((item, index) => (
-                              <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
-                            ))}
-                          </tr>
+              {reportData.level2Components.map((component, index) => (
+                <div key={index} className="mb-4">
+                  <div className="flex items-center justify-between p-4 bg-gray-50">
+                    <div className="flex items-center">
+                      <button 
+                        className="mr-2 focus:outline-none" 
+                        onClick={() => handleComponentExpansion(component.component)}
+                      >
+                        {expandedComponents[component.component] ? (
+                          <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+                        ) : (
+                          <ChevronRightIcon className="h-4 w-4 text-gray-500" />
                         )}
-                        
-                        {/* Level 3 Components (if expanded) */}
-                        {expandedComponents[component.component] && reportData.level3Components
-                          .filter(subcomp => subcomp.parentComponent === component.component)
-                          .map((subcomp, subIndex) => (
-                            <React.Fragment key={subIndex}>
-                              <tr className="bg-gray-50 hover:bg-gray-100" onClick={() => handleComponentSelect(subcomp)}>
-                                <td className="px-4 py-2 whitespace-nowrap font-medium pl-8" rowSpan={showProjectedInventory ? 3 : 2}>
-                                  {subcomp.component}
-                                </td>
-                                <td className="px-4 py-2 whitespace-nowrap" rowSpan={showProjectedInventory ? 3 : 2}>{subcomp.location}</td>
-                                <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Required</td>
-                                {subcomp.data.map((item, index) => (
-                                  <td key={index} className="px-4 py-2 whitespace-nowrap text-gray-700">{formatNumber(item.required)}</td>
-                                ))}
-                              </tr>
-                              <tr className="bg-gray-50 hover:bg-gray-100" onClick={() => handleComponentSelect(subcomp)}>
-                                <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Supply</td>
-                                {subcomp.data.map((item, index) => (
-                                  <td key={index} className="px-4 py-2 whitespace-nowrap text-blue-600">{formatNumber(item.supply)}</td>
-                                ))}
-                              </tr>
-                              {showProjectedInventory && (
-                                <tr className="bg-gray-50 hover:bg-gray-100" onClick={() => handleComponentSelect(subcomp)}>
-                                  <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-500">Projected Inventory</td>
-                                  {subcomp.data.map((item, index) => (
-                                    <td key={index} className="px-4 py-2 whitespace-nowrap text-green-600">{formatNumber(item.projectedInventory)}</td>
-                                  ))}
-                                </tr>
-                              )}
-                            </React.Fragment>
-                          ))}
-                      </React.Fragment>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                      </button>
+                      <h3 className="font-medium">{component.component}</h3>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleComponentSelect(component)}
+                    >
+                      View Chart
+                    </Button>
+                  </div>
+                  {expandedComponents[component.component] && (
+                    <ReportTable
+                      data={component.data}
+                      dates={dates}
+                      showProjectedInventory={showProjectedInventory}
+                      onComponentSelect={handleComponentSelect}
+                    />
+                  )}
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
@@ -456,45 +681,12 @@ export default function ProductReportPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={selectedComponent ? 
-                    generateChartData(selectedComponent) : 
-                    generateChartData(reportData.topLevelData)}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="Required" 
-                    stroke="#8884d8" 
-                    strokeWidth={2}
-                    activeDot={{ r: 8 }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="Supply" 
-                    stroke="#82ca9d" 
-                    strokeWidth={2}
-                    activeDot={{ r: 8 }}
-                  />
-                  {showProjectedInventory && (
-                    <Line 
-                      type="monotone" 
-                      dataKey="Projected Inventory" 
-                      stroke="#ffc658" 
-                      strokeWidth={2}
-                      activeDot={{ r: 8 }}
-                    />
-                  )}
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <ReportChart
+              data={selectedComponent ? 
+                generateChartData(selectedComponent) : 
+                generateChartData(reportData.topLevelData)}
+              showProjectedInventory={showProjectedInventory}
+            />
             
             {!selectedComponent && (
               <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -502,11 +694,7 @@ export default function ProductReportPage() {
                   <h3 className="text-lg font-medium mb-4">Component Breakdown</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart
-                      data={reportData.level2Components.map(comp => ({
-                        name: comp.component.split(' - ')[0],
-                        required: comp.data.reduce((sum, item) => sum + item.required, 0),
-                        supply: comp.data.reduce((sum, item) => sum + item.supply, 0),
-                      }))}
+                      data={generateComponentBreakdownData(reportData.level2Components)}
                       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -524,12 +712,7 @@ export default function ProductReportPage() {
                   <h3 className="text-lg font-medium mb-4">Supply vs. Demand Trend</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart
-                      data={dates.map((date, i) => ({
-                        date,
-                        required: reportData.topLevelData.data[i].required,
-                        supply: reportData.topLevelData.data[i].supply,
-                        gap: reportData.topLevelData.data[i].supply - reportData.topLevelData.data[i].required,
-                      }))}
+                      data={generateSupplyDemandData(dates, reportData.topLevelData.data)}
                       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />

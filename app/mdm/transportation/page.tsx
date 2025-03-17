@@ -13,9 +13,22 @@ import {
   ArrowPathIcon,
   TruckIcon
 } from '@heroicons/react/24/outline';
+import { ColumnDef } from '@tanstack/react-table';
 
-// Sample data
-const transportationLanes = [
+// Add interface for transportation lane data type
+interface TransportationLane {
+  id: string;
+  fromLocation: string;
+  toLocation: string;
+  mode: string;
+  distance: string;
+  transitTime: string;
+  cost: string;
+  status: string;
+}
+
+// Update sample data with proper type
+const transportationLanes: TransportationLane[] = [
   { id: 'TL1001', fromLocation: 'Main Plant (1000)', toLocation: 'Distribution Center East (1001)', mode: 'Truck', distance: '250 km', transitTime: '1 day', cost: '$500', status: 'Active' },
   { id: 'TL1002', fromLocation: 'Main Plant (1000)', toLocation: 'European Plant (1004)', mode: 'Air', distance: '6500 km', transitTime: '2 days', cost: '$3500', status: 'Active' },
   { id: 'TL1003', fromLocation: 'European Plant (1004)', toLocation: 'Distribution Center East (1001)', mode: 'Ship', distance: '7000 km', transitTime: '14 days', cost: '$1800', status: 'Active' },
@@ -23,7 +36,8 @@ const transportationLanes = [
   { id: 'TL1005', fromLocation: 'Main Plant (1000)', toLocation: 'Customer Zone B', mode: 'Rail', distance: '450 km', transitTime: '2 days', cost: '$650', status: 'Inactive' },
 ];
 
-const columns = [
+// Update columns with proper type
+const columns: ColumnDef<TransportationLane, unknown>[] = [
   { accessorKey: 'id', header: 'Lane ID' },
   { accessorKey: 'fromLocation', header: 'From Location' },
   { accessorKey: 'toLocation', header: 'To Location' },
@@ -34,6 +48,7 @@ const columns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>

@@ -1,96 +1,293 @@
 'use client';
 
-import { useState } from 'react';
-import MdmPageTemplate from '../components/MdmPageTemplate';
-import { DataTable } from '@/components/ui/data-table';
+import { useState, Suspense } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  PlusCircleIcon, 
-  ArrowDownTrayIcon, 
-  ArrowUpTrayIcon,
-  MagnifyingGlassIcon,
-  FunnelIcon,
-  ArrowPathIcon
-} from '@heroicons/react/24/outline';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PlusIcon, PencilIcon } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
+import LocationModal from '@/components/location/LocationModal';
+import { Location } from '@/types/location';
 
-// Sample data
-const locations = [
-  { id: '1000', name: 'Main Plant', type: 'Plant', region: 'North', country: 'USA', status: 'Active' },
-  { id: '1001', name: 'Distribution Center East', type: 'DC', region: 'East', country: 'USA', status: 'Active' },
-  { id: '1002', name: 'Storage Area A', type: 'Storage Location', region: 'North', country: 'USA', status: 'Active' },
-  { id: '1003', name: 'MRP Area Production', type: 'MRP Area', region: 'North', country: 'USA', status: 'Active' },
-  { id: '1004', name: 'European Plant', type: 'Plant', region: 'Europe', country: 'Germany', status: 'Active' },
-];
+// Import map component dynamically to avoid SSR issues
+const LocationMap = dynamic(
+  () => import('@/components/location/LocationMap'),
+  { ssr: false }
+);
 
-const columns = [
-  { accessorKey: 'id', header: 'Location ID' },
-  { accessorKey: 'name', header: 'Description' },
-  { accessorKey: 'type', header: 'Location Type' },
-  { accessorKey: 'region', header: 'Region' },
-  { accessorKey: 'country', header: 'Country' },
-  { accessorKey: 'status', header: 'Status' },
-  { 
-    id: 'actions',
-    cell: ({ row }) => (
-      <div className="flex space-x-2">
-        <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>
-        <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">View</Button>
-      </div>
-    ),
-  },
-];
+export default function LocationMaster() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [filters, setFilters] = useState({
+    active: true,
+    inactive: false,
+    internal: true,
+    external: true,
+    type: 'all',
+    supplier: 'all'
+  });
 
-export default function LocationMasterPage() {
+  // Demo data with multiple locations
+  const locations: Location[] = [
+    {
+      id: '1001',
+      name: 'Acme HQ',
+      type: 'Office',
+      description: 'Acme Headquarters',
+      address: '123 Main St',
+      city: 'San Jose',
+      state: 'CA',
+      country: 'US',
+      postal_code: '95112',
+      latitude: 37.3382,
+      longitude: -121.8863,
+      timezone: 'America/Los_Angeles',
+      isInternal: true,
+      isActive: true,
+      created_at: '2024-01-01',
+      updated_at: '2024-01-01'
+    },
+    {
+      id: '1002',
+      name: 'Irvine',
+      type: 'Mfg',
+      description: 'Irvine Manufacturing',
+      address: '456 Tech Drive',
+      city: 'Irvine',
+      state: 'CA',
+      country: 'US',
+      postal_code: '92618',
+      latitude: 33.6846,
+      longitude: -117.8265,
+      timezone: 'America/Los_Angeles',
+      isInternal: true,
+      isActive: true,
+      created_at: '2024-01-02',
+      updated_at: '2024-01-02'
+    },
+    {
+      id: '3001',
+      name: 'Sanmina Thailand',
+      type: 'Mfg',
+      description: 'Sanmina Thailand',
+      address: '789 Industrial Park',
+      city: 'xyz',
+      state: 'Bangkok',
+      country: 'Thailand',
+      postal_code: '10120',
+      latitude: 13.7563,
+      longitude: 100.5018,
+      timezone: 'Asia/Bangkok',
+      supplier: 'Sanmina',
+      isInternal: false,
+      isActive: true,
+      created_at: '2024-01-03',
+      updated_at: '2024-01-03'
+    },
+    {
+      id: '2001',
+      name: 'Celestica MX',
+      type: 'Mfg',
+      description: 'Celestica Mexico',
+      address: '321 Mfg Blvd',
+      city: 'Monterrey',
+      state: 'NL',
+      country: 'Mexico',
+      postal_code: '64000',
+      latitude: 25.6866,
+      longitude: -100.3161,
+      timezone: 'America/Monterrey',
+      supplier: 'Celestica',
+      isInternal: false,
+      isActive: true,
+      created_at: '2024-01-04',
+      updated_at: '2024-01-04'
+    }
+  ];
+
+  const handleAddLocation = () => {
+    setSelectedLocation(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditLocation = (location: Location) => {
+    setSelectedLocation(location);
+    setIsModalOpen(true);
+  };
+
+  // Filter locations based on current filters
+  const filteredLocations = locations.filter(location => {
+    if (location.isActive && !filters.active) return false;
+    if (!location.isActive && !filters.inactive) return false;
+    if (location.isInternal && !filters.internal) return false;
+    if (!location.isInternal && !filters.external) return false;
+    if (filters.type !== 'all' && location.type !== filters.type) return false;
+    if (filters.supplier !== 'all' && location.supplier !== filters.supplier) return false;
+    return true;
+  });
+
+  // Get unique types and suppliers for filter dropdowns
+  const types = Array.from(new Set(locations.map(l => l.type)));
+  const suppliers = Array.from(new Set(locations.map(l => l.supplier).filter((s): s is string => !!s)));
+
   return (
-    <MdmPageTemplate
-      title="Location Master"
-      description="Manage plants, MRP areas, storage locations, and other location data. Define and maintain geographical and organizational structures for your supply chain."
-    >
-      <div className="mb-6">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-          <div className="flex flex-wrap gap-2">
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-              <PlusCircleIcon className="h-4 w-4 mr-2" />
-              New Location
-            </Button>
-            <Button variant="outline" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">
-              <ArrowUpTrayIcon className="h-4 w-4 mr-2" />
-              Import
-            </Button>
-            <Button variant="outline" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">
-              <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-            <Button variant="outline" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">
-              <ArrowPathIcon className="h-4 w-4 mr-2" />
-              Refresh
-            </Button>
-          </div>
-          
-          <div className="flex gap-2">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search locations..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full md:w-64"
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900">Locations</h1>
+        <Button onClick={handleAddLocation}>
+          <PlusIcon className="h-5 w-5 mr-1" />
+          Add Location
+        </Button>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="active"
+                checked={filters.active}
+                onCheckedChange={(checked) => 
+                  setFilters(prev => ({ ...prev, active: checked as boolean }))
+                }
               />
+              <label htmlFor="active">Active</label>
             </div>
-            <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-50">
-              <FunnelIcon className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="inactive"
+                checked={filters.inactive}
+                onCheckedChange={(checked) => 
+                  setFilters(prev => ({ ...prev, inactive: checked as boolean }))
+                }
+              />
+              <label htmlFor="inactive">Inactive</label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="internal"
+                checked={filters.internal}
+                onCheckedChange={(checked) => 
+                  setFilters(prev => ({ ...prev, internal: checked as boolean }))
+                }
+              />
+              <label htmlFor="internal">Internal</label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="external"
+                checked={filters.external}
+                onCheckedChange={(checked) => 
+                  setFilters(prev => ({ ...prev, external: checked as boolean }))
+                }
+              />
+              <label htmlFor="external">External</label>
+            </div>
+            <Select
+              value={filters.type}
+              onValueChange={(value) => 
+                setFilters(prev => ({ ...prev, type: value }))
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                {types.map(type => (
+                  <SelectItem key={type} value={type}>{type}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={filters.supplier}
+              onValueChange={(value) => 
+                setFilters(prev => ({ ...prev, supplier: value }))
+              }
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Supplier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Suppliers</SelectItem>
+                {suppliers.map(supplier => (
+                  <SelectItem key={supplier} value={supplier}>{supplier}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
-      </div>
-      
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 bg-gray-50">
-          <h3 className="font-medium text-gray-700">Location List</h3>
-        </div>
-        <DataTable columns={columns} data={locations} />
-      </div>
-    </MdmPageTemplate>
+        </CardContent>
+      </Card>
+
+      {/* Map */}
+      <Card>
+        <CardContent className="p-4">
+          <Suspense fallback={
+            <div className="h-[400px] w-full flex items-center justify-center bg-gray-100">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+            </div>
+          }>
+            <LocationMap locations={filteredLocations} />
+          </Suspense>
+        </CardContent>
+      </Card>
+
+      {/* Grid */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Active</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredLocations.map((location) => (
+                  <tr key={location.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{location.id}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{location.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{location.type}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{location.description}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{location.city}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{location.country}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{location.supplier || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {location.isActive ? 'Yes' : 'No'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditLocation(location)}
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <LocationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        location={selectedLocation}
+      />
+    </div>
   );
 } 

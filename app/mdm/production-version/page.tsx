@@ -13,9 +13,22 @@ import {
   ArrowPathIcon,
   CalendarIcon
 } from '@heroicons/react/24/outline';
+import { ColumnDef } from '@tanstack/react-table';
 
-// Sample data
-const productionVersions = [
+// Add interface for data type
+interface ProductionVersion {
+  id: string;
+  material: string;
+  plant: string;
+  bom: string;
+  routing: string;
+  validFrom: string;
+  validTo: string;
+  status: string;
+}
+
+// Update sample data with proper type
+const productionVersions: ProductionVersion[] = [
   { id: 'PV1001', material: 'Final Product X', plant: '1000', bom: 'BOM1001', routing: 'R1001', validFrom: '2023-01-01', validTo: '2099-12-31', status: 'Active' },
   { id: 'PV1002', material: 'Final Product Y', plant: '1000', bom: 'BOM1004', routing: 'R1004', validFrom: '2023-01-01', validTo: '2099-12-31', status: 'Active' },
   { id: 'PV1003', material: 'Final Product Z', plant: '1004', bom: 'BOM1005', routing: 'R1005', validFrom: '2023-06-01', validTo: '2099-12-31', status: 'In Development' },
@@ -23,7 +36,8 @@ const productionVersions = [
   { id: 'PV1005', material: 'Subassembly A', plant: '1000', bom: 'BOM1002', routing: 'R1002', validFrom: '2023-01-01', validTo: '2099-12-31', status: 'Active' },
 ];
 
-const columns = [
+// Update columns with proper type
+const columns: ColumnDef<ProductionVersion, unknown>[] = [
   { accessorKey: 'id', header: 'Version ID' },
   { accessorKey: 'material', header: 'Material' },
   { accessorKey: 'plant', header: 'Plant' },
@@ -34,6 +48,7 @@ const columns = [
   { accessorKey: 'status', header: 'Status' },
   { 
     id: 'actions',
+    header: 'Actions',
     cell: ({ row }) => (
       <div className="flex space-x-2">
         <Button variant="outline" size="sm" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">Edit</Button>
