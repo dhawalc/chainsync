@@ -28,8 +28,9 @@ gcloud run deploy ${SERVICE_NAME} \
   --region ${REGION} \
   --allow-unauthenticated \
   --memory 1Gi \
+  --port 8080 \
   --add-cloudsql-instances ${PROJECT_ID}:${REGION}:chainsync-db \
-  --set-env-vars DATABASE_URL="${DATABASE_URL}"
+  --set-env-vars DATABASE_URL="${DATABASE_URL},PORT=8080"
 
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')

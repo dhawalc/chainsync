@@ -56,7 +56,7 @@
     USER nextjs
     
     # Set environment variables
-    ENV PORT=3000
+    ENV PORT=8080
     ENV HOSTNAME="0.0.0.0"
     
     # Run database migrations (if any) and start the application
