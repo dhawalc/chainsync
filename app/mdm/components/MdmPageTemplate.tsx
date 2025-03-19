@@ -26,15 +26,7 @@ export default function MdmPageTemplate({
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
       {/* Header with breadcrumb */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="hover:text-indigo-600 cursor-pointer">Master Data</span>
-            <ChevronRightIcon className="h-4 w-4 mx-1" />
-            <span className="text-indigo-600 font-medium">{title}</span>
-          </div>
-        </div>
-      </div>
+
       
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Page header */}

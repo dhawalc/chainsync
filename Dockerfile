@@ -1,49 +1,58 @@
 # ---------------------- BUILDER STAGE ----------------------
-    FROM node:18-alpine AS builder
+    FROM node:18-alpine AS base
 
-# Set the working directory
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files and install dependencies with legacy peer dependency resolution
+# Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps
+RUN npm ci
 
-# Install additional dependencies needed for the build
-RUN npm install --save clsx tailwind-merge @radix-ui/react-switch @radix-ui/react-select @radix-ui/react-label @radix-ui/react-slot @radix-ui/react-checkbox @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-toast lucide-react recharts --legacy-peer-deps
-
-# Create necessary directories
-RUN mkdir -p lib
-
-# Create the utils.ts file
-RUN echo 'import { type ClassValue, clsx } from "clsx"; import { twMerge } from "tailwind-merge"; export function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)) }' > lib/utils.ts
-
-# Copy the rest of the application code
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Create a simple tsconfig.json that disables strict type checking
-RUN echo '{"compilerOptions":{"strict":false,"noImplicitAny":false,"baseUrl":".","paths":{"@/*":["./*"]}}}' > tsconfig.json
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Create an ESLint config to disable warnings
-RUN echo 'module.exports = { extends: "next/core-web-vitals", rules: { "tailwindcss/classnames-order": "off", "tailwindcss/enforces-shorthand": "off", "tailwindcss/migration-from-tailwind-2": "off", "tailwindcss/no-unnecessary-arbitrary-value": "off", "react/no-unescaped-entities": "off", "@next/next/no-img-element": "off", "react-hooks/exhaustive-deps": "off" } };' > .eslintrc.js
+RUN npm run build
 
-# Build the Next.js app with ESLint checks disabled
-RUN NEXT_TELEMETRY_DISABLED=1 npm run build -- --no-lint
-
-# Production image
-FROM node:18-alpine AS runner
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy necessary files from builder stage
-COPY --from=builder /app/next.config.js ./
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 
-# Expose the port your app runs on
-EXPOSE 3000
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
 
-# Start the application
-CMD ["npm", "start"]
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy Prisma files
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+
+USER nextjs
+
+# Set environment variables
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+# Run database migrations and start the application
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]

@@ -12,6 +12,9 @@ PROJECT_ID=${GCP_PROJECT_ID:-chainsync-demo}
 SERVICE_NAME="chainsync"
 REGION="us-central1"
 
+# Set up database URL for Cloud SQL
+DATABASE_URL="postgresql://chainsync:power123@/chainsync?host=/cloudsql/${PROJECT_ID}:${REGION}:chainsync-db"
+
 echo "Building Docker image..."
 docker build -t gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest .
 
@@ -25,7 +28,9 @@ gcloud run deploy ${SERVICE_NAME} \
   --region ${REGION} \
   --allow-unauthenticated \
   --memory 1Gi \
-  --set-env-vars ""
+  --add-cloudsql-instances ${PROJECT_ID}:${REGION}:chainsync-db \
+  --set-env-vars DATABASE_URL="${DATABASE_URL}"
+
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
 echo "Cloud Run service URL: $URL"
