@@ -34,6 +34,7 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV PORT=8080
 
 # Set default Snowflake environment variables for local testing.
 # In production, override these via Cloud Run's environment variable settings or secret manager.
@@ -54,7 +55,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
 # Expose the port your app runs on
-EXPOSE 3000
+EXPOSE 8080
 
 # Start the application
 CMD ["npm", "start"]
