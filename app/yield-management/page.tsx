@@ -95,6 +95,15 @@ export default function YieldManagement() {
                       { id: 'product-2', name: 'PRD2006', type: 'PRODUCT' },
                       { id: 'product-3', name: 'PRD2678', type: 'PRODUCT' }
                     ]
+                  },
+                  {
+                    id: 'line-2',
+                    name: 'Mobile Computing',
+                    type: 'PRODUCT_LINE',
+                    children: [
+                      { id: 'product-4', name: 'MCU2023', type: 'PRODUCT' },
+                      { id: 'product-5', name: 'MCU2024', type: 'PRODUCT' }
+                    ]
                   }
                 ]
               }
@@ -105,6 +114,8 @@ export default function YieldManagement() {
     ];
     
     setHierarchyData(mockHierarchyData);
+    // Update expandedNodes to include new line
+    setExpandedNodes(new Set(['business-1', 'category-1', 'tech-1', 'line-1', 'line-2']));
     
     // Generate mock yield data
     generateMockYieldData();
@@ -124,41 +135,66 @@ export default function YieldManagement() {
   // Generate mock yield data
   const generateMockYieldData = () => {
     let mockData: YieldData[] = [
-      // Default yield for 7nm
+      // Set default yield for 7nm technology
       { productId: 'tech-1', month: 'default', year: currentYear.toString(), yield: 98 },
-      
-      // Scattered data points around weeks 13-20
-      { productId: 'tech-1', month: 'Week 13', year: currentYear.toString(), yield: 97 },
-      { productId: 'tech-1', month: 'Week 16', year: currentYear.toString(), yield: 98 },
-      { productId: 'tech-1', month: 'Week 19', year: currentYear.toString(), yield: 96 },
-      
-      { productId: 'product-1', month: 'Week 14', year: currentYear.toString(), yield: 92 },
-      { productId: 'product-1', month: 'Week 17', year: currentYear.toString(), yield: 95 },
-      { productId: 'product-1', month: 'Week 20', year: currentYear.toString(), yield: 93 },
-      
-      { productId: 'product-2', month: 'Week 13', year: currentYear.toString(), yield: 88 },
-      { productId: 'product-2', month: 'Week 15', year: currentYear.toString(), yield: 91 },
-      { productId: 'product-2', month: 'Week 18', year: currentYear.toString(), yield: 89 }
     ];
 
-    // Different data for different time buckets
-    if (selectedBucket === 'QUARTERLY') {
+    // Add data based on time bucket
+    if (selectedBucket === 'WEEKLY') {
       mockData = [
-        { productId: 'tech-1', month: 'default', year: currentYear.toString(), yield: 98 },
-        { productId: 'tech-1', month: 'Q1', year: currentYear.toString(), yield: 97 },
-        { productId: 'tech-1', month: 'Q2', year: currentYear.toString(), yield: 98 }
+        ...mockData,
+        // Data Center line products with lower yields
+        { productId: 'product-1', month: 'Week 14', year: currentYear.toString(), yield: 92 },
+        { productId: 'product-1', month: 'Week 17', year: currentYear.toString(), yield: 95 },
+        { productId: 'product-1', month: 'Week 20', year: currentYear.toString(), yield: 93 },
+        
+        { productId: 'product-2', month: 'Week 13', year: currentYear.toString(), yield: 88 },
+        { productId: 'product-2', month: 'Week 15', year: currentYear.toString(), yield: 91 },
+        { productId: 'product-2', month: 'Week 18', year: currentYear.toString(), yield: 89 },
+
+        // Mobile Computing line products with different yields
+        { productId: 'product-4', month: 'Week 13', year: currentYear.toString(), yield: 94 },
+        { productId: 'product-4', month: 'Week 16', year: currentYear.toString(), yield: 96 },
+        { productId: 'product-4', month: 'Week 19', year: currentYear.toString(), yield: 95 },
+
+        { productId: 'product-5', month: 'Week 14', year: currentYear.toString(), yield: 93 },
+        { productId: 'product-5', month: 'Week 17', year: currentYear.toString(), yield: 92 },
+        { productId: 'product-5', month: 'Week 20', year: currentYear.toString(), yield: 94 }
       ];
     } else if (selectedBucket === 'MONTHLY') {
       mockData = [
-        { productId: 'tech-1', month: 'default', year: currentYear.toString(), yield: 98 },
-        { productId: 'tech-1', month: 'Mar', year: currentYear.toString(), yield: 97 },
-        { productId: 'tech-1', month: 'Apr', year: currentYear.toString(), yield: 98 }
+        ...mockData,
+        // Only show values that differ from default
+        { productId: 'product-1', month: 'Mar', year: currentYear.toString(), yield: 97 },
+        { productId: 'product-2', month: 'Mar', year: currentYear.toString(), yield: 95 },
+        { productId: 'product-2', month: 'Apr', year: currentYear.toString(), yield: 96 },
+        
+        // Mobile Computing line products
+        { productId: 'product-4', month: 'Mar', year: currentYear.toString(), yield: 96 },
+        { productId: 'product-4', month: 'Apr', year: currentYear.toString(), yield: 97 },
+        { productId: 'product-5', month: 'Mar', year: currentYear.toString(), yield: 94 },
+        { productId: 'product-5', month: 'Apr', year: currentYear.toString(), yield: 95 }
+      ];
+    } else if (selectedBucket === 'QUARTERLY') {
+      mockData = [
+        ...mockData,
+        // Data Center line products
+        { productId: 'product-1', month: 'Q1', year: currentYear.toString(), yield: 96 },
+        { productId: 'product-2', month: 'Q1', year: currentYear.toString(), yield: 95 },
+        { productId: 'product-2', month: 'Q2', year: currentYear.toString(), yield: 96 },
+        
+        // Mobile Computing line products
+        { productId: 'product-4', month: 'Q1', year: currentYear.toString(), yield: 97 },
+        { productId: 'product-5', month: 'Q1', year: currentYear.toString(), yield: 94 },
+        { productId: 'product-5', month: 'Q2', year: currentYear.toString(), yield: 95 }
       ];
     } else if (selectedBucket === 'YEARLY') {
       mockData = [
-        { productId: 'tech-1', month: 'default', year: currentYear.toString(), yield: 98 },
-        { productId: 'tech-1', month: '2024', year: '2024', yield: 97 },
-        { productId: 'tech-1', month: '2025', year: '2025', yield: 98 }
+        ...mockData,
+        // Only show significant yearly variations
+        { productId: 'product-2', month: '2024', year: '2024', yield: 96 },
+        { productId: 'product-4', month: '2024', year: '2024', yield: 97 },
+        { productId: 'product-5', month: '2024', year: '2024', yield: 95 }
       ];
     }
     
@@ -425,11 +461,11 @@ export default function YieldManagement() {
             placeholder="-"
             className={`w-full h-10 text-center text-sm transition-all duration-200 border ${
               isEdited 
-                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                ? 'border-indigo-500 bg-indigo-50 text-indigo-700' 
                 : value === null || value === undefined
-                  ? 'border-gray-200 bg-gray-50 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'
-                  : 'border-gray-200 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
-            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                  ? 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+                  : 'border-gray-200 bg-indigo-50 text-indigo-700'
+            } rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
           />
         </div>
       );
@@ -441,7 +477,7 @@ export default function YieldManagement() {
           setShowDateRangePicker(true);
           setSelectedNodeForDateRange(nodeId);
         }}
-        className="w-full h-8 flex items-center justify-center gap-1.5 text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-md transition-all duration-200 text-xs font-medium shadow-sm hover:shadow dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800 dark:hover:bg-blue-900/30"
+        className="w-full h-8 flex items-center justify-center gap-1.5 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 text-xs font-medium"
       >
         <CalendarIcon className="h-3.5 w-3.5" />
         <span>Date Range</span>
@@ -604,6 +640,62 @@ export default function YieldManagement() {
                     </tr>
                   </>
                 )}
+
+                {/* Mobile Computing Product Line Row */}
+                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
+                  <tr className="hover:bg-gray-50 transition-colors duration-200">
+                    <td className="px-6 py-3 whitespace-nowrap">
+                      <div className="flex items-center pl-24">
+                        <button 
+                          onClick={() => toggleNodeExpansion('line-2')}
+                          className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                        >
+                          {expandedNodes.has('line-2') ? '▼' : '►'}
+                        </button>
+                        <span className="text-sm font-medium text-gray-900">Mobile Computing</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2">
+                      {renderCell('line-2', 'default', true)}
+                    </td>
+                    <td className="px-4 py-2">
+                      {renderDateRangeButton('line-2')}
+                    </td>
+                  </tr>
+                )}
+
+                {/* Mobile Computing Products */}
+                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-2') && (
+                  <>
+                    <tr className="hover:bg-gray-50 transition-colors duration-200">
+                      <td className="px-6 py-3 whitespace-nowrap">
+                        <div className="flex items-center pl-32">
+                          <span className="text-sm font-medium text-gray-900">MCU2023</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-2">
+                        {renderCell('product-4', 'default', true)}
+                      </td>
+                      <td className="px-4 py-2">
+                        {renderDateRangeButton('product-4')}
+                      </td>
+                    </tr>
+
+                    <tr className="hover:bg-gray-50 transition-colors duration-200">
+                      <td className="px-6 py-3 whitespace-nowrap">
+                        <div className="flex items-center pl-32">
+                          <span className="text-sm font-medium text-gray-900">MCU2024</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-2">
+                        {renderCell('product-5', 'default', true)}
+                      </td>
+                      <td className="px-4 py-2">
+                        {renderDateRangeButton('product-5')}
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </div>
@@ -691,6 +783,38 @@ export default function YieldManagement() {
                     </tr>
                   </>
                 )}
+
+                {/* Mobile Computing Product Line Row */}
+                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
+                  <tr className="hover:bg-gray-50 transition-colors duration-200">
+                    {periods.map(period => (
+                      <td key={`line-2-${period}`} className="px-4 py-2">
+                        {renderCell('line-2', period)}
+                      </td>
+                    ))}
+                  </tr>
+                )}
+
+                {/* Mobile Computing Products */}
+                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-2') && (
+                  <>
+                    <tr className="hover:bg-gray-50 transition-colors duration-200">
+                      {periods.map(period => (
+                        <td key={`product-4-${period}`} className="px-4 py-2">
+                          {renderCell('product-4', period)}
+                        </td>
+                      ))}
+                    </tr>
+
+                    <tr className="hover:bg-gray-50 transition-colors duration-200">
+                      {periods.map(period => (
+                        <td key={`product-5-${period}`} className="px-4 py-2">
+                          {renderCell('product-5', period)}
+                        </td>
+                      ))}
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </div>
@@ -699,8 +823,8 @@ export default function YieldManagement() {
         {/* Date Range Picker Modal */}
         {showDateRangePicker && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Set Date Range Value</h3>
+            <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Set Date Range Value</h3>
               <form onSubmit={(e) => {
                 e.preventDefault();
                 const form = e.target as HTMLFormElement;
@@ -711,32 +835,32 @@ export default function YieldManagement() {
               }}>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">From Date</label>
+                    <label className="block text-sm font-medium text-gray-700">From Date</label>
                     <input
                       type="date"
                       name="fromDate"
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">To Date</label>
+                    <label className="block text-sm font-medium text-gray-700">To Date</label>
                     <input
                       type="date"
                       name="toDate"
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Value (%)</label>
+                    <label className="block text-sm font-medium text-gray-700">Value (%)</label>
                     <input
                       type="number"
                       name="value"
                       min="0"
                       max="99"
                       required
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     />
                   </div>
                   <div className="flex justify-end gap-3">
@@ -746,13 +870,13 @@ export default function YieldManagement() {
                         setShowDateRangePicker(false);
                         setSelectedNodeForDateRange(null);
                       }}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 border border-transparent rounded-md"
+                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border border-transparent rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       Apply
                     </button>
@@ -767,56 +891,58 @@ export default function YieldManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-[1400px] mx-auto px-6 py-8">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-          {/* Header Section with Gradient */}
-          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  Yield Management
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Manage and track yield percentages across different time periods
-                </p>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-indigo-900 mb-2">Yield Management</h1>
+          <p className="text-gray-700 max-w-3xl">
+            Manage and track yield percentages across different time periods
+          </p>
+        </div>
+
+        <div className="mb-6">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">Time Bucket:</label>
+                <select
+                  value={selectedBucket}
+                  onChange={(e) => setSelectedBucket(e.target.value as TimeBucket)}
+                  className="h-10 pl-4 pr-8 text-sm bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 cursor-pointer hover:border-gray-400"
+                >
+                  <option value="MONTHLY">Monthly</option>
+                  <option value="QUARTERLY">Quarterly</option>
+                  <option value="WEEKLY">Weekly</option>
+                  <option value="YEARLY">Yearly</option>
+                </select>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-3">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Time Bucket:</label>
-                  <select
-                    value={selectedBucket}
-                    onChange={(e) => setSelectedBucket(e.target.value as TimeBucket)}
-                    className="h-10 pl-4 pr-8 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer hover:border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-                  >
-                    <option value="MONTHLY">Monthly</option>
-                    <option value="QUARTERLY">Quarterly</option>
-                    <option value="WEEKLY">Weekly</option>
-                    <option value="YEARLY">Yearly</option>
-                  </select>
-                </div>
-                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-1">
-                  <button
-                    onClick={() => setCurrentYear(prev => prev - 1)}
-                    className="p-2 rounded-md hover:bg-white hover:shadow-sm text-gray-600 dark:text-gray-300 transition-all duration-200"
-                  >
-                    <ChevronLeftIcon className="h-5 w-5" />
-                  </button>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 px-2">{currentYear}</span>
-                  <button
-                    onClick={() => setCurrentYear(prev => prev + 1)}
-                    className="p-2 rounded-md hover:bg-white hover:shadow-sm text-gray-600 dark:text-gray-300 transition-all duration-200"
-                  >
-                    <ChevronRightIcon className="h-5 w-5" />
-                  </button>
-                </div>
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-md p-1">
+                <button
+                  onClick={() => setCurrentYear(prev => prev - 1)}
+                  className="p-2 rounded hover:bg-gray-50 text-gray-600 transition-all duration-200"
+                >
+                  <ChevronLeftIcon className="h-5 w-5" />
+                </button>
+                <span className="text-sm font-semibold text-gray-900 px-2">{currentYear}</span>
+                <button
+                  onClick={() => setCurrentYear(prev => prev + 1)}
+                  className="p-2 rounded hover:bg-gray-50 text-gray-600 transition-all duration-200"
+                >
+                  <ChevronRightIcon className="h-5 w-5" />
+                </button>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="p-4 border-b border-gray-200 bg-gray-50">
+            <h3 className="font-medium text-gray-700">Yield Data</h3>
           </div>
 
           {/* Toast Notification */}
           {toast.visible && (
-            <div className="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md shadow-lg transition-all duration-500 transform translate-y-0 opacity-100 dark:bg-green-900 dark:border-green-800 dark:text-green-100">
+            <div className="fixed top-4 right-4 bg-white border border-indigo-300 text-indigo-700 px-4 py-3 rounded-md shadow-lg transition-all duration-500 transform translate-y-0 opacity-100">
               <div className="flex items-center">
                 <CheckCircleIcon className="h-5 w-5 mr-2" />
                 <p>{toast.message}</p>
@@ -825,14 +951,14 @@ export default function YieldManagement() {
           )}
 
           {/* Yield Table */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
             {renderYieldTable()}
           </div>
 
-          <div className="p-6 border-t border-gray-100 dark:border-gray-700">
+          <div className="p-4 border-t border-gray-200">
             <div className="flex justify-end items-center gap-4">
               {toast.visible && (
-                <div className="flex items-center text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                <div className="flex items-center text-sm text-indigo-600 font-medium">
                   <CheckCircleIcon className="h-5 w-5 mr-2" />
                   <span>Changes saved successfully</span>
                 </div>
@@ -840,7 +966,7 @@ export default function YieldManagement() {
               <button
                 onClick={saveChanges}
                 disabled={isSaving}
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200 shadow-sm"
+                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200"
               >
                 {isSaving ? (
                   <span className="flex items-center gap-2">
