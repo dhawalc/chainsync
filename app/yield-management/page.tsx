@@ -440,452 +440,319 @@ export default function YieldManagement() {
     return data ? data : null;
   };
 
-  // Render yield table
-  const renderYieldTable = () => {
-    const periods = getTimePeriods();
-    
-    const renderCell = (nodeId: string, period: string, isDefaultYield: boolean = false) => {
-      const yieldData = getYieldValue(nodeId, period);
-      const isEdited = yieldData?.isEdited;
-      const value = yieldData?.yield;
-
-      return (
-        <div className="relative">
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={2}
-            value={value === null || value === undefined ? '' : value}
-            onChange={(e) => handleYieldChange(nodeId, period, e.target.value)}
-            placeholder="-"
-            className={`w-full h-10 text-center text-sm transition-all duration-200 border ${
-              isEdited 
-                ? 'border-indigo-500 bg-indigo-50 text-indigo-700' 
-                : value === null || value === undefined
-                  ? 'border-gray-200 bg-gray-50 hover:bg-gray-100'
-                  : 'border-gray-200 bg-indigo-50 text-indigo-700'
-            } rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
-          />
-        </div>
-      );
-    };
-
-    const renderDateRangeButton = (nodeId: string) => (
-      <button
-        onClick={() => {
-          setShowDateRangePicker(true);
-          setSelectedNodeForDateRange(nodeId);
-        }}
-        className="w-full h-8 flex items-center justify-center gap-1.5 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 text-xs font-medium"
-      >
-        <CalendarIcon className="h-3.5 w-3.5" />
-        <span>Date Range</span>
-      </button>
-    );
+  // Render cell for yield data
+  const renderCell = (nodeId: string, period: string, isDefaultYield: boolean = false) => {
+    const yieldData = getYieldValue(nodeId, period);
+    const isEdited = yieldData?.isEdited;
+    const value = yieldData?.yield;
 
     return (
+      <div className="relative h-full group">
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={2}
+          value={value === null || value === undefined ? '' : value}
+          onChange={(e) => handleYieldChange(nodeId, period, e.target.value)}
+          placeholder="-"
+          className={`w-full h-9 text-center text-sm transition-colors duration-75 ${
+            isEdited 
+              ? 'bg-blue-50/80 text-blue-700 focus:bg-white' 
+              : value === null || value === undefined
+                ? 'bg-[#f5fbf5] hover:bg-[#edf8ed] focus:bg-white group-hover:bg-[#edf8ed]'
+                : 'bg-[#e6ffe6] text-green-700 hover:bg-[#d9f2d9] focus:bg-white'
+          } border-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset selection:bg-[#b3d7ff]`}
+        />
+      </div>
+    );
+  };
+
+  // Render date range button
+  const renderDateRangeButton = (nodeId: string) => (
+    <button
+      onClick={() => {
+        setShowDateRangePicker(true);
+        setSelectedNodeForDateRange(nodeId);
+      }}
+      className="w-full h-8 flex items-center justify-center gap-1.5 text-green-700 bg-[#e6ffe6] hover:bg-[#d9f2d9] border border-green-200 rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 text-xs font-medium"
+    >
+      <CalendarIcon className="h-3.5 w-3.5" />
+      <span>Date Range</span>
+    </button>
+  );
+
+  // Get visible periods
+  const periods = getTimePeriods();
+
+  // Render yield table
+  const renderYieldTable = () => {
+    return (
       <div className="relative">
-        <div className="flex">
-          {/* Fixed columns */}
-          <div className="sticky left-0 z-20 bg-white">
-            <table className="divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[200px]">
-                    Hierarchy
-                  </th>
-                  <th className="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[80px]">
-                    Default %
-                  </th>
-                  <th className="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[90px]">
-                    Date Range
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* Business Unit Row */}
-                <tr className="hover:bg-gray-50 transition-colors duration-200">
-                  <td className="px-6 py-3 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <button 
-                        onClick={() => toggleNodeExpansion('business-1')}
-                        className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                      >
-                        {expandedNodes.has('business-1') ? '▼' : '►'}
-                      </button>
-                      <span className="text-sm font-medium text-gray-900">Logic Chips</span>
+        <table className="border-collapse w-full select-none">
+          <thead>
+            <tr>
+              <th className="sticky left-0 z-20 px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[200px] bg-[#e6ffe6] border border-gray-200">
+                Hierarchy
+              </th>
+              <th className="sticky left-[200px] z-20 px-2 py-2 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[80px] bg-[#e6ffe6] border border-gray-200">
+                Default %
+              </th>
+              <th className="sticky left-[280px] z-20 px-2 py-2 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[90px] bg-[#e6ffe6] border border-gray-200">
+                Date Range
+              </th>
+              {periods.map((period: string) => (
+                <th key={period} className="px-2 py-2 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[80px] bg-[#e6ffe6] border border-gray-200">
+                  {period}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {/* Business Unit Row */}
+            <tr className="hover:bg-gray-50/50">
+              <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                <div className="flex items-center">
+                  <button 
+                    onClick={() => toggleNodeExpansion('business-1')}
+                    className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                  >
+                    {expandedNodes.has('business-1') ? '▼' : '►'}
+                  </button>
+                  <span className="text-sm font-medium text-gray-900">Logic Chips</span>
+                </div>
+              </td>
+              <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                {renderCell('business-1', 'default', true)}
+              </td>
+              <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                {renderDateRangeButton('business-1')}
+              </td>
+              {periods.map((period: string) => (
+                <td key={`business-1-${period}`} className="p-0 border border-gray-200 bg-white">
+                  {renderCell('business-1', period)}
+                </td>
+              ))}
+            </tr>
+
+            {/* Product Category Row */}
+            {expandedNodes.has('business-1') && (
+              <tr className="hover:bg-gray-50/50">
+                <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                  <div className="flex items-center pl-8">
+                    <button 
+                      onClick={() => toggleNodeExpansion('category-1')}
+                      className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    >
+                      {expandedNodes.has('category-1') ? '▼' : '►'}
+                    </button>
+                    <span className="text-sm font-medium text-gray-900">Microprocessors</span>
+                  </div>
+                </td>
+                <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                  {renderCell('category-1', 'default', true)}
+                </td>
+                <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                  {renderDateRangeButton('category-1')}
+                </td>
+                {periods.map((period: string) => (
+                  <td key={`category-1-${period}`} className="p-0 border border-gray-200 bg-white">
+                    {renderCell('category-1', period)}
+                  </td>
+                ))}
+              </tr>
+            )}
+
+            {/* Technology Node Row */}
+            {expandedNodes.has('business-1') && expandedNodes.has('category-1') && (
+              <tr className="hover:bg-gray-50/50">
+                <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                  <div className="flex items-center pl-16">
+                    <button 
+                      onClick={() => toggleNodeExpansion('tech-1')}
+                      className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    >
+                      {expandedNodes.has('tech-1') ? '▼' : '►'}
+                    </button>
+                    <span className="text-sm font-medium text-gray-900">7nm</span>
+                  </div>
+                </td>
+                <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                  {renderCell('tech-1', 'default', true)}
+                </td>
+                <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                  {renderDateRangeButton('tech-1')}
+                </td>
+                {periods.map((period: string) => (
+                  <td key={`tech-1-${period}`} className="p-0 border border-gray-200 bg-white">
+                    {renderCell('tech-1', period)}
+                  </td>
+                ))}
+              </tr>
+            )}
+
+            {/* Product Line Row */}
+            {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
+              <tr className="hover:bg-gray-50/50">
+                <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                  <div className="flex items-center pl-24">
+                    <button 
+                      onClick={() => toggleNodeExpansion('line-1')}
+                      className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    >
+                      {expandedNodes.has('line-1') ? '▼' : '►'}
+                    </button>
+                    <span className="text-sm font-medium text-gray-900">Data Center</span>
+                  </div>
+                </td>
+                <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                  {renderCell('line-1', 'default', true)}
+                </td>
+                <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                  {renderDateRangeButton('line-1')}
+                </td>
+                {periods.map((period: string) => (
+                  <td key={`line-1-${period}`} className="p-0 border border-gray-200 bg-white">
+                    {renderCell('line-1', period)}
+                  </td>
+                ))}
+              </tr>
+            )}
+
+            {/* Product Rows */}
+            {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-1') && (
+              <>
+                <tr className="hover:bg-gray-50/50">
+                  <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                    <div className="flex items-center pl-32">
+                      <span className="text-sm font-medium text-gray-900">PRD1</span>
                     </div>
                   </td>
-                  <td className="px-4 py-2">
-                    {renderCell('business-1', 'default', true)}
+                  <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                    {renderCell('product-1', 'default', true)}
                   </td>
-                  <td className="px-4 py-2">
-                    {renderDateRangeButton('business-1')}
+                  <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                    {renderDateRangeButton('product-1')}
                   </td>
-                </tr>
-
-                {/* Product Category Row */}
-                {expandedNodes.has('business-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <div className="flex items-center pl-8">
-                        <button 
-                          onClick={() => toggleNodeExpansion('category-1')}
-                          className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                        >
-                          {expandedNodes.has('category-1') ? '▼' : '►'}
-                        </button>
-                        <span className="text-sm font-medium text-gray-900">Microprocessors</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderCell('category-1', 'default', true)}
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderDateRangeButton('category-1')}
-                    </td>
-                  </tr>
-                )}
-
-                {/* Technology Node Row */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <div className="flex items-center pl-16">
-                        <button 
-                          onClick={() => toggleNodeExpansion('tech-1')}
-                          className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                        >
-                          {expandedNodes.has('tech-1') ? '▼' : '►'}
-                        </button>
-                        <span className="text-sm font-medium text-gray-900">7nm</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderCell('tech-1', 'default', true)}
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderDateRangeButton('tech-1')}
-                    </td>
-                  </tr>
-                )}
-
-                {/* Product Line Row */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <div className="flex items-center pl-24">
-                        <button 
-                          onClick={() => toggleNodeExpansion('line-1')}
-                          className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                        >
-                          {expandedNodes.has('line-1') ? '▼' : '►'}
-                        </button>
-                        <span className="text-sm font-medium text-gray-900">Data Center</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderCell('line-1', 'default', true)}
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderDateRangeButton('line-1')}
-                    </td>
-                  </tr>
-                )}
-
-                {/* Product Rows */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-1') && (
-                  <>
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="px-6 py-3 whitespace-nowrap">
-                        <div className="flex items-center pl-32">
-                          <span className="text-sm font-medium text-gray-900">PRD1</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderCell('product-1', 'default', true)}
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderDateRangeButton('product-1')}
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="px-6 py-3 whitespace-nowrap">
-                        <div className="flex items-center pl-32">
-                          <span className="text-sm font-medium text-gray-900">PRD2006</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderCell('product-2', 'default', true)}
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderDateRangeButton('product-2')}
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="px-6 py-3 whitespace-nowrap">
-                        <div className="flex items-center pl-32">
-                          <span className="text-sm font-medium text-gray-900">PRD2678</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderCell('product-3', 'default', true)}
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderDateRangeButton('product-3')}
-                      </td>
-                    </tr>
-                  </>
-                )}
-
-                {/* Mobile Computing Product Line Row */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <div className="flex items-center pl-24">
-                        <button 
-                          onClick={() => toggleNodeExpansion('line-2')}
-                          className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-                        >
-                          {expandedNodes.has('line-2') ? '▼' : '►'}
-                        </button>
-                        <span className="text-sm font-medium text-gray-900">Mobile Computing</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderCell('line-2', 'default', true)}
-                    </td>
-                    <td className="px-4 py-2">
-                      {renderDateRangeButton('line-2')}
-                    </td>
-                  </tr>
-                )}
-
-                {/* Mobile Computing Products */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-2') && (
-                  <>
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="px-6 py-3 whitespace-nowrap">
-                        <div className="flex items-center pl-32">
-                          <span className="text-sm font-medium text-gray-900">MCU2023</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderCell('product-4', 'default', true)}
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderDateRangeButton('product-4')}
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      <td className="px-6 py-3 whitespace-nowrap">
-                        <div className="flex items-center pl-32">
-                          <span className="text-sm font-medium text-gray-900">MCU2024</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderCell('product-5', 'default', true)}
-                      </td>
-                      <td className="px-4 py-2">
-                        {renderDateRangeButton('product-5')}
-                      </td>
-                    </tr>
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Scrollable time periods */}
-          <div className="overflow-x-auto" style={{ scrollbarWidth: 'thin' }}>
-            <table className="divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {periods.map(period => (
-                    <th key={period} className="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap w-[80px]">
-                      {period}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {/* Business Unit Row */}
-                <tr className="hover:bg-gray-50 transition-colors duration-200">
-                  {periods.map(period => (
-                    <td key={`business-1-${period}`} className="px-4 py-2">
-                      {renderCell('business-1', period)}
+                  {periods.map((period: string) => (
+                    <td key={`product-1-${period}`} className="p-0 border border-gray-200 bg-white">
+                      {renderCell('product-1', period)}
                     </td>
                   ))}
                 </tr>
 
-                {/* Product Category Row */}
-                {expandedNodes.has('business-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    {periods.map(period => (
-                      <td key={`category-1-${period}`} className="px-4 py-2">
-                        {renderCell('category-1', period)}
-                      </td>
-                    ))}
-                  </tr>
-                )}
+                <tr className="hover:bg-gray-50/50">
+                  <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                    <div className="flex items-center pl-32">
+                      <span className="text-sm font-medium text-gray-900">PRD2006</span>
+                    </div>
+                  </td>
+                  <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                    {renderCell('product-2', 'default', true)}
+                  </td>
+                  <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                    {renderDateRangeButton('product-2')}
+                  </td>
+                  {periods.map((period: string) => (
+                    <td key={`product-2-${period}`} className="p-0 border border-gray-200 bg-white">
+                      {renderCell('product-2', period)}
+                    </td>
+                  ))}
+                </tr>
 
-                {/* Technology Node Row */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    {periods.map(period => (
-                      <td key={`tech-1-${period}`} className="px-4 py-2">
-                        {renderCell('tech-1', period)}
-                      </td>
-                    ))}
-                  </tr>
-                )}
+                <tr className="hover:bg-gray-50/50">
+                  <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                    <div className="flex items-center pl-32">
+                      <span className="text-sm font-medium text-gray-900">PRD2678</span>
+                    </div>
+                  </td>
+                  <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                    {renderCell('product-3', 'default', true)}
+                  </td>
+                  <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                    {renderDateRangeButton('product-3')}
+                  </td>
+                  {periods.map((period: string) => (
+                    <td key={`product-3-${period}`} className="p-0 border border-gray-200 bg-white">
+                      {renderCell('product-3', period)}
+                    </td>
+                  ))}
+                </tr>
+              </>
+            )}
 
-                {/* Product Line Row */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    {periods.map(period => (
-                      <td key={`line-1-${period}`} className="px-4 py-2">
-                        {renderCell('line-1', period)}
-                      </td>
-                    ))}
-                  </tr>
-                )}
-
-                {/* Product Rows */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-1') && (
-                  <>
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      {periods.map(period => (
-                        <td key={`product-1-${period}`} className="px-4 py-2">
-                          {renderCell('product-1', period)}
-                        </td>
-                      ))}
-                    </tr>
-
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      {periods.map(period => (
-                        <td key={`product-2-${period}`} className="px-4 py-2">
-                          {renderCell('product-2', period)}
-                        </td>
-                      ))}
-                    </tr>
-
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      {periods.map(period => (
-                        <td key={`product-3-${period}`} className="px-4 py-2">
-                          {renderCell('product-3', period)}
-                        </td>
-                      ))}
-                    </tr>
-                  </>
-                )}
-
-                {/* Mobile Computing Product Line Row */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
-                  <tr className="hover:bg-gray-50 transition-colors duration-200">
-                    {periods.map(period => (
-                      <td key={`line-2-${period}`} className="px-4 py-2">
-                        {renderCell('line-2', period)}
-                      </td>
-                    ))}
-                  </tr>
-                )}
-
-                {/* Mobile Computing Products */}
-                {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-2') && (
-                  <>
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      {periods.map(period => (
-                        <td key={`product-4-${period}`} className="px-4 py-2">
-                          {renderCell('product-4', period)}
-                        </td>
-                      ))}
-                    </tr>
-
-                    <tr className="hover:bg-gray-50 transition-colors duration-200">
-                      {periods.map(period => (
-                        <td key={`product-5-${period}`} className="px-4 py-2">
-                          {renderCell('product-5', period)}
-                        </td>
-                      ))}
-                    </tr>
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Date Range Picker Modal */}
-        {showDateRangePicker && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Set Date Range Value</h3>
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                const form = e.target as HTMLFormElement;
-                const fromDate = new Date(form.fromDate.value);
-                const toDate = new Date(form.toDate.value);
-                const value = parseInt(form.value.value);
-                handleDateRangeSubmit(fromDate, toDate, value);
-              }}>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">From Date</label>
-                    <input
-                      type="date"
-                      name="fromDate"
-                      required
-                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">To Date</label>
-                    <input
-                      type="date"
-                      name="toDate"
-                      required
-                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Value (%)</label>
-                    <input
-                      type="number"
-                      name="value"
-                      min="0"
-                      max="99"
-                      required
-                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    />
-                  </div>
-                  <div className="flex justify-end gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowDateRangePicker(false);
-                        setSelectedNodeForDateRange(null);
-                      }}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50"
+            {/* Mobile Computing Product Line Row */}
+            {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && (
+              <tr className="hover:bg-gray-50/50">
+                <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                  <div className="flex items-center pl-24">
+                    <button 
+                      onClick={() => toggleNodeExpansion('line-2')}
+                      className="mr-2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                     >
-                      Cancel
+                      {expandedNodes.has('line-2') ? '▼' : '►'}
                     </button>
-                    <button
-                      type="submit"
-                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border border-transparent rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      Apply
-                    </button>
+                    <span className="text-sm font-medium text-gray-900">Mobile Computing</span>
                   </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+                </td>
+                <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                  {renderCell('line-2', 'default', true)}
+                </td>
+                <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                  {renderDateRangeButton('line-2')}
+                </td>
+                {periods.map((period: string) => (
+                  <td key={`line-2-${period}`} className="p-0 border border-gray-200 bg-white">
+                    {renderCell('line-2', period)}
+                  </td>
+                ))}
+              </tr>
+            )}
+
+            {/* Mobile Computing Products */}
+            {expandedNodes.has('business-1') && expandedNodes.has('category-1') && expandedNodes.has('tech-1') && expandedNodes.has('line-2') && (
+              <>
+                <tr className="hover:bg-gray-50/50">
+                  <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                    <div className="flex items-center pl-32">
+                      <span className="text-sm font-medium text-gray-900">MCU2023</span>
+                    </div>
+                  </td>
+                  <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                    {renderCell('product-4', 'default', true)}
+                  </td>
+                  <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                    {renderDateRangeButton('product-4')}
+                  </td>
+                  {periods.map((period: string) => (
+                    <td key={`product-4-${period}`} className="p-0 border border-gray-200 bg-white">
+                      {renderCell('product-4', period)}
+                    </td>
+                  ))}
+                </tr>
+
+                <tr className="hover:bg-gray-50/50">
+                  <td className="sticky left-0 z-20 px-6 py-1 whitespace-nowrap border border-gray-200 bg-white">
+                    <div className="flex items-center pl-32">
+                      <span className="text-sm font-medium text-gray-900">MCU2024</span>
+                    </div>
+                  </td>
+                  <td className="sticky left-[200px] z-20 p-0 border border-gray-200 bg-white">
+                    {renderCell('product-5', 'default', true)}
+                  </td>
+                  <td className="sticky left-[280px] z-20 p-1 border border-gray-200 bg-white">
+                    {renderDateRangeButton('product-5')}
+                  </td>
+                  {periods.map((period: string) => (
+                    <td key={`product-5-${period}`} className="p-0 border border-gray-200 bg-white">
+                      {renderCell('product-5', period)}
+                    </td>
+                  ))}
+                </tr>
+              </>
+            )}
+          </tbody>
+        </table>
       </div>
     );
   };
@@ -936,13 +803,13 @@ export default function YieldManagement() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="p-4 border-b border-gray-200 bg-gray-50">
+          <div className="p-4 border-b border-gray-200 bg-[#f5fbf5]">
             <h3 className="font-medium text-gray-700">Yield Data</h3>
           </div>
 
           {/* Toast Notification */}
           {toast.visible && (
-            <div className="fixed top-4 right-4 bg-white border border-indigo-300 text-indigo-700 px-4 py-3 rounded-md shadow-lg transition-all duration-500 transform translate-y-0 opacity-100">
+            <div className="fixed top-4 right-4 bg-white border border-green-300 text-green-700 px-4 py-3 rounded-md shadow-lg transition-all duration-500 transform translate-y-0 opacity-100">
               <div className="flex items-center">
                 <CheckCircleIcon className="h-5 w-5 mr-2" />
                 <p>{toast.message}</p>
@@ -951,14 +818,14 @@ export default function YieldManagement() {
           )}
 
           {/* Yield Table */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto" style={{ scrollbarWidth: 'thin' }}>
             {renderYieldTable()}
           </div>
 
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-gray-200 bg-[#f5fbf5]">
             <div className="flex justify-end items-center gap-4">
               {toast.visible && (
-                <div className="flex items-center text-sm text-indigo-600 font-medium">
+                <div className="flex items-center text-sm text-green-600 font-medium">
                   <CheckCircleIcon className="h-5 w-5 mr-2" />
                   <span>Changes saved successfully</span>
                 </div>
@@ -966,7 +833,7 @@ export default function YieldManagement() {
               <button
                 onClick={saveChanges}
                 disabled={isSaving}
-                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200"
+                className="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 transition-all duration-200"
               >
                 {isSaving ? (
                   <span className="flex items-center gap-2">
