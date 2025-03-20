@@ -753,6 +753,73 @@ export default function YieldManagement() {
             )}
           </tbody>
         </table>
+
+        {/* Date Range Picker Modal */}
+        {showDateRangePicker && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Set Date Range Value</h3>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const fromDate = new Date(form.fromDate.value);
+                const toDate = new Date(form.toDate.value);
+                const value = parseInt(form.value.value);
+                handleDateRangeSubmit(fromDate, toDate, value);
+              }}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">From Date</label>
+                    <input
+                      type="date"
+                      name="fromDate"
+                      required
+                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">To Date</label>
+                    <input
+                      type="date"
+                      name="toDate"
+                      required
+                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Value (%)</label>
+                    <input
+                      type="number"
+                      name="value"
+                      min="0"
+                      max="99"
+                      required
+                      className="mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowDateRangePicker(false);
+                        setSelectedNodeForDateRange(null);
+                      }}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border border-transparent rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   };
