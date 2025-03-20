@@ -37,6 +37,7 @@
     WORKDIR /app
     
     ENV NODE_ENV=production
+    # (Do not set PORT here; Cloud Run provides it automatically.)
     
     # Copy necessary files from builder stage
     COPY --from=builder /app/next.config.js ./
@@ -45,7 +46,7 @@
     COPY --from=builder /app/node_modules ./node_modules
     COPY --from=builder /app/package.json ./package.json
     
-    # Expose the port your app runs on
+    # Expose the port your app runs on (this is informational)
     EXPOSE 3000
     
     # Start the application
