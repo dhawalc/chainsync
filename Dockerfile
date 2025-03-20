@@ -35,6 +35,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV HOSTNAME="0.0.0.0"
 
 # Set default Snowflake environment variables for local testing.
 # In production, override these via Cloud Run's environment variable settings or secret manager.
