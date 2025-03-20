@@ -25,7 +25,7 @@ gcloud run deploy ${SERVICE_NAME} \
   --region ${REGION} \
   --allow-unauthenticated \
   --memory 1Gi \
-  --set-env-vars ""
+  --set-env-vars "PORT=8080,HOSTNAME=0.0.0.0"
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
 echo "Cloud Run service URL: $URL"
