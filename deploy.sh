@@ -7,7 +7,7 @@ git add .
 git commit -m "Deploy update" || echo "No changes to commit"
 git push origin main
 
-# Set your variables (adjust these as needed)
+# Set your variables
 PROJECT_ID=${GCP_PROJECT_ID:-chainsync-demo}
 SERVICE_NAME="chainsync"
 REGION="us-central1"
@@ -24,8 +24,8 @@ gcloud run deploy ${SERVICE_NAME} \
   --platform managed \
   --region ${REGION} \
   --allow-unauthenticated \
-  --memory 1Gi \
-  --set-env-vars "PORT=8080,HOSTNAME=0.0.0.0"
+  --memory 1Gi
+
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
 echo "Cloud Run service URL: $URL"
