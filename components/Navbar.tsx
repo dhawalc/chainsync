@@ -5,9 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef, memo, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { ChevronDownIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, Bars3Icon, XMarkIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFeatureFlags } from '../hooks/useFeatureFlags';
+import ChatAssistantModal from '@/app/components/ai/ChatAssistantModal';
 
 // Mock user data - in a real app, this would come from authentication
 const user = {
@@ -54,9 +55,9 @@ const menuItems = {
     { href: '/performance', label: 'Performance' },
     { href: '/what-if', label: 'What-If Analysis' },
     { href: '/kpi', label: 'KPI Dashboard' },
+    { href: '/audit', label: 'Audit' },
   ],
   additional: [
-    { href: '/audit', label: 'Audit' },
     { href: '/landing', label: 'Landing' },
   ],
 };
@@ -195,6 +196,8 @@ const Navbar = () => {
     setMobileAnalysisOpen(false);
   }, [pathname]);
 
+  const [isChatAssistantModalOpen, setIsChatAssistantModalOpen] = useState(false);
+
   return (
     <header className="bg-indigo-900 shadow-md relative">
       <div className="max-w-7xl mx-auto py-3 px-6 flex justify-between items-center">
@@ -236,12 +239,8 @@ const Navbar = () => {
         </button>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center">
-          <nav className="space-x-6 mr-8">
-            <Link href="/" className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
-              Dashboard
-            </Link>
-
+        <div className="hidden md:flex items-center justify-between flex-1 pl-8">
+          <nav className="flex items-center space-x-6">
             {/* MDM Dropdown */}
             {mdmFeatures.length > 0 && (
               <div ref={mdmRef} className="relative inline-block text-left">
@@ -405,29 +404,38 @@ const Navbar = () => {
             ))}
           </nav>
           
-          {/* Desktop User profile */}
-          <div className="flex items-center">
-            <motion.div 
-              className="text-right mr-3"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setIsChatAssistantModalOpen(true)}
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-indigo-100 hover:text-white hover:bg-indigo-800 rounded-md transition-colors duration-200"
             >
-              <p className="text-indigo-100 text-sm">Welcome, <span className="font-semibold">{user.name}</span></p>
-              <p className="text-emerald-300 text-xs">{user.company}</p>
-            </motion.div>
-            <motion.div 
-              className="relative"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              <img
-                src={user.avatar}
-                alt={user.name}
-                width={32}
-                height={32}
-                className="rounded-full ring-2 ring-emerald-400/20 hover:ring-emerald-400/40 transition-all duration-200"
-              />
-            </motion.div>
+              <SparklesIcon className="h-4 w-4 mr-1.5" />
+              AI Assistant
+            </button>
+
+            <div className="flex items-center">
+              <motion.div 
+                className="text-right mr-3"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
+              >
+                <p className="text-indigo-100 text-sm">Welcome, <span className="font-semibold">{user.name}</span></p>
+                <p className="text-emerald-300 text-xs">{user.company}</p>
+              </motion.div>
+              <motion.div 
+                className="relative"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  width={32}
+                  height={32}
+                  className="rounded-full ring-2 ring-emerald-400/20 hover:ring-emerald-400/40 transition-all duration-200"
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -444,24 +452,29 @@ const Navbar = () => {
           >
             <div className="px-4 py-2 border-t border-indigo-800">
               {/* Mobile User Profile */}
-              <div className="flex items-center py-4 border-b border-indigo-800">
-                <img
-                  src={user.avatar}
-                  alt={`${user.name}'s profile`}
-                  className="h-10 w-10 rounded-full border-2 border-emerald-400"
-                />
-                <div className="ml-3">
-                  <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
-                  <p className="text-emerald-300 text-sm">{user.company}</p>
+              <div className="flex items-center justify-between py-4 border-b border-indigo-800">
+                <div className="flex items-center">
+                  <img
+                    src={user.avatar}
+                    alt={`${user.name}'s profile`}
+                    className="h-10 w-10 rounded-full border-2 border-emerald-400"
+                  />
+                  <div className="ml-3">
+                    <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
+                    <p className="text-emerald-300 text-sm">{user.company}</p>
+                  </div>
                 </div>
+                <button
+                  onClick={() => setIsChatAssistantModalOpen(true)}
+                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-indigo-100 hover:text-white hover:bg-indigo-800 rounded-md transition-colors duration-200"
+                >
+                  <SparklesIcon className="h-4 w-4 mr-1.5" />
+                  AI Assistant
+                </button>
               </div>
 
               {/* Mobile Navigation Links */}
               <nav className="py-4">
-                <Link href="/" className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium">
-                  Dashboard
-                </Link>
-
                 {/* Mobile MDM Section */}
                 {mdmFeatures.length > 0 && (
                   <div className="py-2.5">
@@ -585,6 +598,11 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ChatAssistantModal
+        isOpen={isChatAssistantModalOpen}
+        onClose={() => setIsChatAssistantModalOpen(false)}
+      />
     </header>
   );
 };

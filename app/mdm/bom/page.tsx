@@ -11,9 +11,11 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon,
   ArrowPathIcon,
-  DocumentDuplicateIcon
+  DocumentDuplicateIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { ColumnDef } from '@tanstack/react-table';
+import DynamicBOMModal from '@/app/components/ai/DynamicBOMModal';
 
 // Add interface for data type
 interface Bom {
@@ -58,6 +60,8 @@ const columns: ColumnDef<Bom, unknown>[] = [
 ];
 
 export default function BomMasterPage() {
+  const [isDynamicBOMModalOpen, setIsDynamicBOMModalOpen] = useState(false);
+
   return (
     <MdmPageTemplate
       title="Bill of Materials"
@@ -69,6 +73,13 @@ export default function BomMasterPage() {
             <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
               <PlusCircleIcon className="h-4 w-4 mr-2" />
               New BOM
+            </Button>
+            <Button 
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              onClick={() => setIsDynamicBOMModalOpen(true)}
+            >
+              <SparklesIcon className="h-4 w-4 mr-2" />
+              AI Generate BOM
             </Button>
             <Button variant="outline" className="text-indigo-700 border-indigo-300 hover:bg-indigo-50">
               <ArrowUpTrayIcon className="h-4 w-4 mr-2" />
@@ -108,6 +119,11 @@ export default function BomMasterPage() {
         </div>
         <DataTable columns={columns} data={boms} />
       </div>
+
+      <DynamicBOMModal
+        isOpen={isDynamicBOMModalOpen}
+        onClose={() => setIsDynamicBOMModalOpen(false)}
+      />
     </MdmPageTemplate>
   );
 } 

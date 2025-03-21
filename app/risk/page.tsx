@@ -11,8 +11,10 @@ import {
   TruckIcon,
   BuildingOfficeIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
+  ArrowTrendingDownIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
+import RiskAnalysisModal from '../components/ai/RiskAnalysisModal';
 
 // Sample risk data
 const riskData = [
@@ -81,6 +83,7 @@ const riskMetrics = [
 
 export default function RiskDashboardPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
   
   const filteredRisks = selectedCategory === 'All' 
     ? riskData 
@@ -114,13 +117,56 @@ export default function RiskDashboardPage() {
     }
   };
 
+  // Sample data for the AI analysis
+  const supplyData = riskData
+    .filter(risk => risk.category === 'Supplier')
+    .map(supplier => ({
+      supplier_id: supplier.id,
+      supplier_name: supplier.name,
+      lead_time: Math.floor(Math.random() * 30) + 5, // Random lead time between 5-35 days
+      reliability_score: Math.floor(Math.random() * 40) + 60, // Random score between 60-100
+      historical_delays: Array.from({ length: 6 }, () => Math.floor(Math.random() * 5)) // Random delays
+    }));
+
+  const demandData = Array.from({ length: 12 }, (_, i) => {
+    const actual = Math.floor(Math.random() * 1000) + 500;
+    const forecasted = actual + (Math.random() - 0.5) * 200;
+    return {
+      period: new Date(2023, i, 1).toISOString().split('T')[0],
+      actual_demand: actual,
+      forecasted_demand: forecasted,
+      forecast_error: ((forecasted - actual) / actual) * 100
+    };
+  });
+
+  const inventoryData = riskData
+    .filter(risk => risk.category === 'Material')
+    .map(material => ({
+      sku: material.id,
+      quantity: Math.floor(Math.random() * 1000) + 100,
+      reorder_point: Math.floor(Math.random() * 200) + 50,
+      safety_stock: Math.floor(Math.random() * 100) + 25,
+      stock_outs: Math.floor(Math.random() * 3)
+    }));
+
   return (
     <div className="container mx-auto py-8 px-4 bg-white min-h-screen">
       <div className="mb-10 border-b border-gray-200 pb-6">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-3">Supply Chain Risk Dashboard</h1>
-        <p className="mt-2 text-xl text-gray-700 max-w-3xl">
-          Monitor and manage risks across your supply chain network
-        </p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-extrabold text-gray-900 mb-3">Supply Chain Risk Dashboard</h1>
+            <p className="mt-2 text-xl text-gray-700 max-w-3xl">
+              Monitor and manage risks across your supply chain network
+            </p>
+          </div>
+          <Button
+            onClick={() => setIsAnalysisModalOpen(true)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white"
+          >
+            <SparklesIcon className="h-5 w-5 mr-2" />
+            AI Risk Analysis
+          </Button>
+        </div>
       </div>
       
       {/* Risk Metrics */}
@@ -261,6 +307,15 @@ export default function RiskDashboardPage() {
           </Button>
         </div>
       </div>
+
+      {/* AI Risk Analysis Modal */}
+      <RiskAnalysisModal
+        isOpen={isAnalysisModalOpen}
+        onClose={() => setIsAnalysisModalOpen(false)}
+        supplyData={supplyData}
+        demandData={demandData}
+        inventoryData={inventoryData}
+      />
     </div>
   );
 } 

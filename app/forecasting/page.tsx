@@ -5,6 +5,8 @@ import {
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
   Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
+import { SparklesIcon } from '@heroicons/react/24/outline';
+import DemandInsightsModal from '../components/ai/DemandInsightsModal';
 
 interface ForecastData {
   product_id: string;
@@ -35,6 +37,7 @@ export default function DemandForecasting() {
     message: '',
     type: 'info'
   });
+  const [isInsightsModalOpen, setIsInsightsModalOpen] = useState(false);
   
   // Fetch forecast data
   useEffect(() => {
@@ -141,7 +144,16 @@ export default function DemandForecasting() {
   
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">Demand Forecasting</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-blue-700">Demand Forecasting</h1>
+        <button
+          onClick={() => setIsInsightsModalOpen(true)}
+          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          <SparklesIcon className="h-5 w-5 mr-2" />
+          AI Insights
+        </button>
+      </div>
       
       {/* Toast Notification */}
       {toast.visible && (
@@ -313,6 +325,15 @@ export default function DemandForecasting() {
           </div>
         ))
       )}
+
+      {/* AI Insights Modal */}
+      <DemandInsightsModal
+        isOpen={isInsightsModalOpen}
+        onClose={() => setIsInsightsModalOpen(false)}
+        productId={selectedProduct === 'all' ? undefined : selectedProduct}
+        historicalData={filteredData.flatMap(item => item.historical_data)}
+        forecastData={filteredData.flatMap(item => item.forecast_data)}
+      />
     </div>
   );
 } 

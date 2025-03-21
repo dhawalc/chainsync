@@ -13,6 +13,8 @@ import {
   AreaChart,
   Area
 } from 'recharts';
+import { SparklesIcon } from '@heroicons/react/24/outline';
+import DemandInsightsModal from '../components/ai/DemandInsightsModal';
 
 // Mock data for demand planning
 const historicalData = [
@@ -75,13 +77,23 @@ export default function DemandPlanningPage() {
   const [showHistorical, setShowHistorical] = useState(true);
   const [showForecast, setShowForecast] = useState(true);
   const [showPlan, setShowPlan] = useState(true);
+  const [isDemandInsightsModalOpen, setIsDemandInsightsModalOpen] = useState(false);
   
   // Combine historical and forecast data
   const combinedData = [...forecastData];
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Demand Planning</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900">Demand Forecasting</h1>
+        <button
+          onClick={() => setIsDemandInsightsModalOpen(true)}
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          <SparklesIcon className="h-5 w-5 mr-2" />
+          AI Demand Insights
+        </button>
+      </div>
       
       {/* Controls */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -334,6 +346,11 @@ export default function DemandPlanningPage() {
           Submit for Approval
         </button>
       </div>
+
+      <DemandInsightsModal
+        isOpen={isDemandInsightsModalOpen}
+        onClose={() => setIsDemandInsightsModalOpen(false)}
+      />
     </div>
   );
 } 

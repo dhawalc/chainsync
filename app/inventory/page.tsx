@@ -5,6 +5,8 @@ import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
   Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
+import { SparklesIcon } from '@heroicons/react/24/outline';
+import InventoryOptimizationModal from '../components/ai/InventoryOptimizationModal';
 
 interface InventoryItem {
   id: string;
@@ -35,6 +37,7 @@ export default function InventoryManagement() {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [isOptimizationModalOpen, setIsOptimizationModalOpen] = useState(false);
   const [toast, setToast] = useState<{ visible: boolean, title: string, message: string, type: 'success' | 'error' | 'info' }>({
     visible: false,
     title: '',
@@ -230,9 +233,48 @@ export default function InventoryManagement() {
     });
   };
   
+  // Prepare inventory data for AI optimization
+  const getInventoryDataForOptimization = () => {
+    return filteredItems.map(item => ({
+      sku: item.product_id,
+      productName: item.product_name,
+      currentStock: item.quantity,
+      historicalDemand: getHistoricalDemand(item.product_id),
+      leadTime: 7, // Assuming 7 days lead time, replace with actual data if available
+      holdingCost: item.unit_cost * 0.2, // Assuming 20% holding cost
+      stockoutCost: item.unit_cost * 2 // Assuming stockout cost is 2x unit cost
+    }));
+  };
+
+  // Get historical demand for a product
+  const getHistoricalDemand = (productId: string) => {
+    const history = inventoryHistory
+      .filter(h => h.product_id === productId)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Calculate daily demand changes
+    const demands: number[] = [];
+    for (let i = 1; i < history.length; i++) {
+      const demand = history[i-1].quantity - history[i].quantity;
+      if (demand > 0) demands.push(demand);
+    }
+
+    // If no history, return estimated demand
+    return demands.length > 0 ? demands : [10, 15, 12, 8, 14, 11];
+  };
+  
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">Inventory Management</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-blue-700">Inventory Management</h1>
+        <button
+          onClick={() => setIsOptimizationModalOpen(true)}
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          <SparklesIcon className="h-5 w-5 mr-2" />
+          AI Inventory Optimization
+        </button>
+      </div>
       
       {/* Toast Notification */}
       {toast.visible && (
@@ -530,6 +572,13 @@ export default function InventoryManagement() {
           </table>
         </div>
       </div>
+      
+      {/* AI Inventory Optimization Modal */}
+      <InventoryOptimizationModal
+        isOpen={isOptimizationModalOpen}
+        onClose={() => setIsOptimizationModalOpen(false)}
+        inventoryData={getInventoryDataForOptimization()}
+      />
     </div>
   );
 } 
