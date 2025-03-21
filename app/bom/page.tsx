@@ -1,3 +1,5 @@
+"use client";
+
 import { PlusIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import DynamicBOMModal from '../components/ai/DynamicBOMModal';
 import { useState } from 'react';

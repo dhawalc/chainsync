@@ -4,6 +4,32 @@ FROM node:18-alpine AS builder
 # Set the working directory
 WORKDIR /app
 
+# Define build arguments
+ARG OPENAI_API_KEY
+ARG DATABASE_URL
+ARG SNOWFLAKE_ACCOUNT
+ARG SNOWFLAKE_USERNAME
+ARG SNOWFLAKE_PASSWORD
+ARG SNOWFLAKE_WAREHOUSE
+ARG SNOWFLAKE_DATABASE
+ARG SNOWFLAKE_SCHEMA
+ARG SNOWFLAKE_ROLE
+ARG SNOWFLAKE_REGION
+ARG FRONTEND_URL
+
+# Set environment variables for build
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+ENV DATABASE_URL=$DATABASE_URL
+ENV SNOWFLAKE_ACCOUNT=$SNOWFLAKE_ACCOUNT
+ENV SNOWFLAKE_USERNAME=$SNOWFLAKE_USERNAME
+ENV SNOWFLAKE_PASSWORD=$SNOWFLAKE_PASSWORD
+ENV SNOWFLAKE_WAREHOUSE=$SNOWFLAKE_WAREHOUSE
+ENV SNOWFLAKE_DATABASE=$SNOWFLAKE_DATABASE
+ENV SNOWFLAKE_SCHEMA=$SNOWFLAKE_SCHEMA
+ENV SNOWFLAKE_ROLE=$SNOWFLAKE_ROLE
+ENV SNOWFLAKE_REGION=$SNOWFLAKE_REGION
+ENV FRONTEND_URL=$FRONTEND_URL
+
 # Copy package files and install dependencies with legacy peer dependency resolution
 COPY package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
@@ -11,10 +37,8 @@ RUN npm ci --legacy-peer-deps
 # Install additional dependencies needed for the build
 RUN npm install --save clsx tailwind-merge @radix-ui/react-switch @radix-ui/react-select @radix-ui/react-label @radix-ui/react-slot @radix-ui/react-checkbox @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-popover @radix-ui/react-toast lucide-react recharts --legacy-peer-deps
 
-# Create necessary directories
+# Create necessary directories and files
 RUN mkdir -p lib
-
-# Create the utils.ts file
 RUN echo 'import { type ClassValue, clsx } from "clsx"; import { twMerge } from "tailwind-merge"; export function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)) }' > lib/utils.ts
 
 # Copy the rest of the application code
@@ -36,18 +60,32 @@ RUN NEXT_TELEMETRY_DISABLED=1 npm run build -- --no-lint
 FROM node:18-alpine AS runner
 WORKDIR /app
 
+# Define build arguments again for the runner stage
+ARG OPENAI_API_KEY
+ARG DATABASE_URL
+ARG SNOWFLAKE_ACCOUNT
+ARG SNOWFLAKE_USERNAME
+ARG SNOWFLAKE_PASSWORD
+ARG SNOWFLAKE_WAREHOUSE
+ARG SNOWFLAKE_DATABASE
+ARG SNOWFLAKE_SCHEMA
+ARG SNOWFLAKE_ROLE
+ARG SNOWFLAKE_REGION
+ARG FRONTEND_URL
+
+# Set environment variables for runtime
 ENV NODE_ENV=production
-ENV OPENAI_API_KEY=${OPENAI_API_KEY}
-ENV DATABASE_URL=${DATABASE_URL}
-ENV SNOWFLAKE_ACCOUNT=${SNOWFLAKE_ACCOUNT}
-ENV SNOWFLAKE_USERNAME=${SNOWFLAKE_USERNAME}
-ENV SNOWFLAKE_PASSWORD=${SNOWFLAKE_PASSWORD}
-ENV SNOWFLAKE_WAREHOUSE=${SNOWFLAKE_WAREHOUSE}
-ENV SNOWFLAKE_DATABASE=${SNOWFLAKE_DATABASE}
-ENV SNOWFLAKE_SCHEMA=${SNOWFLAKE_SCHEMA}
-ENV SNOWFLAKE_ROLE=${SNOWFLAKE_ROLE}
-ENV SNOWFLAKE_REGION=${SNOWFLAKE_REGION}
-ENV FRONTEND_URL=${FRONTEND_URL}
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+ENV DATABASE_URL=$DATABASE_URL
+ENV SNOWFLAKE_ACCOUNT=$SNOWFLAKE_ACCOUNT
+ENV SNOWFLAKE_USERNAME=$SNOWFLAKE_USERNAME
+ENV SNOWFLAKE_PASSWORD=$SNOWFLAKE_PASSWORD
+ENV SNOWFLAKE_WAREHOUSE=$SNOWFLAKE_WAREHOUSE
+ENV SNOWFLAKE_DATABASE=$SNOWFLAKE_DATABASE
+ENV SNOWFLAKE_SCHEMA=$SNOWFLAKE_SCHEMA
+ENV SNOWFLAKE_ROLE=$SNOWFLAKE_ROLE
+ENV SNOWFLAKE_REGION=$SNOWFLAKE_REGION
+ENV FRONTEND_URL=$FRONTEND_URL
 
 # Copy necessary files from builder stage
 COPY --from=builder /app/next.config.js ./
@@ -55,6 +93,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/prisma ./prisma
 
 # Expose the port your app runs on
 EXPOSE 3000
