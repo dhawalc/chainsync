@@ -111,9 +111,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <div className="relative flex min-h-screen flex-col bg-background">
-            <Suspense fallback={<div className="h-16 bg-accent animate-pulse" />}>
-              <Navbar />
-            </Suspense>
+            <Navbar />
             <main className="flex-1">
               <Suspense fallback={<div className="h-full bg-background animate-pulse" />}>
                 {children}

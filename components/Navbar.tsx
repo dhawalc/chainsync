@@ -3,7 +3,7 @@
 // components/Navbar.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, useEffect, useRef, memo, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ChevronDownIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -131,12 +131,12 @@ DropdownButton.displayName = 'DropdownButton';
 const Navbar = () => {
   const { getEnabledFeaturesByCategory } = useFeatureFlags();
 
-  // Get enabled features by category
-  const mdmFeatures = getEnabledFeaturesByCategory('mdm');
-  const supplyChainFeatures = getEnabledFeaturesByCategory('supplyChain');
-  const planningFeatures = getEnabledFeaturesByCategory('planning');
-  const analysisFeatures = getEnabledFeaturesByCategory('analysis');
-  const additionalFeatures = getEnabledFeaturesByCategory('additional');
+  // Get enabled features by category with useMemo to prevent unnecessary recalculations
+  const mdmFeatures = useMemo(() => getEnabledFeaturesByCategory('mdm'), [getEnabledFeaturesByCategory]);
+  const supplyChainFeatures = useMemo(() => getEnabledFeaturesByCategory('supplyChain'), [getEnabledFeaturesByCategory]);
+  const planningFeatures = useMemo(() => getEnabledFeaturesByCategory('planning'), [getEnabledFeaturesByCategory]);
+  const analysisFeatures = useMemo(() => getEnabledFeaturesByCategory('analysis'), [getEnabledFeaturesByCategory]);
+  const additionalFeatures = useMemo(() => getEnabledFeaturesByCategory('additional'), [getEnabledFeaturesByCategory]);
 
   // Desktop dropdown states
   const [supplyChainOpen, setSupplyChainOpen] = useState(false);

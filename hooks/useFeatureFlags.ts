@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { allFeatures } from '../config/features';
+import { allFeatures, customerConfigs } from '../config/features';
+
+// Cache for feature flags
+const featureFlagsCache: Record<string, string[]> = {};
 
 export const useFeatureFlags = () => {
   const searchParams = useSearchParams();
   const customerId = searchParams?.get('customer');
-  const [enabledFeatures, setEnabledFeatures] = useState<string[]>([]);
+  const [enabledFeatures, setEnabledFeatures] = useState<string[]>(() => {
+    // Initialize with cached value or all features
+    if (customerId && featureFlagsCache[customerId]) {
+      return featureFlagsCache[customerId];
+    }
+    return allFeatures.map(feature => feature.id);
+  });
 
   useEffect(() => {
     // If no customer is specified, show all features
@@ -14,11 +23,26 @@ export const useFeatureFlags = () => {
       return;
     }
 
-    // Otherwise, fetch customer-specific features
+    // If we have cached data, use it
+    if (featureFlagsCache[customerId]) {
+      setEnabledFeatures(featureFlagsCache[customerId]);
+      return;
+    }
+
+    // Check if we have a static config for this customer
+    const staticConfig = customerConfigs[customerId];
+    if (staticConfig) {
+      featureFlagsCache[customerId] = staticConfig.enabledFeatures;
+      setEnabledFeatures(staticConfig.enabledFeatures);
+      return;
+    }
+
+    // Otherwise, fetch from API
     fetch(`/api/customers/${customerId}`)
       .then(res => res.json())
       .then(data => {
         if (!data.error) {
+          featureFlagsCache[customerId] = data.enabledFeatures;
           setEnabledFeatures(data.enabledFeatures);
         }
       })

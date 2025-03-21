@@ -14,16 +14,19 @@ export interface CustomerConfig {
 
 export const allFeatures: Feature[] = [
   // MDM Features
-  { id: 'mdm-dashboard', name: 'MDM Dashboard', description: 'Master Data Management Overview', category: 'mdm', path: '/mdm' },
-  { id: 'material-master', name: 'Material Master', description: 'Manage material data', category: 'mdm', path: '/mdm/material' },
-  { id: 'customer-master', name: 'Customer Master', description: 'Manage customer data', category: 'mdm', path: '/mdm/customer' },
-  { id: 'vendor-master', name: 'Vendor Master', description: 'Manage vendor data', category: 'mdm', path: '/mdm/vendor' },
-  { id: 'bom', name: 'Bill of Materials', description: 'Manage BOM data', category: 'mdm', path: '/mdm/bom' },
-  { id: 'routing', name: 'Routing & Work Centers', description: 'Manage routing data', category: 'mdm', path: '/mdm/routing' },
+  { id: 'mdm-dashboard', name: 'MDM Dashboard', description: 'Master Data Management Dashboard', category: 'mdm', path: '/mdm' },
+  { id: 'material-master', name: 'Material Master', description: 'Manage material master data', category: 'mdm', path: '/mdm/material' },
+  { id: 'customer-master', name: 'Customer Master', description: 'Manage customer master data', category: 'mdm', path: '/mdm/customer' },
+  { id: 'vendor-master', name: 'Vendor Master', description: 'Manage vendor master data', category: 'mdm', path: '/mdm/vendor' },
+  { id: 'bom', name: 'Bill of Materials', description: 'Manage bill of materials', category: 'mdm', path: '/mdm/bom' },
+  { id: 'routing', name: 'Routing & Work Centers', description: 'Manage routing and work centers', category: 'mdm', path: '/mdm/routing' },
   { id: 'production-version', name: 'Production Version', description: 'Manage production versions', category: 'mdm', path: '/mdm/production-version' },
   { id: 'calendar', name: 'Calendars', description: 'Manage calendars', category: 'mdm', path: '/mdm/calendar' },
-  { id: 'location', name: 'Location Master', description: 'Manage locations', category: 'mdm', path: '/mdm/location' },
-  { id: 'transportation', name: 'Transportation', description: 'Manage transportation', category: 'mdm', path: '/mdm/transportation' },
+  { id: 'location', name: 'Location Master', description: 'Manage location master data', category: 'mdm', path: '/mdm/location' },
+  { id: 'transportation', name: 'Transportation', description: 'Manage transportation data', category: 'mdm', path: '/mdm/transportation' },
+  { id: 'technology-node-mapping', name: 'Technology Node - Process Mapping', description: 'Map technology nodes to processes', category: 'mdm', path: '/mdm/technology-node' },
+  { id: 'process-master', name: 'Process Master', description: 'Manage process master data', category: 'mdm', path: '/mdm/process' },
+  { id: 'technology-node-define', name: 'Define Technology Nodes', description: 'Define and manage technology nodes', category: 'mdm', path: '/mdm/technology-node/define' },
   { id: 'integrations', name: 'Integration', description: 'Manage integrations', category: 'mdm', path: '/integrations' },
 
   // Supply Chain Features
@@ -66,7 +69,7 @@ export const customerConfigs: Record<string, CustomerConfig> = {
     domain: 'arista.chainsync.info',
     enabledFeatures: [
       // MDM
-      'mdm-dashboard', 'material-master', 'customer-master', 'vendor-master', 'bom', 'routing',
+      'mdm-dashboard', 'material-master', 'technology-node', 'process-master', 'customer-master', 'vendor-master', 'bom', 'routing',
       // Supply Chain
       'products', 'inventory', 'suppliers', 'production', 'risk',
       // Planning

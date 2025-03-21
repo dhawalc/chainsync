@@ -11,7 +11,9 @@ import {
   CalendarIcon,
   TruckIcon,
   ArrowPathIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  CircleStackIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 
 const mdmModules = [
@@ -22,6 +24,22 @@ const mdmModules = [
     count: 1245,
     path: '/mdm/material',
     color: 'bg-indigo-50 border-indigo-200',
+  },
+  {
+    title: 'Technology Node',
+    description: 'Manage technology nodes and process mappings',
+    icon: <CircleStackIcon className="h-8 w-8 text-cyan-600" />,
+    count: 5,
+    path: '/mdm/technology-node',
+    color: 'bg-cyan-50 border-cyan-200',
+  },
+  {
+    title: 'Process Master',
+    description: 'Manage semiconductor fabrication processes',
+    icon: <Cog6ToothIcon className="h-8 w-8 text-lime-600" />,
+    count: 8,
+    path: '/mdm/process',
+    color: 'bg-lime-50 border-lime-200',
   },
   {
     title: 'Location Master',
