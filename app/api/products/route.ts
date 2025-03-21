@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
 import { mockProducts, mockCategories, mockProductCategories, shouldUseMockData } from '@/lib/mock-data';
 
+export { dynamic, runtime } from '../route.config'
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

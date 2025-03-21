@@ -111,7 +111,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <div className="relative flex min-h-screen flex-col bg-background">
-            <Navbar />
+            <Suspense fallback={
+              <div className="bg-indigo-900 h-16 w-full animate-pulse">
+                <div className="max-w-7xl mx-auto py-3 px-6 flex justify-between items-center">
+                  <div className="h-10 w-40 bg-indigo-800/50 rounded-md animate-pulse" />
+                </div>
+              </div>
+            }>
+              <Navbar />
+            </Suspense>
             <main className="flex-1">
               <Suspense fallback={<div className="h-full bg-background animate-pulse" />}>
                 {children}
