@@ -57,9 +57,6 @@ const menuItems = {
     { href: '/kpi', label: 'KPI Dashboard' },
     { href: '/audit', label: 'Audit' },
   ],
-  additional: [
-    { href: '/landing', label: 'Landing' },
-  ],
 };
 
 // Memoized dropdown menu component
