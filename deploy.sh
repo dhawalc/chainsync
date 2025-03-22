@@ -16,7 +16,7 @@ echo "Building Docker image..."
 docker build -t gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest .
 
 echo "Pushing Docker image..."
-docker push gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest
+docker build --build-arg OPENAI_API_KEY="${OPENAI_API_KEY}" -t gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest .
 
 echo "Deploying to Cloud Run..."
 gcloud run deploy ${SERVICE_NAME} \
