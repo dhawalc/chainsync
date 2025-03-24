@@ -10,17 +10,10 @@ const withPWA = require('next-pwa')({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  images: {
-    domains: ['randomuser.me', 'images.unsplash.com'],
+  output: 'standalone',
+  experimental: {
+    optimizeCss: true,
   },
-  // Preserve existing configuration
-  ...(process.env.NODE_ENV === 'production' ? {
-    output: 'standalone',
-    experimental: {
-      optimizeCss: true,
-    },
-  } : {}),
-  // Updated image configuration using remotePatterns
   images: {
     remotePatterns: [
       {
@@ -33,11 +26,6 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',
   },
-  // Increase serverless function timeout for Snowflake queries
-  serverRuntimeConfig: {
-    // Will only be available on the server side
-    timeoutSeconds: 60,
-  },
   // Bypass ESLint errors during builds
   eslint: {
     ignoreDuringBuilds: true,
@@ -46,12 +34,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Add webpack configuration for Leaflet
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.(png|jpg|gif|svg)$/i,
-      type: 'asset/resource',
-    });
+  // Add webpack configuration for Node.js modules
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        os: false,
+        stream: false,
+      };
+    }
     return config;
   },
   // Disable static optimization for API routes

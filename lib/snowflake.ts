@@ -154,9 +154,9 @@ export async function getSnowflakeConnection() {
   const warehouse = process.env.SNOWFLAKE_WAREHOUSE;
   const role = process.env.SNOWFLAKE_ROLE;
   const region = process.env.SNOWFLAKE_REGION;
-  const privateKey = process.env.SNOWFLAKE_PRIVATE_KEY;
+  const password = process.env.SNOWFLAKE_PASSWORD;
 
-  if (!account || !username || !database || !schema || !warehouse || !role || !region || !privateKey) {
+  if (!account || !username || !database || !schema || !warehouse || !role || !password) {
     throw new Error('Missing required Snowflake configuration');
   }
 
@@ -168,8 +168,7 @@ export async function getSnowflakeConnection() {
     warehouse,
     role,
     region,
-    authenticator: 'SNOWFLAKE_JWT' as const,
-    privateKey
+    password
   };
 
   connection = snowflake.createConnection(config);
