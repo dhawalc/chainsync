@@ -22,7 +22,8 @@ COPY package.json package-lock.json* ./
 
 # Install dependencies with proper flags and error handling
 RUN npm install --legacy-peer-deps && \
-    npm install sharp --legacy-peer-deps && \
+    npm install -g sharp && \
+    npm link sharp && \
     npm audit fix --force || true
 
 # Copy the rest of the application code
@@ -31,8 +32,9 @@ COPY . .
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build the Next.js app
-RUN npm run build
+# Build the Next.js app with explicit sharp installation
+RUN npm install sharp --legacy-peer-deps && \
+    npm run build
 
 # ---------------------- RUNNER STAGE ----------------------
 FROM node:18-alpine AS runner
