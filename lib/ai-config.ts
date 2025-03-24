@@ -23,11 +23,10 @@ export const AI_FEATURES = {
 
 // AI Models configuration
 export const AI_MODELS = {
-  default: "gpt-3.5-turbo-instruct", // or "gpt-4" if that's accessible
-  fast: "gpt-3.5-turbo-instruct",
+  default: "gpt-3.5-turbo", // or "gpt-4" if that's accessible
+  fast: "gpt-3.5-turbo",
   embedding: "text-embedding-3-small"
 };
-
 
 // Prompt templates
 export const PROMPT_TEMPLATES = {
@@ -40,11 +39,7 @@ export const PROMPT_TEMPLATES = {
 // AI feature flags and configurations
 export const aiFeatures = {
   enabled: true,
-  models: {
-    default: 'gpt-3.5-turbo',
-    fast: 'gpt-3.5-turbo',
-    embedding: 'text-embedding-3-small'
-  },
+  models: AI_MODELS, // Use the same models configuration
   maxTokens: 4000,
   temperature: 0.7
 }; 
