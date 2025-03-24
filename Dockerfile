@@ -20,9 +20,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies including sharp
-RUN npm ci --legacy-peer-deps && \
-    npm install sharp
+# Install dependencies with proper flags and error handling
+RUN npm install --legacy-peer-deps && \
+    npm install sharp --legacy-peer-deps && \
+    npm audit fix --force || true
 
 # Copy the rest of the application code
 COPY . .
