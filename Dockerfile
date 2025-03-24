@@ -20,8 +20,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# Install all dependencies including devDependencies for build
+RUN npm install --legacy-peer-deps --include=dev
 
 # Copy the rest of the application code
 COPY . .
@@ -31,6 +31,9 @@ RUN npx prisma generate
 
 # Build the Next.js app
 RUN npm run build
+
+# Clean up dev dependencies
+RUN npm prune --production
 
 # ---------------------- RUNNER STAGE ----------------------
 FROM node:18-alpine AS runner
