@@ -37,6 +37,7 @@ gcloud run deploy ${SERVICE_NAME} \
   --allow-unauthenticated \
   --memory 1Gi \
   --set-env-vars "OPENAI_API_KEY=${OPENAI_API_KEY}"
+
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
 echo "Cloud Run service URL: $URL"
