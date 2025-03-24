@@ -11,7 +11,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['randomuser.me'],
+    domains: ['randomuser.me', 'images.unsplash.com'],
   },
   // Preserve existing configuration
   ...(process.env.NODE_ENV === 'production' ? {
@@ -53,6 +53,20 @@ const nextConfig = {
       type: 'asset/resource',
     });
     return config;
+  },
+  // Disable static optimization for API routes
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, must-revalidate',
+          },
+        ],
+      },
+    ]
   },
 };
 
