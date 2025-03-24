@@ -140,4 +140,62 @@ export const closeSnowflake = async () => {
   } finally {
     connection = null;
   }
-}; 
+};
+
+export async function getSnowflakeConnection() {
+  if (connection) {
+    return connection;
+  }
+
+  const account = process.env.SNOWFLAKE_ACCOUNT;
+  const username = process.env.SNOWFLAKE_USERNAME;
+  const database = process.env.SNOWFLAKE_DATABASE;
+  const schema = process.env.SNOWFLAKE_SCHEMA;
+  const warehouse = process.env.SNOWFLAKE_WAREHOUSE;
+  const role = process.env.SNOWFLAKE_ROLE;
+  const region = process.env.SNOWFLAKE_REGION;
+  const privateKey = process.env.SNOWFLAKE_PRIVATE_KEY;
+
+  if (!account || !username || !database || !schema || !warehouse || !role || !region || !privateKey) {
+    throw new Error('Missing required Snowflake configuration');
+  }
+
+  const config = {
+    account,
+    username,
+    database,
+    schema,
+    warehouse,
+    role,
+    region,
+    authenticator: 'SNOWFLAKE_JWT' as const,
+    privateKey
+  };
+
+  connection = snowflake.createConnection(config);
+
+  return new Promise((resolve, reject) => {
+    connection.connect((err: any) => {
+      if (err) {
+        console.error('Failed to connect to Snowflake:', err);
+        reject(err);
+      } else {
+        console.log('Successfully connected to Snowflake');
+        resolve(connection);
+      }
+    });
+  });
+}
+
+export function closeSnowflakeConnection() {
+  if (connection) {
+    connection.destroy((err: any) => {
+      if (err) {
+        console.error('Error closing Snowflake connection:', err);
+      } else {
+        console.log('Snowflake connection closed successfully');
+      }
+    });
+    connection = null;
+  }
+} 
