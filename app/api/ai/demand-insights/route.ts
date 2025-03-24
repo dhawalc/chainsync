@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { openai, AI_MODELS, aiFeatures } from '@/lib/ai-config';
+import { openai, AI_MODELS } from '@/lib/ai-config';
 
 interface DemandInsightRequest {
   productId?: string;
@@ -13,38 +13,6 @@ interface DemandInsightRequest {
     lower_bound: number;
     upper_bound: number;
   }>;
-}
-
-export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
-
-export async function GET() {
-  try {
-    if (!aiFeatures.enabled || !openai) {
-      return NextResponse.json({
-        error: 'AI features are not enabled. Please configure OpenAI API key.',
-        mockData: {
-          insights: [
-            { type: "trend", description: "Mock trend insight" },
-            { type: "seasonality", description: "Mock seasonality insight" },
-            { type: "anomaly", description: "Mock anomaly insight" }
-          ]
-        }
-      }, { status: 503 });
-    }
-
-    // Your actual OpenAI logic here
-    return NextResponse.json({
-      insights: [
-        { type: "trend", description: "Mock trend insight" },
-        { type: "seasonality", description: "Mock seasonality insight" },
-        { type: "anomaly", description: "Mock anomaly insight" }
-      ]
-    });
-  } catch (error) {
-    console.error('Error generating demand insights:', error);
-    return NextResponse.json({ error: 'Failed to generate demand insights' }, { status: 500 });
-  }
 }
 
 export async function POST(request: Request) {

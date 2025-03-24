@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run generate-markers && next build",
     "start": "next start",
     "lint": "next lint",
     "deploy": "sh scripts/deploy.sh",
@@ -56,7 +56,7 @@
     "prisma": "^6.5.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-leaflet": "^4.2.1",
+    "react-leaflet": "^5.0.0",
     "recharts": "^2.15.1",
     "snowflake-sdk": "^2.0.2",
     "tailwind-merge": "^2.2.1",

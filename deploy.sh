@@ -1,11 +1,15 @@
 #!/bin/bash
 set -e
 
-# Load environment variables from .env.local if it exists
-if [ -f .env.local ]; then
-  set -a
-  source .env.local
-  set +a
+# Read OPENAI_API_KEY from .env.local if not set in environment
+if [ -z "${OPENAI_API_KEY}" ]; then
+    export OPENAI_API_KEY=$(grep OPENAI_API_KEY .env.local | cut -d '=' -f2)
+fi
+
+# Verify we have the key
+if [ -z "${OPENAI_API_KEY}" ]; then
+    echo "Error: Could not find OPENAI_API_KEY in environment or .env.local"
+    exit 1
 fi
 
 # (Optional) Push your code to GitHub if that's part of your process.
@@ -18,16 +22,6 @@ git push origin main
 PROJECT_ID=${GCP_PROJECT_ID:-chainsync-demo}
 SERVICE_NAME="chainsync"
 REGION="us-central1"
-
-# Create Secret Manager secret for OpenAI API key
-echo "Setting up OpenAI API key in Secret Manager..."
-if [ ! -z "${OPENAI_API_KEY}" ]; then
-  echo "Creating/updating OpenAI API key secret..."
-  echo "${OPENAI_API_KEY}" | gcloud secrets create "OPENAI_API_KEY" \
-    --data-file=- \
-    --replication-policy="automatic" || \
-  echo "${OPENAI_API_KEY}" | gcloud secrets versions add "OPENAI_API_KEY" --data-file=-
-fi
 
 echo "Building Docker image..."
 docker build -t gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest .
@@ -42,24 +36,7 @@ gcloud run deploy ${SERVICE_NAME} \
   --region ${REGION} \
   --allow-unauthenticated \
   --memory 1Gi \
-  --set-env-vars=""
-
+  --set-env-vars "OPENAI_API_KEY=${OPENAI_API_KEY}"
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
 echo "Cloud Run service URL: $URL"
-
-# Print deployment summary
-echo "
-Deployment Summary:
-------------------
-Service Name: ${SERVICE_NAME}
-Region: ${REGION}
-URL: ${URL}
-Environment: Production
-Memory: 1Gi
-
-Next Steps:
-1. Visit ${URL} to verify the deployment
-2. Check Cloud Run logs for any issues
-3. Monitor application performance
-"

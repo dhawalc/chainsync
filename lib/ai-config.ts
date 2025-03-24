@@ -1,9 +1,13 @@
 import OpenAI from 'openai';
 
-// Initialize OpenAI client with optional API key
-export const openai = process.env.OPENAI_API_KEY ? new OpenAI({
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY is not set in environment variables');
+}
+
+// Initialize OpenAI client
+export const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-}) : null;
+});
 
 // AI Feature flags and configurations
 export const AI_FEATURES = {
@@ -34,8 +38,8 @@ export const PROMPT_TEMPLATES = {
 
 // AI feature flags and configurations
 export const aiFeatures = {
-  enabled: process.env.OPENAI_API_KEY ? true : false,
-  models: AI_MODELS,
+  enabled: true,
+  models: AI_MODELS, // Use the same models configuration
   maxTokens: 4000,
   temperature: 0.7
 }; 
