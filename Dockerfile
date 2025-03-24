@@ -20,25 +20,17 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install dependencies with proper flags and error handling
-RUN npm install --legacy-peer-deps && \
-    npm install -g sharp && \
-    npm link sharp && \
-    npm audit fix --force || true
+# Install dependencies
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . .
 
-# Create necessary directories and copy leaflet assets
-RUN mkdir -p public/leaflet && \
-    cp -r node_modules/leaflet/dist/images/* public/leaflet/
-
 # Generate Prisma client
 RUN npx prisma generate
 
-# Install sharp locally and build
-RUN npm install sharp --legacy-peer-deps && \
-    NODE_ENV=production npm run build
+# Build the Next.js app
+RUN npm run build
 
 # ---------------------- RUNNER STAGE ----------------------
 FROM node:18-alpine AS runner
