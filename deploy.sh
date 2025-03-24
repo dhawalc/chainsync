@@ -28,15 +28,15 @@ docker build -t gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest .
 
 echo "Pushing Docker image..."
 docker push gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest
-
 echo "Deploying to Cloud Run..."
+
 gcloud run deploy ${SERVICE_NAME} \
   --image gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest \
   --platform managed \
   --region ${REGION} \
   --allow-unauthenticated \
   --memory 1Gi \
-  --set-env-vars "OPENAI_API_KEY=${OPENAI_API_KEY}"
+  --set-secrets "OPENAI_API_KEY=OPENAI_API_KEY:latest"
 
 echo "Deployment complete. Retrieving Cloud Run URL..."
 URL=$(gcloud run services describe ${SERVICE_NAME} --platform managed --region ${REGION} --format 'value(status.url)')
