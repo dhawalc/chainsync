@@ -29,12 +29,16 @@ RUN npm install --legacy-peer-deps && \
 # Copy the rest of the application code
 COPY . .
 
+# Create necessary directories and copy leaflet assets
+RUN mkdir -p public/leaflet && \
+    cp -r node_modules/leaflet/dist/images/* public/leaflet/
+
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build the Next.js app with explicit sharp installation
+# Install sharp locally and build
 RUN npm install sharp --legacy-peer-deps && \
-    npm run build
+    NODE_ENV=production npm run build
 
 # ---------------------- RUNNER STAGE ----------------------
 FROM node:18-alpine AS runner
@@ -44,7 +48,7 @@ RUN apk add --no-cache python3 make g++
 
 WORKDIR /app
 
-# Define runtime environment variables
+# Set production environment variables
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
