@@ -14,6 +14,15 @@ interface ChatRequest {
 export async function POST(request: Request) {
   try {
     console.log('Starting chat...');
+    
+    if (!openai) {
+      console.error('OpenAI client not initialized. Check your API key configuration.');
+      return NextResponse.json(
+        { error: 'AI service is not available. Please check your configuration.' },
+        { status: 503 }
+      );
+    }
+
     const { message, history }: ChatRequest = await request.json();
 
     if (!message) {
@@ -24,12 +33,13 @@ export async function POST(request: Request) {
     }
 
     console.log('Sending request to OpenAI...');
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `You are a helpful AI assistant specializing in supply chain management and operations. You can help with:
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: `You are a helpful AI assistant specializing in supply chain management and operations. You can help with:
 
 - Inventory optimization and management
 - Demand forecasting and planning
@@ -42,25 +52,36 @@ export async function POST(request: Request) {
 - Sustainability initiatives
 
 Provide clear, concise, and actionable advice based on supply chain best practices. If you need more information to give a proper answer, ask clarifying questions.`
-        },
-        ...history,
-        {
-          role: "user",
-          content: message
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 2000,
-    });
+          },
+          ...history,
+          {
+            role: "user",
+            content: message
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+      });
 
-    const responseContent = completion.choices[0].message.content || 'I apologize, but I am unable to provide a response at this time.';
-    console.log('Received response from OpenAI:', responseContent);
+      if (!completion.choices?.[0]?.message?.content) {
+        throw new Error('No response content from OpenAI');
+      }
 
-    return NextResponse.json({ message: responseContent });
+      const responseContent = completion.choices[0].message.content;
+      console.log('Received response from OpenAI:', responseContent);
+
+      return NextResponse.json({ message: responseContent });
+    } catch (openAiError) {
+      console.error('OpenAI API error:', openAiError);
+      return NextResponse.json(
+        { error: 'Failed to get response from AI service' },
+        { status: 502 }
+      );
+    }
   } catch (error) {
     console.error('Error in chat:', error);
     return NextResponse.json(
-      { error: 'Failed to get response' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

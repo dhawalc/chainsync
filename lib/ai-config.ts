@@ -1,12 +1,33 @@
 import OpenAI from 'openai';
 
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+let openai: OpenAI | null = null;
 
-if (!process.env.OPENAI_API_KEY) {
-  console.warn('Warning: OPENAI_API_KEY is not set. AI functionality will be disabled.');
+function initializeOpenAI() {
+  if (typeof window === 'undefined') {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      console.error('OPENAI_API_KEY not set in environment variables. AI features will not work.');
+      return null;
+    }
+
+    try {
+      return new OpenAI({ 
+        apiKey,
+        timeout: 30000, // 30 second timeout
+        maxRetries: 3   // Retry failed requests up to 3 times
+      });
+    } catch (error) {
+      console.error('Failed to initialize OpenAI client:', error);
+      return null;
+    }
+  }
+  return null;
 }
+
+// Initialize OpenAI instance
+openai = initializeOpenAI();
+
+export { openai };
 
 // AI Feature flags and configurations
 export const AI_FEATURES = {
@@ -38,7 +59,7 @@ export const PROMPT_TEMPLATES = {
 // AI feature flags and configurations
 export const aiFeatures = {
   enabled: true,
-  models: AI_MODELS, // Use the same models configuration
+  models: AI_MODELS,
   maxTokens: 4000,
   temperature: 0.7
 }; 

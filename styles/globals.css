@@ -34,6 +34,10 @@
     --ring: 215 20.2% 65.1%;
 
     --radius: 0.5rem;
+
+    --navbar-bg: 234 89% 27%;
+    --navbar-text: 210 40% 98%;
+    --navbar-hover: 151 72% 50%;
   }
 
   .dark {
@@ -67,6 +71,10 @@
     --ring: 216 34% 17%;
 
     --radius: 0.5rem;
+
+    --navbar-bg: 234 89% 17%;
+    --navbar-text: 210 40% 98%;
+    --navbar-hover: 151 72% 50%;
   }
 }
 
@@ -77,5 +85,55 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .navbar {
+    @apply bg-indigo-900 text-indigo-100 shadow-md relative;
+  }
+
+  .navbar-link {
+    @apply text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium;
+  }
+
+  .navbar-dropdown {
+    @apply absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10;
+  }
+
+  .navbar-dropdown-item {
+    @apply block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700;
+  }
+
+  .navbar-mobile-menu {
+    @apply lg:hidden bg-indigo-900 border-t border-indigo-800;
+  }
+
+  .navbar-mobile-item {
+    @apply block text-indigo-200 hover:text-emerald-300 px-3 py-2 rounded-md text-base font-medium;
+  }
+
+  .navbar-mobile-dropdown {
+    @apply w-full flex justify-between items-center text-indigo-200 hover:text-emerald-300 px-3 py-2 rounded-md text-base font-medium;
+  }
+
+  .navbar-profile {
+    @apply flex items-center ml-8;
+  }
+
+  .navbar-profile-info {
+    @apply text-right mr-3;
+  }
+
+  .navbar-profile-name {
+    @apply text-indigo-100 text-sm;
+  }
+
+  .navbar-profile-company {
+    @apply text-emerald-300 text-xs;
+  }
+
+  .navbar-profile-avatar {
+    @apply rounded-full ring-2 ring-emerald-400/20 hover:ring-emerald-400/40 transition-all duration-200;
   }
 }

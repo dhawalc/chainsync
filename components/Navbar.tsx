@@ -3,11 +3,10 @@
 // components/Navbar.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useRef, memo, useMemo } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ChevronDownIcon, Bars3Icon, XMarkIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useFeatureFlags } from '../hooks/useFeatureFlags';
 import ChatAssistantModal from '@/app/components/ai/ChatAssistantModal';
 
 // Mock user data - in a real app, this would come from authentication
@@ -20,7 +19,6 @@ const user = {
 // Menu items configuration
 const menuItems = {
   mdm: [
-    { href: '/mdm', label: 'MDM Dashboard' },
     { href: '/mdm/material', label: 'Material Master' },
     { href: '/mdm/customer', label: 'Customer Master' },
     { href: '/mdm/vendor', label: 'Vendor Master' },
@@ -29,6 +27,9 @@ const menuItems = {
     { href: '/mdm/production-version', label: 'Production Version' },
     { href: '/mdm/calendar', label: 'Calendars' },
     { href: '/mdm/location', label: 'Location Master' },
+    { href: '/mdm/technology-node', label: 'Technology Node' },
+    { href: '/mdm/process', label: 'Process' },
+    { href: '/mdm/technology-node/define', label: 'Define Technology' },
     { href: '/mdm/transportation', label: 'Transportation' },
     { href: '/integrations', label: 'Integration' },
   ],
@@ -55,8 +56,8 @@ const menuItems = {
     { href: '/performance', label: 'Performance' },
     { href: '/what-if', label: 'What-If Analysis' },
     { href: '/kpi', label: 'KPI Dashboard' },
-    { href: '/audit', label: 'Audit' },
-  ],
+    { href: '/audit', label: 'Audit' }
+  ]
 };
 
 // Memoized dropdown menu component
@@ -77,7 +78,7 @@ const DropdownMenu = memo(({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2 }}
-      className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
+      className="navbar-dropdown"
     >
       <div className="py-1" role="menu" aria-orientation="vertical">
         {items.map((item) => (
@@ -88,7 +89,7 @@ const DropdownMenu = memo(({
           >
             <Link
               href={item.href}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="navbar-dropdown-item"
               role="menuitem"
               onClick={onClose}
             >
@@ -115,7 +116,7 @@ const DropdownButton = memo(({
 }) => (
   <button
     onClick={onClick}
-    className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium flex items-center"
+    className="navbar-link flex items-center"
   >
     {label}
     <ChevronDownIcon
@@ -127,15 +128,6 @@ const DropdownButton = memo(({
 DropdownButton.displayName = 'DropdownButton';
 
 const Navbar = () => {
-  const { getEnabledFeaturesByCategory } = useFeatureFlags();
-
-  // Get enabled features by category with useMemo to prevent unnecessary recalculations
-  const mdmFeatures = useMemo(() => getEnabledFeaturesByCategory('mdm'), [getEnabledFeaturesByCategory]);
-  const supplyChainFeatures = useMemo(() => getEnabledFeaturesByCategory('supplyChain'), [getEnabledFeaturesByCategory]);
-  const planningFeatures = useMemo(() => getEnabledFeaturesByCategory('planning'), [getEnabledFeaturesByCategory]);
-  const analysisFeatures = useMemo(() => getEnabledFeaturesByCategory('analysis'), [getEnabledFeaturesByCategory]);
-  const additionalFeatures = useMemo(() => getEnabledFeaturesByCategory('additional'), [getEnabledFeaturesByCategory]);
-
   // Desktop dropdown states
   const [supplyChainOpen, setSupplyChainOpen] = useState(false);
   const [mdmOpen, setMdmOpen] = useState(false);
@@ -148,6 +140,8 @@ const Navbar = () => {
   const [mobileSupplyChainOpen, setMobileSupplyChainOpen] = useState(false);
   const [mobilePlanningOpen, setMobilePlanningOpen] = useState(false);
   const [mobileAnalysisOpen, setMobileAnalysisOpen] = useState(false);
+
+  const [isChatAssistantModalOpen, setIsChatAssistantModalOpen] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
@@ -193,10 +187,14 @@ const Navbar = () => {
     setMobileAnalysisOpen(false);
   }, [pathname]);
 
-  const [isChatAssistantModalOpen, setIsChatAssistantModalOpen] = useState(false);
+  // Handle mobile menu item click
+  const handleMobileItemClick = (href: string) => {
+    router.push(href);
+    setMobileMenuOpen(false);
+  };
 
   return (
-    <header className="bg-indigo-900 shadow-md relative">
+    <header className="navbar">
       <div className="max-w-7xl mx-auto py-3 px-6 flex justify-between items-center">
         {/* Logo and brand */}
         <Link href="/" className="flex items-center space-x-3">
@@ -209,7 +207,7 @@ const Navbar = () => {
               alt="ChainSync Logo"
               width={40}
               height={40}
-              className="h-10 w-auto rounded-md shadow-lg"
+              className="rounded-md"
               priority
             />
           </motion.div>
@@ -222,10 +220,132 @@ const Navbar = () => {
           </motion.h1>
         </Link>
 
-        {/* Mobile menu toggle button */}
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center">
+          <nav className="flex items-center space-x-6">
+            <div ref={mdmRef} className="relative">
+              <DropdownButton
+                label="Master Data"
+                isOpen={mdmOpen}
+                onClick={() => {
+                  setMdmOpen(!mdmOpen);
+                  setSupplyChainOpen(false);
+                  setPlanningOpen(false);
+                  setAnalysisOpen(false);
+                }}
+              />
+              <AnimatePresence>
+                <DropdownMenu
+                  isOpen={mdmOpen}
+                  items={menuItems.mdm}
+                  onClose={() => setMdmOpen(false)}
+                />
+              </AnimatePresence>
+            </div>
+
+            <div ref={supplyChainRef} className="relative">
+              <DropdownButton
+                label="Supply Chain"
+                isOpen={supplyChainOpen}
+                onClick={() => {
+                  setSupplyChainOpen(!supplyChainOpen);
+                  setMdmOpen(false);
+                  setPlanningOpen(false);
+                  setAnalysisOpen(false);
+                }}
+              />
+              <AnimatePresence>
+                <DropdownMenu
+                  isOpen={supplyChainOpen}
+                  items={menuItems.supplyChain}
+                  onClose={() => setSupplyChainOpen(false)}
+                />
+              </AnimatePresence>
+            </div>
+
+            <div ref={planningRef} className="relative">
+              <DropdownButton
+                label="Planning"
+                isOpen={planningOpen}
+                onClick={() => {
+                  setPlanningOpen(!planningOpen);
+                  setMdmOpen(false);
+                  setSupplyChainOpen(false);
+                  setAnalysisOpen(false);
+                }}
+              />
+              <AnimatePresence>
+                <DropdownMenu
+                  isOpen={planningOpen}
+                  items={menuItems.planning}
+                  onClose={() => setPlanningOpen(false)}
+                />
+              </AnimatePresence>
+            </div>
+
+            <div ref={analysisRef} className="relative">
+              <DropdownButton
+                label="Analysis"
+                isOpen={analysisOpen}
+                onClick={() => {
+                  setAnalysisOpen(!analysisOpen);
+                  setMdmOpen(false);
+                  setSupplyChainOpen(false);
+                  setPlanningOpen(false);
+                }}
+              />
+              <AnimatePresence>
+                <DropdownMenu
+                  isOpen={analysisOpen}
+                  items={menuItems.analysis}
+                  onClose={() => setAnalysisOpen(false)}
+                />
+              </AnimatePresence>
+            </div>
+
+            <Link href="/landing" className="navbar-link">
+              Landing
+            </Link>
+
+            <button
+              onClick={() => setIsChatAssistantModalOpen(true)}
+              className="navbar-link flex items-center"
+            >
+              <SparklesIcon className="h-4 w-4 mr-1.5" />
+              AI Assistant
+            </button>
+          </nav>
+
+          {/* Desktop User Profile */}
+          <div className="navbar-profile">
+            <motion.div 
+              className="navbar-profile-info"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
+              <p className="navbar-profile-name">Welcome, <span className="font-semibold">{user.name}</span></p>
+              <p className="navbar-profile-company">{user.company}</p>
+            </motion.div>
+            <motion.div 
+              className="relative"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                width={32}
+                height={32}
+                className="navbar-profile-avatar"
+              />
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Mobile menu button */}
         <button
-          className="md:hidden text-indigo-200 hover:text-emerald-300 transition-colors duration-200"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden navbar-link"
           aria-label="Toggle mobile menu"
         >
           {mobileMenuOpen ? (
@@ -234,368 +354,171 @@ const Navbar = () => {
             <Bars3Icon className="h-6 w-6" />
           )}
         </button>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center justify-between flex-1 pl-8">
-          <nav className="flex items-center space-x-6">
-            {/* MDM Dropdown */}
-            {mdmFeatures.length > 0 && (
-              <div ref={mdmRef} className="relative inline-block text-left">
-                <button
-                  onClick={() => {
-                    setMdmOpen(!mdmOpen);
-                    setSupplyChainOpen(false);
-                    setPlanningOpen(false);
-                    setAnalysisOpen(false);
-                  }}
-                  className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium flex items-center"
-                >
-                  Master Data
-                  <ChevronDownIcon
-                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${mdmOpen ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                
-                {mdmOpen && (
-                  <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                    <div className="py-1" role="menu" aria-orientation="vertical">
-                      {mdmFeatures.map((feature) => (
-                        <Link
-                          key={feature.id}
-                          href={feature.path}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          role="menuitem"
-                          onClick={() => setMdmOpen(false)}
-                        >
-                          {feature.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Supply Chain Dropdown */}
-            {supplyChainFeatures.length > 0 && (
-              <div ref={supplyChainRef} className="relative inline-block text-left">
-                <button
-                  onClick={() => {
-                    setSupplyChainOpen(!supplyChainOpen);
-                    setMdmOpen(false);
-                    setPlanningOpen(false);
-                    setAnalysisOpen(false);
-                  }}
-                  className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium flex items-center"
-                >
-                  Supply Chain
-                  <ChevronDownIcon
-                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${supplyChainOpen ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                
-                {supplyChainOpen && (
-                  <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                    <div className="py-1" role="menu" aria-orientation="vertical">
-                      {supplyChainFeatures.map((feature) => (
-                        <Link
-                          key={feature.id}
-                          href={feature.path}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          role="menuitem"
-                          onClick={() => setSupplyChainOpen(false)}
-                        >
-                          {feature.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Planning & Analytics Dropdown */}
-            {planningFeatures.length > 0 && (
-              <div ref={planningRef} className="relative inline-block text-left">
-                <button
-                  onClick={() => {
-                    setPlanningOpen(!planningOpen);
-                    setSupplyChainOpen(false);
-                    setMdmOpen(false);
-                    setAnalysisOpen(false);
-                  }}
-                  className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium flex items-center"
-                >
-                  Planning & Analytics
-                  <ChevronDownIcon
-                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${planningOpen ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                
-                {planningOpen && (
-                  <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                    <div className="py-1" role="menu" aria-orientation="vertical">
-                      {planningFeatures.map((feature) => (
-                        <Link
-                          key={feature.id}
-                          href={feature.path}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          role="menuitem"
-                          onClick={() => setPlanningOpen(false)}
-                        >
-                          {feature.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Analysis Dropdown */}
-            {analysisFeatures.length > 0 && (
-              <div ref={analysisRef} className="relative inline-block text-left">
-                <button
-                  onClick={() => {
-                    setAnalysisOpen(!analysisOpen);
-                    setSupplyChainOpen(false);
-                    setMdmOpen(false);
-                    setPlanningOpen(false);
-                  }}
-                  className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium flex items-center"
-                >
-                  Analysis
-                  <ChevronDownIcon
-                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${analysisOpen ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                
-                {analysisOpen && (
-                  <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                    <div className="py-1" role="menu" aria-orientation="vertical">
-                      {analysisFeatures.map((feature) => (
-                        <Link
-                          key={feature.id}
-                          href={feature.path}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          role="menuitem"
-                          onClick={() => setAnalysisOpen(false)}
-                        >
-                          {feature.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {additionalFeatures.map((feature) => (
-              <Link
-                key={feature.id}
-                href={feature.path}
-                className="text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-              >
-                {feature.name}
-              </Link>
-            ))}
-          </nav>
-          
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setIsChatAssistantModalOpen(true)}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-indigo-100 hover:text-white hover:bg-indigo-800 rounded-md transition-colors duration-200"
-            >
-              <SparklesIcon className="h-4 w-4 mr-1.5" />
-              AI Assistant
-            </button>
-
-            <div className="flex items-center">
-              <motion.div 
-                className="text-right mr-3"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <p className="text-indigo-100 text-sm">Welcome, <span className="font-semibold">{user.name}</span></p>
-                <p className="text-emerald-300 text-xs">{user.company}</p>
-              </motion.div>
-              <motion.div 
-                className="relative"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-              >
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  width={32}
-                  height={32}
-                  className="rounded-full ring-2 ring-emerald-400/20 hover:ring-emerald-400/40 transition-all duration-200"
-                />
-              </motion.div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Mobile Navigation */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 bg-indigo-900 shadow-lg md:hidden z-50"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="navbar-mobile-menu"
           >
-            <div className="px-4 py-2 border-t border-indigo-800">
-              {/* Mobile User Profile */}
-              <div className="flex items-center justify-between py-4 border-b border-indigo-800">
-                <div className="flex items-center">
-                  <img
-                    src={user.avatar}
-                    alt={`${user.name}'s profile`}
-                    className="h-10 w-10 rounded-full border-2 border-emerald-400"
-                  />
-                  <div className="ml-3">
-                    <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
-                    <p className="text-emerald-300 text-sm">{user.company}</p>
-                  </div>
-                </div>
+            {/* Mobile User Profile */}
+            <div className="flex items-center p-4 border-b border-indigo-800">
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                width={40}
+                height={40}
+                className="rounded-full border-2 border-emerald-400"
+              />
+              <div className="ml-3">
+                <p className="text-indigo-100">Welcome, <span className="font-semibold">{user.name}</span></p>
+                <p className="text-emerald-300 text-sm">{user.company}</p>
+              </div>
+            </div>
+
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              {/* Master Data Mobile */}
+              <div className="space-y-2">
                 <button
-                  onClick={() => setIsChatAssistantModalOpen(true)}
-                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-indigo-100 hover:text-white hover:bg-indigo-800 rounded-md transition-colors duration-200"
+                  onClick={() => setMobileMdmOpen(!mobileMdmOpen)}
+                  className="navbar-mobile-dropdown"
                 >
-                  <SparklesIcon className="h-4 w-4 mr-1.5" />
-                  AI Assistant
+                  Master Data
+                  <ChevronDownIcon
+                    className={`ml-2 h-5 w-5 transform transition-transform duration-200 ${
+                      mobileMdmOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
+                {mobileMdmOpen && (
+                  <div className="pl-4 space-y-2">
+                    {menuItems.mdm.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => handleMobileItemClick(item.href)}
+                        className="navbar-mobile-item"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* Mobile Navigation Links */}
-              <nav className="py-4">
-                {/* Mobile MDM Section */}
-                {mdmFeatures.length > 0 && (
-                  <div className="py-2.5">
-                    <button
-                      onClick={() => setMobileMdmOpen(!mobileMdmOpen)}
-                      className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                    >
-                      <span>Master Data</span>
-                      <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobileMdmOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {mobileMdmOpen && (
-                      <div className="pl-4 mt-2 space-y-2">
-                        {mdmFeatures.map((feature) => (
-                          <Link
-                            key={feature.id}
-                            href={feature.path}
-                            className="block py-2 text-indigo-300 hover:text-emerald-300"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {feature.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+              {/* Supply Chain Mobile */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setMobileSupplyChainOpen(!mobileSupplyChainOpen)}
+                  className="navbar-mobile-dropdown"
+                >
+                  Supply Chain
+                  <ChevronDownIcon
+                    className={`ml-2 h-5 w-5 transform transition-transform duration-200 ${
+                      mobileSupplyChainOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {mobileSupplyChainOpen && (
+                  <div className="pl-4 space-y-2">
+                    {menuItems.supplyChain.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => handleMobileItemClick(item.href)}
+                        className="navbar-mobile-item"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 )}
+              </div>
 
-                {/* Mobile Supply Chain Section */}
-                {supplyChainFeatures.length > 0 && (
-                  <div className="py-2.5">
-                    <button
-                      onClick={() => setMobileSupplyChainOpen(!mobileSupplyChainOpen)}
-                      className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                    >
-                      <span>Supply Chain</span>
-                      <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobileSupplyChainOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {mobileSupplyChainOpen && (
-                      <div className="pl-4 mt-2 space-y-2">
-                        {supplyChainFeatures.map((feature) => (
-                          <Link
-                            key={feature.id}
-                            href={feature.path}
-                            className="block py-2 text-indigo-300 hover:text-emerald-300"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {feature.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+              {/* Planning Mobile */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setMobilePlanningOpen(!mobilePlanningOpen)}
+                  className="navbar-mobile-dropdown"
+                >
+                  Planning
+                  <ChevronDownIcon
+                    className={`ml-2 h-5 w-5 transform transition-transform duration-200 ${
+                      mobilePlanningOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {mobilePlanningOpen && (
+                  <div className="pl-4 space-y-2">
+                    {menuItems.planning.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => handleMobileItemClick(item.href)}
+                        className="navbar-mobile-item"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 )}
+              </div>
 
-                {/* Mobile Planning & Analytics Section */}
-                {planningFeatures.length > 0 && (
-                  <div className="py-2.5">
-                    <button
-                      onClick={() => setMobilePlanningOpen(!mobilePlanningOpen)}
-                      className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                    >
-                      <span>Planning & Analytics</span>
-                      <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobilePlanningOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {mobilePlanningOpen && (
-                      <div className="pl-4 mt-2 space-y-2">
-                        {planningFeatures.map((feature) => (
-                          <Link
-                            key={feature.id}
-                            href={feature.path}
-                            className="block py-2 text-indigo-300 hover:text-emerald-300"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {feature.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+              {/* Analysis Mobile */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setMobileAnalysisOpen(!mobileAnalysisOpen)}
+                  className="navbar-mobile-dropdown"
+                >
+                  Analysis
+                  <ChevronDownIcon
+                    className={`ml-2 h-5 w-5 transform transition-transform duration-200 ${
+                      mobileAnalysisOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {mobileAnalysisOpen && (
+                  <div className="pl-4 space-y-2">
+                    {menuItems.analysis.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => handleMobileItemClick(item.href)}
+                        className="navbar-mobile-item"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </div>
                 )}
+              </div>
 
-                {/* Mobile Analysis Section */}
-                {analysisFeatures.length > 0 && (
-                  <div className="py-2.5">
-                    <button
-                      onClick={() => setMobileAnalysisOpen(!mobileAnalysisOpen)}
-                      className="w-full flex items-center justify-between text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                    >
-                      <span>Analysis</span>
-                      <ChevronDownIcon className={`h-5 w-5 transition-transform duration-200 ${mobileAnalysisOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {mobileAnalysisOpen && (
-                      <div className="pl-4 mt-2 space-y-2">
-                        {analysisFeatures.map((feature) => (
-                          <Link
-                            key={feature.id}
-                            href={feature.path}
-                            className="block py-2 text-indigo-300 hover:text-emerald-300"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            {feature.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+              {/* Landing Mobile */}
+              <Link href="/landing" className="navbar-mobile-item block">
+                Landing
+              </Link>
 
-                {additionalFeatures.map((feature) => (
-                  <Link
-                    key={feature.id}
-                    href={feature.path}
-                    className="block py-2.5 text-indigo-200 hover:text-emerald-300 transition-colors duration-200 font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {feature.name}
-                  </Link>
-                ))}
-              </nav>
+              {/* AI Assistant Mobile */}
+              <button
+                onClick={() => {
+                  setIsChatAssistantModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="navbar-mobile-item flex items-center w-full"
+              >
+                <SparklesIcon className="h-5 w-5 mr-2" />
+                AI Assistant
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Chat Assistant Modal */}
       <ChatAssistantModal
         isOpen={isChatAssistantModalOpen}
         onClose={() => setIsChatAssistantModalOpen(false)}
@@ -604,4 +527,4 @@ const Navbar = () => {
   );
 };
 
-export default memo(Navbar);
+export default Navbar;

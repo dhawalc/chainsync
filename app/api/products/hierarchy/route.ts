@@ -1,51 +1,37 @@
 import { NextResponse } from 'next/server';
-import { initializeSnowflake, connectSnowflake, executeQuery } from '@/lib/snowflake';
+import { mockHierarchyData, mockProducts } from '@/lib/mock-data';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const hierarchyId = searchParams.get('hierarchyId');
     
-    console.log("Initializing Snowflake connection for product hierarchy...");
-    const connection = initializeSnowflake();
-    
-    console.log("Connecting to Snowflake...");
-    await connectSnowflake(connection);
-    console.log("Connected to Snowflake successfully");
-
-    // Set session context
-    await executeQuery(connection, `USE WAREHOUSE ${process.env.SNOWFLAKE_WAREHOUSE}`);
-    await executeQuery(connection, `USE DATABASE ${process.env.SNOWFLAKE_DATABASE}`);
-    await executeQuery(connection, `USE SCHEMA ${process.env.SNOWFLAKE_SCHEMA}`);
-
-    let query;
-    
     if (hierarchyId) {
       // If hierarchyId is provided, fetch products for that hierarchy
-      // This is a placeholder query - adjust based on your actual schema
-      query = `
-        SELECT p.PRODUCT_ID, p.DESCRIPTION
-        FROM PRODUCT_MASTER p
-        JOIN HIERARCHY_CLOSURE hc ON p.PRODUCT_ID = hc.CHILD_ID
-        WHERE hc.PARENT_ID = '${hierarchyId}'
-      `;
+      const node = mockHierarchyData.find(n => n.HIERARCHY_ID === hierarchyId);
+      if (!node) {
+        return NextResponse.json({ 
+          success: false,
+          error: 'Hierarchy node not found' 
+        }, { status: 404 });
+      }
+      
+      // For demo purposes, return all products in the same category
+      const products = mockProducts.filter(p => p.CATEGORY === node.HIERARCHY_ID);
+      
+      return NextResponse.json({ 
+        success: true,
+        data: products 
+      });
     } else {
-      // If no hierarchyId, fetch top-level hierarchies
-      // This is a placeholder query - adjust based on your actual schema
-      query = `
-        SELECT DISTINCT h.HIERARCHY_ID, h.HIERARCHY_NAME
-        FROM HIERARCHY_TREE h
-        WHERE h.PARENT_ID IS NULL
-      `;
+      // If no hierarchyId, return root nodes
+      const rootNodes = mockHierarchyData.filter(node => node.PARENT_ID === null);
+      
+      return NextResponse.json({ 
+        success: true,
+        data: rootNodes 
+      });
     }
-    
-    console.log(`Executing query: ${query}`);
-    const rows = await executeQuery(connection, query);
-    
-    return NextResponse.json({ 
-      success: true,
-      data: rows 
-    });
   } catch (error: any) {
     console.error('Error fetching product hierarchy:', error);
     return NextResponse.json({ 
