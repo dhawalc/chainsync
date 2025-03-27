@@ -297,7 +297,7 @@ export default function LocationMaster() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-2">
-            <Button onClick={handleAddLocation} className="gap-2 bg-primary hover:bg-primary/90">
+            <Button onClick={handleAddLocation} className="gap-2 bg-blue-600 hover:bg-blue-700">
               <Plus className="h-4 w-4" />
               New Location
             </Button>

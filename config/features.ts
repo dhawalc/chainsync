@@ -2,7 +2,7 @@ export interface Feature {
   id: string;
   name: string;
   description: string;
-  category: 'mdm' | 'supplyChain' | 'planning' | 'analysis' | 'additional';
+  category: 'mdm' | 'supplyChain' | 'planning' | 'analysis' | 'additional' | 'procurement';
   path: string;
 }
 
@@ -56,6 +56,10 @@ export const allFeatures: Feature[] = [
   // Additional Features
   { id: 'audit', name: 'Audit', description: 'Audit tools', category: 'additional', path: '/audit' },
   { id: 'landing', name: 'Landing', description: 'Landing page', category: 'additional', path: '/landing' },
+  { id: 'supplier-master', name: 'Supplier Master', description: 'Manage supplier master data', category: 'mdm', path: '/mdm/supplier' },
+  { id: 'supplier-leadtime', name: 'Supplier Lead Time', description: 'Manage supplier lead times', category: 'procurement', path: '/procurement/supplier-leadtime' },
+  { id: 'supplier-qualification', name: 'Supplier Qualification', description: 'Manage supplier qualification data', category: 'procurement', path: '/procurement/supplier-qualification' },
+  { id: 'supplier-quota', name: 'Supplier Quota Splits', description: 'Manage supplier quota allocations', category: 'procurement', path: '/procurement/supplier-quota' },
 ];
 
 export const customerConfigs: Record<string, CustomerConfig> = {

@@ -21,7 +21,7 @@ const menuItems = {
   mdm: [
     { href: '/mdm/material', label: 'Material Master' },
     { href: '/mdm/customer', label: 'Customer Master' },
-    { href: '/mdm/vendor', label: 'Vendor Master' },
+    { href: '/mdm/supplier', label: 'Supplier Master' },
     { href: '/mdm/bom', label: 'Bill of Materials' },
     { href: '/mdm/routing', label: 'Routing & Work Centers' },
     { href: '/mdm/production-version', label: 'Production Version' },
@@ -49,6 +49,11 @@ const menuItems = {
     { href: '/planning-setup/location-process', label: 'Location Process Setup' },
     { href: '/planning-setup/bom-time-phase', label: 'BOM Time Phase' },
     { href: '/planning-setup/resource-mapping', label: 'Resource Mapping' },
+  ],
+  procurement: [
+    { href: '/procurement/supplier-leadtime', label: 'Supplier Lead Time' },
+    { href: '/procurement/supplier-qualification', label: 'Supplier Qualification' },
+    { href: '/procurement/supplier-quota', label: 'Supplier Quota Splits' },
   ],
   analysis: [
     { href: '/analysis', label: 'Dashboard' },
@@ -132,6 +137,7 @@ const Navbar = () => {
   const [supplyChainOpen, setSupplyChainOpen] = useState(false);
   const [mdmOpen, setMdmOpen] = useState(false);
   const [planningOpen, setPlanningOpen] = useState(false);
+  const [procurementOpen, setProcurementOpen] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
 
   // Mobile dropdown states
@@ -139,6 +145,7 @@ const Navbar = () => {
   const [mobileMdmOpen, setMobileMdmOpen] = useState(false);
   const [mobileSupplyChainOpen, setMobileSupplyChainOpen] = useState(false);
   const [mobilePlanningOpen, setMobilePlanningOpen] = useState(false);
+  const [mobileProcurementOpen, setMobileProcurementOpen] = useState(false);
   const [mobileAnalysisOpen, setMobileAnalysisOpen] = useState(false);
 
   const [isChatAssistantModalOpen, setIsChatAssistantModalOpen] = useState(false);
@@ -150,6 +157,7 @@ const Navbar = () => {
   const supplyChainRef = useRef<HTMLDivElement>(null);
   const mdmRef = useRef<HTMLDivElement>(null);
   const planningRef = useRef<HTMLDivElement>(null);
+  const procurementRef = useRef<HTMLDivElement>(null);
   const analysisRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => pathname === path;
@@ -164,12 +172,15 @@ const Navbar = () => {
         !mdmRef.current.contains(event.target as Node) &&
         planningRef.current &&
         !planningRef.current.contains(event.target as Node) &&
+        procurementRef.current &&
+        !procurementRef.current.contains(event.target as Node) &&
         analysisRef.current &&
         !analysisRef.current.contains(event.target as Node)
       ) {
         setSupplyChainOpen(false);
         setMdmOpen(false);
         setPlanningOpen(false);
+        setProcurementOpen(false);
         setAnalysisOpen(false);
       }
     };
@@ -184,6 +195,7 @@ const Navbar = () => {
     setMobileMdmOpen(false);
     setMobileSupplyChainOpen(false);
     setMobilePlanningOpen(false);
+    setMobileProcurementOpen(false);
     setMobileAnalysisOpen(false);
   }, [pathname]);
 
@@ -231,6 +243,7 @@ const Navbar = () => {
                   setMdmOpen(!mdmOpen);
                   setSupplyChainOpen(false);
                   setPlanningOpen(false);
+                  setProcurementOpen(false);
                   setAnalysisOpen(false);
                 }}
               />
@@ -251,6 +264,7 @@ const Navbar = () => {
                   setSupplyChainOpen(!supplyChainOpen);
                   setMdmOpen(false);
                   setPlanningOpen(false);
+                  setProcurementOpen(false);
                   setAnalysisOpen(false);
                 }}
               />
@@ -271,6 +285,7 @@ const Navbar = () => {
                   setPlanningOpen(!planningOpen);
                   setMdmOpen(false);
                   setSupplyChainOpen(false);
+                  setProcurementOpen(false);
                   setAnalysisOpen(false);
                 }}
               />
@@ -279,6 +294,27 @@ const Navbar = () => {
                   isOpen={planningOpen}
                   items={menuItems.planning}
                   onClose={() => setPlanningOpen(false)}
+                />
+              </AnimatePresence>
+            </div>
+
+            <div ref={procurementRef} className="relative">
+              <DropdownButton
+                label="Procurement"
+                isOpen={procurementOpen}
+                onClick={() => {
+                  setProcurementOpen(!procurementOpen);
+                  setMdmOpen(false);
+                  setSupplyChainOpen(false);
+                  setPlanningOpen(false);
+                  setAnalysisOpen(false);
+                }}
+              />
+              <AnimatePresence>
+                <DropdownMenu
+                  isOpen={procurementOpen}
+                  items={menuItems.procurement}
+                  onClose={() => setProcurementOpen(false)}
                 />
               </AnimatePresence>
             </div>
@@ -292,6 +328,7 @@ const Navbar = () => {
                   setMdmOpen(false);
                   setSupplyChainOpen(false);
                   setPlanningOpen(false);
+                  setProcurementOpen(false);
                 }}
               />
               <AnimatePresence>
@@ -455,6 +492,35 @@ const Navbar = () => {
                 {mobilePlanningOpen && (
                   <div className="pl-4 space-y-2">
                     {menuItems.planning.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => handleMobileItemClick(item.href)}
+                        className="navbar-mobile-item"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Procurement Mobile */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => setMobileProcurementOpen(!mobileProcurementOpen)}
+                  className="navbar-mobile-dropdown"
+                >
+                  Procurement
+                  <ChevronDownIcon
+                    className={`ml-2 h-5 w-5 transform transition-transform duration-200 ${
+                      mobileProcurementOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {mobileProcurementOpen && (
+                  <div className="pl-4 space-y-2">
+                    {menuItems.procurement.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
