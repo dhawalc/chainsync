@@ -1,9 +1,18 @@
 'use client';
 
-import { DataTable } from '@/components/ui/data-table';
+import { Location } from './LocationMaster';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { PencilIcon } from '@heroicons/react/24/outline';
-import type { Location } from './LocationMaster';
+import { Badge } from '@/components/ui/badge';
+import { Pencil } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface LocationGridProps {
   locations: Location[];
@@ -11,84 +20,55 @@ interface LocationGridProps {
 }
 
 export default function LocationGrid({ locations, onEdit }: LocationGridProps) {
-  const columns = [
-    {
-      accessorKey: 'id',
-      header: 'Location ID',
-      cell: ({ row }) => (
-        <div className="font-medium">{row.getValue('id')}</div>
-      ),
-    },
-    {
-      accessorKey: 'name',
-      header: 'Name',
-      cell: ({ row }) => (
-        <div className="max-w-[200px] truncate" title={row.getValue('name')}>
-          {row.getValue('name')}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'type',
-      header: 'Type',
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue('type')}</div>
-      ),
-    },
-    {
-      accessorKey: 'address',
-      header: 'Address',
-      cell: ({ row }) => (
-        <div
-          className="max-w-[250px] truncate"
-          title={row.getValue('address')}
-        >
-          {row.getValue('address')}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'timezone',
-      header: 'Timezone',
-      cell: ({ row }) => (
-        <div className="hidden md:block">{row.getValue('timezone')}</div>
-      ),
-    },
-    {
-      accessorKey: 'status',
-      header: 'Status',
-      cell: ({ row }) => (
-        <div
-          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-            row.getValue('status') === 'active'
-              ? 'bg-green-100 text-green-800'
-              : 'bg-gray-100 text-gray-800'
-          }`}
-        >
-          {row.getValue('status')}
-        </div>
-      ),
-    },
-    {
-      id: 'actions',
-      cell: ({ row }) => (
-        <div className="flex justify-end">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onEdit(row.original)}
-            className="h-8 w-8 p-0"
-          >
-            <PencilIcon className="h-4 w-4 text-indigo-600" />
-          </Button>
-        </div>
-      ),
-    },
-  ];
-
   return (
-    <div className="min-w-full">
-      <DataTable columns={columns} data={locations} />
-    </div>
+    <Card className="border rounded-lg shadow-sm overflow-hidden">
+      <CardHeader className="py-3 px-4">
+        <CardTitle className="text-base font-medium">Location List</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableHead className="w-[100px] font-medium">Location ID</TableHead>
+              <TableHead className="font-medium">Name</TableHead>
+              <TableHead className="font-medium">Type</TableHead>
+              <TableHead className="font-medium">Address</TableHead>
+              <TableHead className="font-medium">Timezone</TableHead>
+              <TableHead className="font-medium">Status</TableHead>
+              <TableHead className="w-[60px]"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {locations.map((location) => (
+              <TableRow key={location.id} className="hover:bg-muted/50">
+                <TableCell className="font-medium">{location.id}</TableCell>
+                <TableCell>{location.name}</TableCell>
+                <TableCell>{location.type}</TableCell>
+                <TableCell className="max-w-[300px] truncate">{location.address}</TableCell>
+                <TableCell>{location.timezone}</TableCell>
+                <TableCell>
+                  <Badge 
+                    variant={location.status === 'active' ? 'default' : 'secondary'}
+                    className={location.status === 'active' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-muted'}
+                  >
+                    {location.status.charAt(0).toUpperCase() + location.status.slice(1)}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onEdit(location)}
+                    className="h-8 w-8 hover:bg-muted"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 } 

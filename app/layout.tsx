@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
+import { Toaster } from '@/components/ui/toaster';
 
 // Optimize font loading
 const inter = Inter({ 
@@ -127,6 +128,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </main>
           </div>
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

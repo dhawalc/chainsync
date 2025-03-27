@@ -1,14 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Location } from './LocationMaster';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -16,191 +19,217 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Location } from './LocationMaster';
 
 interface LocationModalProps {
   isOpen: boolean;
+  location?: Location | null;
   onClose: () => void;
   onSave: (location: Location) => void;
-  location?: Location | null;
 }
 
-export function LocationModal({
+export default function LocationModal({
   isOpen,
+  location,
   onClose,
   onSave,
-  location,
 }: LocationModalProps) {
   const [formData, setFormData] = useState<Partial<Location>>({
     id: '',
     name: '',
-    type: 'internal',
+    type: 'Internal',
     address: '',
-    latitude: 0,
-    longitude: 0,
     timezone: '',
     status: 'active',
+    latitude: 0,
+    longitude: 0,
   });
-
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (location) {
       setFormData(location);
     } else {
       setFormData({
-        id: '',
+        id: `LOC${String(Math.floor(Math.random() * 900) + 100)}`,
         name: '',
-        type: 'internal',
+        type: 'Internal',
         address: '',
-        latitude: 0,
-        longitude: 0,
         timezone: '',
         status: 'active',
+        latitude: 0,
+        longitude: 0,
       });
     }
   }, [location]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      // Geocode the address to get latitude and longitude
-      const geocoder = new google.maps.Geocoder();
-      const result = await new Promise<google.maps.GeocoderResult>((resolve, reject) => {
-        geocoder.geocode({ address: formData.address }, (results, status) => {
-          if (status === 'OK' && results && results[0]) {
-            resolve(results[0]);
-          } else {
-            reject(new Error('Geocoding failed'));
-          }
-        });
-      });
-
-      // Get timezone using Google Maps Time Zone API
-      const timestamp = Math.floor(Date.now() / 1000);
-      const location = result.geometry.location;
-      const timezone = await fetch(
-        `https://maps.googleapis.com/maps/api/timezone/json?location=${location.lat()},${location.lng()}&timestamp=${timestamp}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-      ).then((res) => res.json());
-
-      const newLocation: Location = {
-        ...formData,
-        id: formData.id || `LOC${Math.floor(Math.random() * 10000)}`,
-        latitude: location.lat(),
-        longitude: location.lng(),
-        timezone: timezone.timeZoneId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      } as Location;
-
-      onSave(newLocation);
-    } catch (error) {
-      console.error('Error saving location:', error);
-      // Handle error (show error message to user)
-    } finally {
-      setIsLoading(false);
-    }
+    onSave(formData as Location);
   };
+
+  const timezones = [
+    'America/Detroit',
+    'America/Los_Angeles',
+    'America/New_York',
+    'America/Chicago',
+    'America/Sao_Paulo',
+    'Europe/London',
+    'Europe/Berlin',
+    'Europe/Paris',
+    'Asia/Tokyo',
+    'Asia/Singapore',
+    'Asia/Dubai',
+    'Australia/Sydney',
+    'Australia/Melbourne',
+  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>
-            {location ? 'Edit Location' : 'Add New Location'}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[600px]">
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>
+              {location ? 'Edit Location' : 'Add New Location'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="id">Location ID</Label>
+                <Input
+                  id="id"
+                  value={formData.id}
+                  onChange={(e) =>
+                    setFormData({ ...formData, id: e.target.value })
+                  }
+                  disabled={!!location}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                />
+              </div>
+            </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="text-sm font-medium text-gray-700">
-                Location Name
-              </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="type">Type</Label>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, type: value as 'Internal' | 'External' })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Internal">Internal</SelectItem>
+                    <SelectItem value="External">External</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  value={formData.status}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, status: value as 'active' | 'inactive' })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
               <Input
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                placeholder="Enter location name"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">Type</label>
-              <Select
-                value={formData.type}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    type: value as 'internal' | 'external',
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="internal">Internal</SelectItem>
-                  <SelectItem value="external">External</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium text-gray-700">Status</label>
-              <Select
-                value={formData.status}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    status: value as 'active' | 'inactive',
-                  }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="col-span-2">
-              <label className="text-sm font-medium text-gray-700">Address</label>
-              <Input
+                id="address"
                 value={formData.address}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, address: e.target.value }))
+                  setFormData({ ...formData, address: e.target.value })
                 }
-                placeholder="Enter full address"
                 required
               />
-              <p className="mt-1 text-xs text-gray-500">
-                Latitude, longitude, and timezone will be automatically determined
-                from the address
-              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="timezone">Timezone</Label>
+                <Select
+                  value={formData.timezone}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, timezone: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timezones.map((tz) => (
+                      <SelectItem key={tz} value={tz}>
+                        {tz}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="latitude">Latitude</Label>
+                <Input
+                  id="latitude"
+                  type="number"
+                  step="any"
+                  value={formData.latitude}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      latitude: parseFloat(e.target.value),
+                    })
+                  }
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="longitude">Longitude</Label>
+                <Input
+                  id="longitude"
+                  type="number"
+                  step="any"
+                  value={formData.longitude}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      longitude: parseFloat(e.target.value),
+                    })
+                  }
+                  required
+                />
+              </div>
             </div>
           </div>
-
-          <div className="flex justify-end gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isLoading}
-            >
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : 'Save Location'}
-            </Button>
-          </div>
+            <Button type="submit">Save</Button>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
